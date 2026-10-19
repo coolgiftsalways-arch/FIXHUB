@@ -1,0 +1,1395 @@
+/* ==========================================================
+   FIXHUB CONTACT PAGE
+   DARK NAVY + NEON BLUE
+========================================================== */
+
+.fxc-page {
+     --fxc-bg: #020b15;
+     --fxc-secondary: #061525;
+     --fxc-card: #071b2e;
+     --fxc-blue: #008cff;
+     --fxc-cyan: #00d4ff;
+     --fxc-white: #ffffff;
+     --fxc-muted: #b2c5d9;
+
+     position: relative;
+     width: 100%;
+
+     background: var(--fxc-bg);
+     color: var(--fxc-white);
+
+     overflow: clip;
+}
+
+.fxc-page *,
+.fxc-page *::before,
+.fxc-page *::after {
+     box-sizing: border-box;
+}
+
+.fxc-container {
+     width: min(1440px, 92%);
+     margin: 0 auto;
+}
+
+/* ==========================================================
+   CONTACT HERO
+========================================================== */
+
+.fxc-hero {
+     position: relative;
+     padding: 36px 0 55px;
+
+     background:
+          radial-gradient(ellipse at 85% 20%,
+               rgba(0, 140, 255, 0.1),
+               transparent 55%),
+          #020b15;
+}
+
+.fxc-hero-box {
+     position: relative;
+
+     min-height: 650px;
+
+     border: 1px solid rgba(0, 149, 255, 0.38);
+     border-radius: 25px;
+
+     background: #031326;
+
+     overflow: hidden;
+     isolation: isolate;
+}
+
+.fxc-hero-visual {
+     position: absolute;
+     inset: 0 0 0 35%;
+
+     z-index: 0;
+}
+
+.fxc-hero-image {
+     display: block;
+
+     width: 100%;
+     height: 100%;
+
+     object-fit: cover;
+     object-position: center;
+}
+
+.fxc-hero-overlay {
+     position: absolute;
+     inset: 0;
+
+     z-index: 1;
+
+     background: linear-gradient(90deg,
+               #020d1d 0%,
+               rgba(2, 13, 29, 0.99) 25%,
+               rgba(2, 13, 29, 0.88) 43%,
+               rgba(2, 13, 29, 0.25) 77%,
+               rgba(2, 13, 29, 0.06) 100%);
+
+     pointer-events: none;
+}
+
+/* HERO CONTENT */
+
+.fxc-hero-content {
+     position: relative;
+     z-index: 3;
+
+     display: flex;
+     flex-direction: column;
+     align-items: flex-start;
+
+     width: 100%;
+     min-height: 650px;
+
+     padding: clamp(35px, 5vw, 75px);
+
+     justify-content: center;
+}
+
+/* BADGE */
+
+.fxc-badge {
+     display: inline-flex;
+     align-items: center;
+
+     gap: 11px;
+
+     padding: 10px 18px;
+
+     border: 1px solid rgba(0, 150, 255, 0.48);
+     border-radius: 50px;
+
+     background: rgba(3, 30, 59, 0.75);
+
+     color: #e2f1ff;
+
+     font-size: 12px;
+     font-weight: 700;
+     letter-spacing: 2px;
+}
+
+.fxc-badge-dot {
+     width: 9px;
+     height: 9px;
+
+     border-radius: 50%;
+
+     background: #00cfff;
+
+     box-shadow: 0 0 15px #00cfff;
+}
+
+/* HERO HEADING */
+
+.fxc-hero-title {
+     max-width: 750px;
+
+     margin: 35px 0 20px;
+
+     color: #fff;
+
+     font-family: "Space Grotesk", "DM Sans", sans-serif;
+
+     font-size: clamp(45px, 5.3vw, 82px);
+     font-weight: 800;
+
+     line-height: 1.06;
+     letter-spacing: -0.055em;
+}
+
+.fxc-hero-title span {
+     background: linear-gradient(90deg,
+               #008cff,
+               #00d4ff);
+
+     -webkit-background-clip: text;
+     background-clip: text;
+
+     -webkit-text-fill-color: transparent;
+     color: transparent;
+}
+
+.fxc-hero-description {
+     max-width: 580px;
+
+     margin: 0;
+
+     color: #b9cbe0;
+
+     font-size: clamp(14px, 1.25vw, 18px);
+     line-height: 1.8;
+}
+
+/* ==========================================================
+   CONTACT METHOD CARDS
+========================================================== */
+
+.fxc-methods {
+     display: grid;
+     grid-template-columns: repeat(3, minmax(0, 1fr));
+
+     gap: 14px;
+
+     width: min(850px, 100%);
+
+     margin-top: 42px;
+}
+
+.fxc-method-card {
+     display: flex;
+     align-items: center;
+
+     gap: 13px;
+
+     min-width: 0;
+     min-height: 95px;
+
+     padding: 16px;
+
+     border: 1px solid rgba(0, 153, 255, 0.55);
+     border-radius: 17px;
+
+     background: rgba(3, 25, 49, 0.82);
+
+     backdrop-filter: blur(14px);
+
+     color: #fff;
+     text-decoration: none;
+
+     transition:
+          transform 0.35s ease,
+          background 0.35s ease,
+          border-color 0.35s ease,
+          box-shadow 0.35s ease;
+}
+
+a.fxc-method-card:hover {
+     transform: translateY(-6px);
+
+     background: rgba(6, 43, 77, 0.95);
+
+     border-color: #00d4ff;
+
+     box-shadow: 0 12px 30px rgba(0, 120, 255, 0.17);
+}
+
+.fxc-method-card--disabled {
+     cursor: not-allowed;
+}
+
+.fxc-method-icon {
+     display: grid;
+     place-items: center;
+
+     width: 52px;
+     height: 52px;
+
+     flex-shrink: 0;
+
+     border-radius: 50%;
+
+     background: #008cff;
+     color: #fff;
+}
+
+.fxc-method-icon.whatsapp {
+     background: #12b95d;
+}
+
+.fxc-method-icon.phone {
+     background: #008cff;
+}
+
+.fxc-method-icon.email {
+     background: #7357e9;
+}
+
+.fxc-method-text {
+     min-width: 0;
+}
+
+.fxc-method-text h3 {
+     margin: 0 0 5px;
+
+     color: #fff;
+
+     font-size: 15px;
+     font-weight: 700;
+}
+
+.fxc-method-text p {
+     margin: 0;
+
+     color: #a8c1d9;
+
+     font-size: 11px;
+     line-height: 1.5;
+}
+
+.fxc-method-arrow {
+     margin-left: auto;
+     flex-shrink: 0;
+
+     color: #00cfff;
+}
+
+/* ==========================================================
+   HERO BENEFITS
+========================================================== */
+
+.fxc-benefits {
+     display: flex;
+     align-items: center;
+     flex-wrap: wrap;
+
+     gap: 25px;
+
+     margin-top: 52px;
+}
+
+.fxc-benefit {
+     display: flex;
+     align-items: center;
+
+     gap: 11px;
+}
+
+.fxc-benefit-icon {
+     display: grid;
+     place-items: center;
+
+     width: 45px;
+     height: 45px;
+
+     flex-shrink: 0;
+
+     border: 1px solid #009cff;
+     border-radius: 50%;
+
+     background: rgba(0, 136, 255, 0.1);
+
+     color: #00cfff;
+}
+
+.fxc-benefit h4 {
+     margin: 0 0 3px;
+
+     color: #fff;
+
+     font-size: 12px;
+     font-weight: 700;
+}
+
+.fxc-benefit p {
+     margin: 0;
+
+     color: #a4bbd3;
+
+     font-size: 10px;
+}
+
+/* ==========================================================
+   HERO DECORATION
+========================================================== */
+
+.fxc-hero-decoration {
+     position: absolute;
+
+     top: 15%;
+     right: 12%;
+
+     z-index: 2;
+
+     pointer-events: none;
+}
+
+.fxc-hero-decoration span {
+     position: absolute;
+
+     width: 180px;
+     height: 180px;
+
+     border: 1px solid rgba(0, 160, 255, 0.12);
+     border-radius: 50%;
+}
+
+.fxc-hero-decoration span:nth-child(2) {
+     transform: scale(1.5);
+}
+
+.fxc-hero-decoration span:nth-child(3) {
+     transform: scale(2);
+}
+
+/* ==========================================================
+   COMMON SECTION TAG
+========================================================== */
+
+.fxc-section-tag {
+     display: inline-flex;
+     align-items: center;
+
+     gap: 9px;
+
+     margin-bottom: 18px;
+
+     color: #00cfff;
+
+     font-size: 11px;
+     font-weight: 700;
+
+     letter-spacing: 1.5px;
+}
+
+/* ==========================================================
+   CONTACT CONTENT
+========================================================== */
+
+.fxc-content-section {
+     padding: 65px 0 85px;
+
+     background:
+          radial-gradient(ellipse at 15% 30%,
+               rgba(0, 130, 255, 0.09),
+               transparent 50%),
+          #020b15;
+}
+
+.fxc-content-grid {
+     display: grid;
+
+     grid-template-columns: 0.9fr 1.1fr;
+
+     gap: clamp(35px, 5vw, 80px);
+
+     align-items: start;
+}
+
+/* ==========================================================
+   CONTACT INFORMATION
+========================================================== */
+
+.fxc-info-panel {
+     padding-top: 25px;
+}
+
+.fxc-info-panel h2,
+.fxc-form-header h2,
+.fxc-faq-header h2 {
+     margin: 0;
+
+     font-family: "Space Grotesk", "DM Sans", sans-serif;
+
+     font-size: clamp(34px, 3.5vw, 52px);
+     font-weight: 800;
+
+     letter-spacing: -0.045em;
+     line-height: 1.1;
+}
+
+.fxc-info-panel h2 span,
+.fxc-form-header h2 span,
+.fxc-faq-header h2 span {
+     color: #00bfff;
+}
+
+.fxc-info-description {
+     max-width: 470px;
+
+     margin: 22px 0 35px;
+
+     color: #b6c8da;
+
+     font-size: 14px;
+     line-height: 1.9;
+}
+
+/* INFORMATION LIST */
+
+.fxc-info-list {
+     display: flex;
+     flex-direction: column;
+
+     gap: 23px;
+}
+
+.fxc-info-item {
+     display: flex;
+     align-items: flex-start;
+
+     gap: 17px;
+}
+
+.fxc-info-icon {
+     display: grid;
+     place-items: center;
+
+     width: 51px;
+     height: 51px;
+
+     flex-shrink: 0;
+
+     border: 1px solid rgba(0, 157, 255, 0.46);
+     border-radius: 13px;
+
+     background: #071b2e;
+
+     color: #00cfff;
+}
+
+.fxc-info-item h3 {
+     margin: 0 0 6px;
+
+     color: #fff;
+
+     font-size: 14px;
+}
+
+.fxc-info-item p {
+     margin: 0;
+
+     color: #c4d4e5;
+
+     font-size: 13px;
+     overflow-wrap: anywhere;
+}
+
+.fxc-info-item small {
+     display: block;
+
+     margin-top: 5px;
+
+     color: #829fb9;
+     font-size: 11px;
+}
+
+/* ==========================================================
+   CONTACT PROMO
+========================================================== */
+
+.fxc-info-promo {
+     display: flex;
+     align-items: center;
+
+     gap: 15px;
+
+     margin-top: 43px;
+     padding: 20px;
+
+     border: 1px solid rgba(0, 155, 255, 0.45);
+     border-radius: 16px;
+
+     background:
+          linear-gradient(120deg,
+               rgba(0, 119, 255, 0.14),
+               rgba(0, 40, 80, 0.15));
+}
+
+.fxc-info-promo-icon {
+     display: grid;
+     place-items: center;
+
+     width: 48px;
+     height: 48px;
+
+     flex-shrink: 0;
+
+     border-radius: 13px;
+
+     background: #008cff;
+}
+
+.fxc-info-promo h3 {
+     margin: 0 0 5px;
+
+     font-size: 14px;
+}
+
+.fxc-info-promo p {
+     margin: 0;
+
+     color: #b6c8da;
+
+     font-size: 11px;
+     line-height: 1.6;
+}
+
+.fxc-info-promo>a {
+     display: grid;
+     place-items: center;
+
+     width: 38px;
+     height: 38px;
+
+     margin-left: auto;
+     flex-shrink: 0;
+
+     border: 1px solid #00aaff;
+     border-radius: 50%;
+
+     color: #00cfff;
+}
+
+/* ==========================================================
+   CONTACT FORM CARD
+========================================================== */
+
+.fxc-form-card {
+     padding: clamp(25px, 3vw, 45px);
+
+     border: 1px solid rgba(0, 151, 255, 0.4);
+     border-radius: 23px;
+
+     background:
+          linear-gradient(145deg,
+               rgba(5, 30, 56, 0.9),
+               rgba(2, 16, 31, 0.96));
+
+     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+}
+
+.fxc-form-header p {
+     margin: 17px 0 30px;
+
+     color: #b3c5d8;
+
+     font-size: 13px;
+     line-height: 1.7;
+}
+
+/* ==========================================================
+   FORM
+========================================================== */
+
+.fxc-form {
+     display: flex;
+     flex-direction: column;
+
+     gap: 21px;
+}
+
+.fxc-form-row {
+     display: grid;
+
+     grid-template-columns: repeat(2, minmax(0, 1fr));
+
+     gap: 18px;
+}
+
+.fxc-field {
+     display: flex;
+     flex-direction: column;
+
+     gap: 10px;
+
+     min-width: 0;
+}
+
+.fxc-field label {
+     color: #e3effa;
+
+     font-size: 12px;
+     font-weight: 600;
+}
+
+.fxc-field input,
+.fxc-field select,
+.fxc-field textarea {
+     display: block;
+
+     width: 100%;
+     min-width: 0;
+
+     padding: 15px 16px;
+
+     border: 1px solid rgba(0, 151, 255, 0.27);
+     border-radius: 11px;
+
+     background: rgba(2, 13, 27, 0.8);
+
+     color: #fff;
+
+     font-family: inherit;
+     font-size: 12px;
+
+     outline: none;
+
+     transition:
+          border-color 0.3s ease,
+          box-shadow 0.3s ease;
+}
+
+.fxc-field input:focus,
+.fxc-field select:focus,
+.fxc-field textarea:focus {
+     border-color: #00bfff;
+
+     box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.08);
+}
+
+.fxc-field input::placeholder,
+.fxc-field textarea::placeholder {
+     color: #7593af;
+}
+
+.fxc-field textarea {
+     resize: vertical;
+     min-height: 145px;
+}
+
+.fxc-select-box {
+     position: relative;
+}
+
+.fxc-select-box select {
+     appearance: none;
+
+     padding-right: 40px;
+
+     cursor: pointer;
+}
+
+.fxc-select-box select option {
+     background: #061525;
+     color: #fff;
+}
+
+.fxc-select-box svg {
+     position: absolute;
+
+     top: 50%;
+     right: 15px;
+
+     transform: translateY(-50%);
+
+     color: #00cfff;
+
+     pointer-events: none;
+}
+
+/* ==========================================================
+   SUBMIT BUTTON
+========================================================== */
+
+.fxc-submit-button {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+
+     gap: 12px;
+
+     width: 100%;
+     min-height: 52px;
+
+     padding: 14px 25px;
+
+     border: none;
+     border-radius: 12px;
+
+     background: linear-gradient(110deg,
+               #007bff,
+               #00c6ff);
+
+     color: #fff;
+
+     font-family: inherit;
+     font-size: 14px;
+     font-weight: 700;
+
+     cursor: pointer;
+
+     transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease,
+          filter 0.3s ease;
+}
+
+.fxc-submit-button:hover:not(:disabled) {
+     transform: translateY(-3px);
+
+     box-shadow: 0 10px 25px rgba(0, 140, 255, 0.25);
+}
+
+.fxc-submit-button:disabled {
+     opacity: 0.65;
+     cursor: not-allowed;
+}
+
+.fxc-form-note {
+     margin: 0;
+
+     color: #859eb7;
+
+     font-size: 10px;
+     text-align: center;
+
+     line-height: 1.6;
+}
+
+/* STATUS */
+
+.fxc-form-status {
+     display: flex;
+     align-items: center;
+
+     gap: 10px;
+
+     padding: 13px 16px;
+
+     border-radius: 9px;
+
+     font-size: 12px;
+     line-height: 1.6;
+}
+
+.fxc-form-status--success {
+     border: 1px solid rgba(46, 213, 139, 0.35);
+     background: rgba(46, 213, 139, 0.08);
+     color: #69e7aa;
+}
+
+.fxc-form-status--error {
+     border: 1px solid rgba(255, 90, 105, 0.3);
+     background: rgba(255, 90, 105, 0.07);
+     color: #ff9da7;
+}
+
+.fxc-spinner {
+     animation: fxc-spin 1s linear infinite;
+}
+
+@keyframes fxc-spin {
+     to {
+          transform: rotate(360deg);
+     }
+}
+
+/* ==========================================================
+   FAQ SECTION
+========================================================== */
+
+.fxc-faq-section {
+     padding: 65px 0 85px;
+
+     border-top: 1px solid rgba(0, 140, 255, 0.12);
+
+     background: #03101e;
+}
+
+.fxc-faq-header {
+     max-width: 650px;
+
+     margin: 0 auto 38px;
+
+     text-align: center;
+}
+
+.fxc-faq-header p {
+     margin: 15px 0 0;
+
+     color: #a7bfd5;
+
+     font-size: 13px;
+     line-height: 1.7;
+}
+
+/* FAQ LIST */
+
+.fxc-faq-list {
+     width: min(900px, 100%);
+
+     margin: 0 auto;
+
+     display: flex;
+     flex-direction: column;
+
+     gap: 13px;
+}
+
+.fxc-faq-item {
+     border: 1px solid rgba(0, 151, 255, 0.3);
+     border-radius: 13px;
+
+     background: rgba(4, 25, 47, 0.8);
+
+     overflow: hidden;
+}
+
+.fxc-faq-item summary {
+     display: flex;
+     align-items: center;
+
+     gap: 16px;
+
+     padding: 21px 24px;
+
+     list-style: none;
+
+     cursor: pointer;
+}
+
+.fxc-faq-item summary::-webkit-details-marker {
+     display: none;
+}
+
+.fxc-faq-number {
+     color: #00cfff;
+
+     font-size: 12px;
+     font-weight: 800;
+}
+
+.fxc-faq-question {
+     flex: 1;
+
+     color: #f5f9ff;
+
+     font-size: 14px;
+     font-weight: 600;
+}
+
+.fxc-faq-toggle {
+     display: grid;
+     place-items: center;
+
+     width: 30px;
+     height: 30px;
+
+     border: 1px solid rgba(0, 174, 255, 0.48);
+     border-radius: 50%;
+
+     color: #00cfff;
+
+     transition: transform 0.3s ease;
+}
+
+.fxc-faq-item[open] .fxc-faq-toggle {
+     transform: rotate(180deg);
+}
+
+.fxc-faq-answer {
+     padding: 0 24px 23px 52px;
+}
+
+.fxc-faq-answer p {
+     margin: 0;
+
+     color: #b2c7db;
+
+     font-size: 13px;
+     line-height: 1.8;
+}
+
+/* ==========================================================
+   BOTTOM CTA
+========================================================== */
+
+.fxc-bottom-cta {
+     padding: 0 0 75px;
+
+     background: #03101e;
+}
+
+.fxc-cta-box {
+     display: flex;
+     align-items: center;
+
+     gap: 25px;
+
+     padding: 30px 35px;
+
+     border: 1px solid rgba(0, 177, 255, 0.4);
+     border-radius: 20px;
+
+     background: linear-gradient(110deg,
+               #005fd5,
+               #008cff,
+               #0070e9);
+}
+
+.fxc-cta-icon {
+     display: grid;
+     place-items: center;
+
+     width: 70px;
+     height: 70px;
+
+     flex-shrink: 0;
+
+     border-radius: 50%;
+
+     background: rgba(255, 255, 255, 0.13);
+     color: #fff;
+}
+
+.fxc-cta-content {
+     flex: 1;
+}
+
+.fxc-cta-content>span {
+     display: block;
+
+     margin-bottom: 9px;
+
+     font-size: 10px;
+     font-weight: 700;
+
+     letter-spacing: 1.4px;
+}
+
+.fxc-cta-content h2 {
+     margin: 0 0 7px;
+
+     font-size: clamp(21px, 2.5vw, 32px);
+     font-weight: 800;
+
+     letter-spacing: -0.035em;
+}
+
+.fxc-cta-content p {
+     margin: 0;
+
+     color: #e0f0ff;
+
+     font-size: 12px;
+     line-height: 1.6;
+}
+
+.fxc-cta-button {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+
+     gap: 13px;
+
+     min-height: 50px;
+
+     padding: 14px 23px;
+
+     border-radius: 12px;
+
+     background: #fff;
+
+     color: #004a9b;
+
+     font-size: 13px;
+     font-weight: 800;
+
+     text-decoration: none;
+     white-space: nowrap;
+
+     transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+}
+
+.fxc-cta-button:hover {
+     transform: translateY(-3px);
+
+     box-shadow: 0 10px 25px rgba(0, 25, 70, 0.2);
+}
+
+/* ==========================================================
+   LARGE DESKTOP
+========================================================== */
+
+@media (min-width: 1600px) {
+
+     .fxc-hero-box,
+     .fxc-hero-content {
+          min-height: 710px;
+     }
+}
+
+/* ==========================================================
+   LAPTOP
+========================================================== */
+
+@media (max-width: 1200px) {
+
+     .fxc-hero-box,
+     .fxc-hero-content {
+          min-height: 610px;
+     }
+
+     .fxc-methods {
+          width: min(780px, 100%);
+     }
+
+     .fxc-method-card {
+          padding: 12px;
+     }
+
+     .fxc-method-icon {
+          width: 44px;
+          height: 44px;
+     }
+
+     .fxc-method-text h3 {
+          font-size: 13px;
+     }
+
+     .fxc-benefits {
+          gap: 17px;
+     }
+
+     .fxc-content-grid {
+          gap: 35px;
+     }
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 1024px) {
+     .fxc-hero-visual {
+          inset: 0;
+     }
+
+     .fxc-hero-overlay {
+          background: linear-gradient(90deg,
+                    rgba(2, 13, 29, 0.98),
+                    rgba(2, 13, 29, 0.86) 53%,
+                    rgba(2, 13, 29, 0.43));
+     }
+
+     .fxc-hero-title {
+          font-size: clamp(42px, 6vw, 65px);
+     }
+
+     .fxc-hero-description {
+          max-width: 550px;
+     }
+
+     .fxc-methods {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+
+          width: min(610px, 100%);
+     }
+
+     .fxc-content-grid {
+          grid-template-columns: 1fr;
+     }
+
+     .fxc-info-panel {
+          padding-top: 0;
+     }
+
+     .fxc-info-list {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+     }
+
+     .fxc-info-promo {
+          max-width: 600px;
+     }
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 768px) {
+     .fxc-container {
+          width: 92%;
+     }
+
+     .fxc-hero {
+          padding: 20px 0 40px;
+     }
+
+     .fxc-hero-box {
+          min-height: auto;
+          border-radius: 18px;
+     }
+
+     .fxc-hero-visual {
+          inset: 0 0 auto;
+
+          height: 390px;
+     }
+
+     .fxc-hero-image {
+          object-position: 65% center;
+     }
+
+     .fxc-hero-overlay {
+          background: linear-gradient(180deg,
+                    rgba(2, 13, 29, 0.12) 0%,
+                    rgba(2, 13, 29, 0.68) 230px,
+                    #020d1d 390px,
+                    #020d1d 100%);
+     }
+
+     .fxc-hero-content {
+          min-height: auto;
+
+          padding: 260px 22px 30px;
+
+          justify-content: flex-start;
+     }
+
+     .fxc-badge {
+          padding: 9px 14px;
+          font-size: 10px;
+     }
+
+     .fxc-hero-title {
+          margin-top: 23px;
+
+          font-size: clamp(37px, 8vw, 55px);
+     }
+
+     .fxc-hero-description {
+          font-size: 13px;
+          line-height: 1.8;
+     }
+
+     .fxc-methods {
+          grid-template-columns: 1fr;
+          width: 100%;
+
+          gap: 12px;
+          margin-top: 28px;
+     }
+
+     .fxc-method-card {
+          min-height: 78px;
+          padding: 12px 15px;
+     }
+
+     .fxc-method-icon {
+          width: 46px;
+          height: 46px;
+     }
+
+     .fxc-benefits {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+
+          gap: 20px 12px;
+          margin-top: 35px;
+     }
+
+     .fxc-benefit-icon {
+          width: 39px;
+          height: 39px;
+     }
+
+     .fxc-benefit h4 {
+          font-size: 11px;
+     }
+
+     .fxc-benefit p {
+          font-size: 9px;
+     }
+
+     .fxc-content-section {
+          padding: 45px 0 60px;
+     }
+
+     .fxc-info-panel h2,
+     .fxc-form-header h2,
+     .fxc-faq-header h2 {
+          font-size: clamp(31px, 7vw, 42px);
+     }
+
+     .fxc-info-description {
+          font-size: 12px;
+     }
+
+     .fxc-info-list {
+          grid-template-columns: 1fr;
+          gap: 23px;
+     }
+
+     .fxc-form-card {
+          padding: 25px 18px;
+     }
+
+     .fxc-form-row {
+          grid-template-columns: 1fr;
+          gap: 20px;
+     }
+
+     .fxc-faq-section {
+          padding: 50px 0 60px;
+     }
+
+     .fxc-faq-item summary {
+          padding: 17px;
+          gap: 10px;
+     }
+
+     .fxc-faq-question {
+          font-size: 12px;
+     }
+
+     .fxc-faq-answer {
+          padding: 0 17px 18px 38px;
+     }
+
+     .fxc-faq-answer p {
+          font-size: 12px;
+     }
+
+     .fxc-bottom-cta {
+          padding-bottom: 45px;
+     }
+
+     .fxc-cta-box {
+          flex-direction: column;
+          align-items: flex-start;
+
+          padding: 25px 20px;
+     }
+
+     .fxc-cta-icon {
+          width: 54px;
+          height: 54px;
+     }
+
+     .fxc-cta-button {
+          width: 100%;
+     }
+}
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 480px) {
+     .fxc-hero-content {
+          padding: 240px 17px 25px;
+     }
+
+     .fxc-hero-title {
+          font-size: 36px;
+     }
+
+     .fxc-method-text h3 {
+          font-size: 13px;
+     }
+
+     .fxc-method-text p {
+          font-size: 10px;
+     }
+
+     .fxc-benefits {
+          grid-template-columns: 1fr;
+          gap: 15px;
+     }
+
+     .fxc-benefit {
+          gap: 12px;
+     }
+
+     .fxc-hero-description {
+          font-size: 12px;
+     }
+
+     .fxc-info-promo {
+          padding: 15px;
+          gap: 10px;
+     }
+
+     .fxc-info-promo-icon {
+          width: 40px;
+          height: 40px;
+     }
+
+     .fxc-info-promo h3 {
+          font-size: 12px;
+     }
+
+     .fxc-info-promo p {
+          font-size: 10px;
+     }
+
+     .fxc-info-promo>a {
+          width: 34px;
+          height: 34px;
+     }
+}
+
+/* ==========================================================
+   REDUCED MOTION
+========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+     .fxc-page *,
+     .fxc-page *::before,
+     .fxc-page *::after {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+     }
+}

@@ -1,0 +1,948 @@
+/* FIXHUB — HOW IT WORKS — scoped styles (no Navbar/Footer changes) */
+.hiw-page {
+     --hiw-bg: #020b15;
+     --hiw-panel: #061727;
+     --hiw-cyan: #00cbff;
+     --hiw-blue: #008cff;
+     --hiw-text: #fff;
+     --hiw-muted: #adc2d8;
+     color: var(--hiw-text);
+     background: var(--hiw-bg);
+     overflow: hidden;
+}
+
+.hiw-page *,
+.hiw-page *::before,
+.hiw-page *::after {
+     box-sizing: border-box;
+}
+
+.hiw-container {
+     width: min(1420px, 92%);
+     margin: 0 auto;
+}
+
+.hiw-page a {
+     text-decoration: none;
+}
+
+.hiw-eyebrow {
+     display: inline-flex;
+     align-items: center;
+     gap: 9px;
+     width: fit-content;
+     padding: 8px 13px;
+     border: 1px solid rgba(0, 169, 255, .46);
+     border-radius: 99px;
+     background: rgba(0, 126, 255, .09);
+     color: #68dfff;
+     font-size: 10px;
+     font-weight: 800;
+     letter-spacing: 1.6px;
+}
+
+.hiw-eyebrow svg {
+     flex-shrink: 0;
+}
+
+.hiw-page h1,
+.hiw-page h2,
+.hiw-page h3,
+.hiw-page p {
+     margin-top: 0;
+}
+
+.hiw-page h1,
+.hiw-page h2,
+.hiw-page h3 {
+     font-family: "Space Grotesk", "DM Sans", sans-serif;
+}
+
+.hiw-page h1 span,
+.hiw-page h2 span:not(.hiw-eyebrow):not(.hiw-step__number):not(.hiw-step__icon) {
+     color: var(--hiw-cyan);
+}
+
+.hiw-btn {
+     display: inline-flex;
+     justify-content: center;
+     align-items: center;
+     gap: 13px;
+     min-height: 48px;
+     padding: 12px 22px;
+     color: #fff;
+     font-size: 13px;
+     font-weight: 750;
+     border-radius: 40px;
+     border: 1px solid transparent;
+     transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+}
+
+.hiw-btn:hover {
+     transform: translateY(-3px);
+}
+
+.hiw-btn--primary {
+     background: linear-gradient(105deg, #006df5, #00c7fb);
+     box-shadow: 0 8px 24px rgba(0, 140, 255, .24);
+}
+
+.hiw-btn--primary:hover {
+     box-shadow: 0 9px 27px rgba(0, 170, 255, .4);
+}
+
+.hiw-btn--outline {
+     background: rgba(1, 14, 27, .7);
+     border-color: rgba(0, 190, 255, .7);
+}
+
+.hiw-btn--outline:hover {
+     background: rgba(0, 137, 255, .16);
+}
+
+.hiw-btn--white {
+     background: #fff;
+     color: #05234b;
+     font-weight: 800;
+}
+
+/* HERO */
+.hiw-hero {
+     position: relative;
+     min-height: 490px;
+     display: flex;
+     align-items: center;
+     background: #04101f;
+     isolation: isolate;
+}
+
+.hiw-hero__photo {
+     position: absolute;
+     inset: 0 0 0 41%;
+     z-index: -2;
+}
+
+.hiw-hero__photo img {
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+     object-position: center 43%;
+}
+
+.hiw-hero__shade {
+     position: absolute;
+     inset: 0;
+     z-index: -1;
+     background:
+          linear-gradient(90deg, #020b15 0%, rgba(2, 11, 21, .97) 22%, rgba(2, 11, 21, .76) 46%, rgba(2, 11, 21, .19) 82%),
+          linear-gradient(0deg, #020b15 0%, transparent 33%);
+}
+
+.hiw-hero__layout {
+     padding: 85px 0 56px;
+}
+
+.hiw-hero__copy {
+     max-width: 680px;
+}
+
+.hiw-hero h1 {
+     font-size: clamp(42px, 4.9vw, 77px);
+     font-weight: 850;
+     line-height: 1.02;
+     letter-spacing: -.055em;
+     margin: 21px 0;
+}
+
+.hiw-hero__copy>p {
+     max-width: 570px;
+     font-size: 15px;
+     line-height: 1.8;
+     color: #d0dfef;
+     margin-bottom: 25px;
+}
+
+.hiw-hero__actions {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 13px;
+     margin-bottom: 38px;
+}
+
+.hiw-hero__highlights {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 17px 23px;
+}
+
+.hiw-highlight {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+}
+
+.hiw-highlight>svg {
+     color: var(--hiw-cyan);
+     flex-shrink: 0;
+}
+
+.hiw-highlight span {
+     display: flex;
+     flex-direction: column;
+     gap: 4px;
+}
+
+.hiw-highlight strong {
+     font-size: 11px;
+     color: white;
+}
+
+.hiw-highlight small {
+     font-size: 10px;
+     color: #bad1e9;
+}
+
+/* COMMON SECTION HEADINGS */
+.hiw-section-heading {
+     margin-bottom: 34px;
+}
+
+.hiw-section-heading--center {
+     text-align: center;
+}
+
+.hiw-section-heading h2 {
+     font-size: clamp(29px, 3vw, 43px);
+     letter-spacing: -.04em;
+     margin: 14px 0 9px;
+}
+
+.hiw-section-heading p {
+     color: var(--hiw-muted);
+     font-size: 13px;
+     margin: 0;
+}
+
+/* FOUR STEPS */
+.hiw-steps-section {
+     padding: 58px 0 76px;
+     position: relative;
+}
+
+.hiw-steps-grid {
+     display: grid;
+     grid-template-columns: repeat(4, minmax(0, 1fr));
+     gap: 25px;
+}
+
+.hiw-step {
+     min-width: 0;
+     position: relative;
+}
+
+.hiw-step:not(:last-child)::after {
+     content: "→";
+     position: absolute;
+     top: 93px;
+     right: -20px;
+     color: #00b6ef;
+     font-size: 25px;
+     z-index: 2;
+}
+
+.hiw-step__media {
+     height: clamp(172px, 15vw, 230px);
+     position: relative;
+     margin-bottom: 23px;
+     border: 1px solid rgba(0, 167, 255, .35);
+     border-radius: 17px;
+     overflow: visible;
+}
+
+.hiw-step__media img {
+     display: block;
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+     border-radius: 16px;
+}
+
+.hiw-step__media::after {
+     content: "";
+     position: absolute;
+     inset: 0;
+     border-radius: 16px;
+     background: linear-gradient(0deg, rgba(1, 12, 24, .26), transparent 70%);
+     pointer-events: none;
+}
+
+.hiw-step__number {
+     position: absolute;
+     top: -15px;
+     left: -12px;
+     z-index: 2;
+     width: 46px;
+     height: 46px;
+     display: grid;
+     place-items: center;
+     border-radius: 50%;
+     font-size: 16px;
+     font-weight: 800;
+     background: linear-gradient(130deg, #0275ff, #00bfff);
+     box-shadow: 0 7px 23px rgba(0, 130, 255, .3);
+}
+
+.hiw-step__icon {
+     position: absolute;
+     bottom: 12px;
+     right: 12px;
+     z-index: 2;
+     display: grid;
+     place-items: center;
+     width: 39px;
+     height: 39px;
+     border-radius: 11px;
+     color: white;
+     background: rgba(0, 126, 220, .86);
+     backdrop-filter: blur(10px);
+}
+
+.hiw-step h3 {
+     margin: 0 0 10px;
+     font-size: 18px;
+     font-weight: 800;
+     color: #40d0ff;
+}
+
+.hiw-step>p {
+     color: #d1e0f0;
+     font-size: 13px;
+     line-height: 1.75;
+}
+
+/* WHY CHOOSE */
+.hiw-why-section {
+     padding: 6px 0 58px;
+}
+
+.hiw-why {
+     display: grid;
+     grid-template-columns: 41% 59%;
+     border: 1px solid rgba(0, 144, 255, .34);
+     border-radius: 19px;
+     overflow: hidden;
+     background: linear-gradient(125deg, #041324, #051b30);
+}
+
+.hiw-why__photo {
+     min-height: 310px;
+     position: relative;
+}
+
+.hiw-why__photo::after {
+     content: "";
+     position: absolute;
+     inset: 0;
+     background: linear-gradient(90deg, transparent 70%, #051b30 100%);
+}
+
+.hiw-why__photo img {
+     display: block;
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+}
+
+.hiw-why__body {
+     padding: clamp(25px, 3vw, 48px);
+}
+
+.hiw-why h2 {
+     font-size: clamp(27px, 2.8vw, 42px);
+     line-height: 1.1;
+     letter-spacing: -.04em;
+     margin: 14px 0 26px;
+}
+
+.hiw-benefits-grid {
+     display: grid;
+     grid-template-columns: repeat(2, minmax(0, 1fr));
+     gap: 24px 21px;
+}
+
+.hiw-benefit {
+     display: flex;
+     gap: 12px;
+     align-items: flex-start;
+}
+
+.hiw-benefit__icon {
+     display: grid;
+     place-items: center;
+     width: 43px;
+     height: 43px;
+     flex-shrink: 0;
+     border-radius: 50%;
+     color: #03bfff;
+     background: rgba(0, 120, 255, .15);
+     border: 1px solid rgba(0, 144, 255, .3);
+}
+
+.hiw-benefit h3 {
+     font-size: 14px;
+     color: #fff;
+     margin: 2px 0 6px;
+}
+
+.hiw-benefit p {
+     color: #aabfd3;
+     font-size: 11px;
+     line-height: 1.65;
+     margin: 0;
+}
+
+/* MEMBERSHIP BANNER */
+.hiw-membership-section {
+     padding: 0 0 65px;
+}
+
+.hiw-membership {
+     position: relative;
+     display: flex;
+     align-items: center;
+     min-height: 292px;
+     padding: 34px 44px;
+     border: 1px solid rgba(0, 150, 255, .35);
+     border-radius: 19px;
+     background: radial-gradient(circle at 74% 20%, rgba(0, 123, 255, .27), transparent 38%), linear-gradient(125deg, #061c33 0%, #020b15 84%);
+     overflow: hidden;
+}
+
+.hiw-membership__copy {
+     position: relative;
+     z-index: 2;
+     width: min(62%, 610px);
+}
+
+.hiw-membership h2 {
+     font-size: clamp(29px, 3vw, 43px);
+     line-height: 1.14;
+     letter-spacing: -.04em;
+     margin: 12px 0;
+}
+
+.hiw-membership__copy p {
+     color: #c2d4e5;
+     line-height: 1.7;
+     max-width: 560px;
+     font-size: 12px;
+}
+
+.hiw-membership__pricing {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 10px;
+     margin: 18px 0 20px;
+}
+
+.hiw-membership__pricing>span {
+     display: inline-flex;
+     align-items: center;
+     gap: 9px;
+     font-size: 11px;
+     border-radius: 8px;
+     border: 1px solid rgba(0, 176, 255, .23);
+     background: rgba(1, 16, 30, .72);
+     padding: 9px 12px;
+}
+
+.hiw-membership__pricing strong {
+     font-size: 17px;
+     color: #42d6ff;
+}
+
+.hiw-membership__visual {
+     position: absolute;
+     inset: 0 0 0 60%;
+     display: grid;
+     place-items: center;
+     perspective: 900px;
+}
+
+.hiw-membership__shine {
+     position: absolute;
+     width: 310px;
+     height: 310px;
+     border-radius: 50%;
+     border: 2px solid rgba(0, 185, 255, .27);
+     box-shadow: 0 0 80px rgba(0, 128, 255, .17);
+     transform: rotate(-30deg) scaleY(.42);
+}
+
+.hiw-membership__card {
+     width: min(80%, 330px);
+     aspect-ratio: 1.55;
+     padding: 24px;
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+     border: 1px solid #197dbd;
+     border-radius: 18px;
+     background: linear-gradient(140deg, #123e69, #031423 65%, #02101e);
+     transform: rotate(-9deg) rotateY(-13deg);
+     box-shadow: -16px 19px 40px rgba(0, 0, 0, .5), inset 0 0 20px rgba(0, 162, 255, .09);
+}
+
+.hiw-membership__card-top {
+     display: flex;
+     align-items: center;
+     gap: 9px;
+     font-size: 23px;
+     font-weight: 900;
+     color: #fff;
+}
+
+.hiw-membership__card-top svg {
+     color: #12c9ff;
+}
+
+.hiw-membership__card>strong {
+     font-size: 12px;
+     letter-spacing: 3px;
+     color: #52d6ff;
+}
+
+.hiw-membership__card-bottom {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     color: #adcadd;
+     font-size: 10px;
+     letter-spacing: 2px;
+}
+
+.hiw-membership__card-bottom svg {
+     color: #0cc6ff;
+}
+
+.hiw-membership__orb {
+     position: absolute;
+     right: 13%;
+     bottom: 16%;
+     display: grid;
+     place-items: center;
+     width: 63px;
+     height: 63px;
+     border-radius: 50%;
+     background: #008dff;
+     color: #fff;
+     box-shadow: 0 0 30px rgba(0, 151, 255, .65);
+}
+
+/* FAQ */
+.hiw-faq-section {
+     padding-bottom: 57px;
+}
+
+.hiw-faq-grid {
+     display: grid;
+     grid-template-columns: repeat(2, minmax(0, 1fr));
+     gap: 12px 17px;
+}
+
+.hiw-faq {
+     border: 1px solid rgba(0, 138, 255, .28);
+     border-radius: 11px;
+     background: #041526;
+     align-self: start;
+}
+
+.hiw-faq summary {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     gap: 15px;
+     cursor: pointer;
+     list-style: none;
+     padding: 17px 20px;
+     color: #ecf6ff;
+     font-size: 13px;
+     font-weight: 650;
+}
+
+.hiw-faq summary::-webkit-details-marker {
+     display: none;
+}
+
+.hiw-faq summary svg {
+     flex-shrink: 0;
+     color: #04c3ff;
+     transition: transform .25s ease;
+}
+
+.hiw-faq[open] summary svg {
+     transform: rotate(180deg);
+}
+
+.hiw-faq[open] {
+     border-color: rgba(0, 191, 255, .63);
+     background: #061c30;
+}
+
+.hiw-faq p {
+     margin: 0;
+     padding: 0 20px 19px;
+     color: #afc3d7;
+     font-size: 12px;
+     line-height: 1.8;
+}
+
+/* CTA */
+.hiw-cta-section {
+     padding-bottom: 66px;
+}
+
+.hiw-cta {
+     display: flex;
+     gap: 21px;
+     align-items: center;
+     min-height: 119px;
+     padding: 24px 32px;
+     border-radius: 16px;
+     background: linear-gradient(105deg, #0052c7, #008fff 62%, #0064e7);
+}
+
+.hiw-cta__icon {
+     display: grid;
+     place-items: center;
+     width: 55px;
+     height: 55px;
+     flex-shrink: 0;
+     background: rgba(255, 255, 255, .13);
+     border-radius: 50%;
+}
+
+.hiw-cta>div {
+     flex: 1;
+}
+
+.hiw-cta__kicker {
+     color: #d3efff;
+     font-size: 10px;
+     font-weight: 800;
+     letter-spacing: 1px;
+}
+
+.hiw-cta h2 {
+     font-size: clamp(18px, 2vw, 28px);
+     margin: 6px 0 4px;
+}
+
+.hiw-cta p {
+     color: #e0f2ff;
+     font-size: 12px;
+     margin: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+     .hiw-hero__photo {
+          left: 38%;
+     }
+
+     .hiw-steps-grid {
+          gap: 16px;
+     }
+
+     .hiw-step:not(:last-child)::after {
+          right: -15px;
+     }
+
+     .hiw-step h3 {
+          font-size: 16px;
+     }
+
+     .hiw-why {
+          grid-template-columns: 37% 63%;
+     }
+}
+
+@media (max-width: 950px) {
+     .hiw-hero__highlights {
+          max-width: 600px;
+     }
+
+     .hiw-steps-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 35px 23px;
+     }
+
+     .hiw-step:not(:last-child)::after {
+          display: none;
+     }
+
+     .hiw-step__media {
+          height: 235px;
+     }
+
+     .hiw-why {
+          grid-template-columns: 1fr;
+     }
+
+     .hiw-why__photo {
+          height: 275px;
+          min-height: 0;
+     }
+
+     .hiw-why__photo::after {
+          background: linear-gradient(0deg, #051b30, transparent 45%);
+     }
+
+     .hiw-membership__copy {
+          width: 63%;
+     }
+}
+
+@media (max-width: 640px) {
+     .hiw-container {
+          width: 91%;
+     }
+
+     .hiw-hero {
+          align-items: flex-end;
+          min-height: 680px;
+     }
+
+     .hiw-hero__photo {
+          inset: 0 0 auto;
+          height: 340px;
+     }
+
+     .hiw-hero__photo img {
+          object-position: 52% center;
+     }
+
+     .hiw-hero__shade {
+          background: linear-gradient(180deg, rgba(2, 11, 21, .04) 0%, rgba(2, 11, 21, .25) 160px, #020b15 360px);
+     }
+
+     .hiw-hero__layout {
+          padding: 285px 0 42px;
+     }
+
+     .hiw-hero h1 {
+          font-size: clamp(37px, 9vw, 53px);
+          margin: 15px 0;
+     }
+
+     .hiw-hero__copy>p {
+          font-size: 13px;
+          line-height: 1.7;
+     }
+
+     .hiw-hero__actions {
+          gap: 9px;
+          margin-bottom: 27px;
+     }
+
+     .hiw-btn {
+          min-height: 44px;
+          font-size: 11px;
+          padding: 10px 15px;
+          gap: 7px;
+     }
+
+     .hiw-hero__highlights {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 17px 12px;
+     }
+
+     .hiw-highlight>svg {
+          width: 21px;
+     }
+
+     .hiw-highlight strong {
+          font-size: 10px;
+     }
+
+     .hiw-highlight small {
+          font-size: 9px;
+     }
+
+     .hiw-steps-section {
+          padding: 50px 0;
+     }
+
+     .hiw-section-heading {
+          margin-bottom: 31px;
+     }
+
+     .hiw-section-heading h2 {
+          font-size: 30px;
+     }
+
+     .hiw-step__media {
+          height: 175px;
+     }
+
+     .hiw-step h3 {
+          font-size: 15px;
+     }
+
+     .hiw-step>p {
+          font-size: 11px;
+     }
+
+     .hiw-step__number {
+          width: 38px;
+          height: 38px;
+          top: -12px;
+          left: -7px;
+          font-size: 13px;
+     }
+
+     .hiw-step__icon {
+          width: 32px;
+          height: 32px;
+     }
+
+     .hiw-why-section {
+          padding-bottom: 45px;
+     }
+
+     .hiw-why__body {
+          padding: 24px 20px;
+     }
+
+     .hiw-why h2 {
+          font-size: 29px;
+     }
+
+     .hiw-benefits-grid {
+          gap: 21px 12px;
+     }
+
+     .hiw-benefit {
+          gap: 8px;
+     }
+
+     .hiw-benefit__icon {
+          width: 36px;
+          height: 36px;
+     }
+
+     .hiw-benefit__icon svg {
+          width: 20px;
+     }
+
+     .hiw-benefit h3 {
+          font-size: 12px;
+     }
+
+     .hiw-benefit p {
+          font-size: 10px;
+     }
+
+     .hiw-membership-section {
+          padding-bottom: 53px;
+     }
+
+     .hiw-membership {
+          padding: 27px 20px 210px;
+     }
+
+     .hiw-membership__copy {
+          width: 100%;
+     }
+
+     .hiw-membership h2 {
+          font-size: 29px;
+     }
+
+     .hiw-membership__visual {
+          inset: auto 0 5px;
+          height: 194px;
+     }
+
+     .hiw-membership__card {
+          width: 235px;
+          padding: 18px;
+     }
+
+     .hiw-membership__card-top {
+          font-size: 18px;
+     }
+
+     .hiw-membership__orb {
+          right: 13%;
+          width: 49px;
+          height: 49px;
+     }
+
+     .hiw-faq-grid {
+          grid-template-columns: 1fr;
+     }
+
+     .hiw-faq summary {
+          font-size: 12px;
+          padding: 15px;
+     }
+
+     .hiw-faq p {
+          padding: 0 15px 15px;
+          font-size: 11px;
+     }
+
+     .hiw-cta-section {
+          padding-bottom: 48px;
+     }
+
+     .hiw-cta {
+          flex-wrap: wrap;
+          gap: 12px;
+          padding: 21px;
+     }
+
+     .hiw-cta__icon {
+          width: 42px;
+          height: 42px;
+     }
+
+     .hiw-cta h2 {
+          font-size: 19px;
+     }
+
+     .hiw-cta .hiw-btn {
+          width: 100%;
+     }
+}
+
+@media (max-width: 380px) {
+     .hiw-steps-grid {
+          gap: 28px 12px;
+     }
+
+     .hiw-step__media {
+          height: 140px;
+     }
+
+     .hiw-step h3 {
+          font-size: 13px;
+     }
+
+     .hiw-highlight {
+          gap: 6px;
+     }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+     .hiw-page *,
+     .hiw-page *::before,
+     .hiw-page *::after {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+     }
+}

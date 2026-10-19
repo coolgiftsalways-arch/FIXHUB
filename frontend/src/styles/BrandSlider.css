@@ -1,0 +1,295 @@
+/* ===============================================
+   FIXHUB — PREMIUM BRAND SLIDER
+=============================================== */
+
+.fh-brands {
+     --brand-card-width: 138px;
+     --brand-gap: 14px;
+
+     position: relative;
+     z-index: 8;
+
+     width: 100%;
+
+     flex: 0 0 auto;
+     margin-top: auto;
+
+     padding: 14px 0;
+
+     background: rgba(3, 13, 27, 0.97);
+
+     border-top: 1px solid rgba(36, 172, 255, 0.2);
+     border-bottom: 1px solid rgba(36, 172, 255, 0.18);
+
+     box-shadow: 0 -18px 38px rgba(0, 0, 0, 0.14);
+
+     overflow: hidden;
+}
+
+/* ===============================================
+   EDGE FADES
+=============================================== */
+
+.fh-brands::before,
+.fh-brands::after {
+     content: "";
+
+     position: absolute;
+
+     z-index: 2;
+     top: 0;
+     bottom: 0;
+
+     width: min(7vw, 100px);
+
+     pointer-events: none;
+}
+
+.fh-brands::before {
+     left: 0;
+
+     background: linear-gradient(90deg,
+               #030d1b,
+               transparent);
+}
+
+.fh-brands::after {
+     right: 0;
+
+     background: linear-gradient(270deg,
+               #030d1b,
+               transparent);
+}
+
+/* ===============================================
+   SLIDER CONTAINER
+=============================================== */
+
+.fh-brands__viewport {
+     width: 100%;
+     overflow: hidden;
+}
+
+/* ===============================================
+   ANIMATED TRACK
+=============================================== */
+
+.fh-brands__track {
+     display: flex;
+
+     width: max-content;
+
+     animation: fh-brands-scroll 52s linear infinite;
+
+     will-change: transform;
+}
+
+/* ===============================================
+   SLIDER GROUP
+=============================================== */
+
+.fh-brands__group {
+     display: flex;
+     flex: 0 0 auto;
+
+     align-items: center;
+
+     gap: var(--brand-gap);
+     padding-right: var(--brand-gap);
+}
+
+/* ===============================================
+   INFINITE SLIDING ANIMATION
+=============================================== */
+
+@keyframes fh-brands-scroll {
+     from {
+          transform: translate3d(0, 0, 0);
+     }
+
+     to {
+          transform: translate3d(-50%, 0, 0);
+     }
+}
+
+/* ===============================================
+   PAUSE ON HOVER
+=============================================== */
+
+.fh-brands:hover .fh-brands__track,
+.fh-brands:focus-within .fh-brands__track,
+.fh-brands:active .fh-brands__track {
+     animation-play-state: paused;
+}
+
+/* ===============================================
+   PREMIUM BRAND CARD
+=============================================== */
+
+.fh-brands__card {
+     display: flex;
+
+     flex: 0 0 var(--brand-card-width);
+
+     flex-direction: row;
+     align-items: center;
+     justify-content: center;
+
+     gap: 11px;
+
+     width: var(--brand-card-width);
+     min-height: 64px;
+
+     padding: 10px 13px;
+
+     background: rgba(255, 255, 255, 0.035);
+
+     border: 1px solid rgba(255, 255, 255, 0.09);
+     border-radius: 14px;
+
+     color: #eaf3ff;
+
+     text-decoration: none;
+
+     transition:
+          border-color 0.25s ease,
+          background 0.25s ease,
+          box-shadow 0.25s ease;
+}
+
+/* ===============================================
+   BRAND HOVER EFFECT
+=============================================== */
+
+.fh-brands__card:hover,
+.fh-brands__card:focus-visible {
+     background: color-mix(in srgb,
+               var(--brand-accent) 8%,
+               #081729);
+
+     border-color: color-mix(in srgb,
+               var(--brand-accent) 55%,
+               transparent);
+
+     box-shadow: 0 0 22px color-mix(in srgb,
+               var(--brand-accent) 12%,
+               transparent);
+}
+
+.fh-brands__card:focus-visible {
+     outline: 2px solid #45d2ff;
+     outline-offset: -2px;
+}
+
+/* ===============================================
+   REAL SVG LOGOS
+=============================================== */
+
+.fh-brands__logo {
+     display: grid;
+
+     flex: 0 0 35px;
+
+     place-items: center;
+
+     width: 35px;
+     height: 35px;
+
+     color: var(--brand-accent);
+}
+
+.fh-brands__logo img {
+     display: block;
+
+     width: 35px;
+     height: 35px;
+
+     object-fit: contain;
+}
+
+/* ===============================================
+   SVG FALLBACK
+=============================================== */
+
+.fh-brands__fallback {
+     width: 100%;
+     height: 100%;
+
+     overflow: visible;
+}
+
+/* ===============================================
+   BRAND NAME
+=============================================== */
+
+.fh-brands__name {
+     font-size: 12px;
+     line-height: 1.2;
+
+     font-weight: 750;
+     letter-spacing: -0.025em;
+
+     white-space: nowrap;
+}
+
+/* ===============================================
+   MOBILE RESPONSIVE
+=============================================== */
+
+@media (max-width: 768px) {
+     .fh-brands {
+          --brand-card-width: 122px;
+          --brand-gap: 9px;
+
+          padding: 10px 0;
+     }
+
+     .fh-brands__track {
+          animation-duration: 43s;
+     }
+
+     .fh-brands__card {
+          min-height: 56px;
+
+          padding: 8px;
+          gap: 7px;
+
+          border-radius: 12px;
+     }
+
+     .fh-brands__logo,
+     .fh-brands__logo img {
+          width: 30px;
+          height: 30px;
+     }
+
+     .fh-brands__logo {
+          flex-basis: 30px;
+     }
+
+     .fh-brands__name {
+          font-size: 11px;
+     }
+}
+
+/* ===============================================
+   ACCESSIBILITY
+=============================================== */
+
+@media (prefers-reduced-motion: reduce) {
+     .fh-brands__viewport {
+          overflow-x: auto;
+
+          -webkit-overflow-scrolling: touch;
+
+          scrollbar-width: thin;
+     }
+
+     .fh-brands__track {
+          animation: none !important;
+     }
+
+     .fh-brands__group[aria-hidden="true"] {
+          display: none;
+     }
+}

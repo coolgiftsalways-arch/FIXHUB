@@ -1,0 +1,124 @@
+/* ==========================================
+   FIXHUB NAVBAR AUTH STYLES
+========================================== */
+
+.fh-navbar__user-actions {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+}
+
+.fh-navbar__account-btn {
+     max-width: 150px;
+}
+
+.fh-navbar__account-btn span {
+     max-width: 90px;
+
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+}
+
+.fh-navbar__logout-btn {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+
+     gap: 8px;
+
+     height: 43px;
+     padding: 0 14px;
+
+     border: 1px solid rgba(0, 190, 255, 0.38);
+     border-radius: 999px;
+
+     background: rgba(0, 140, 255, 0.07);
+
+     color: #e8f5ff;
+
+     cursor: pointer;
+
+     font-family: inherit;
+     font-size: 13px;
+     font-weight: 600;
+}
+
+.fh-navbar__logout-btn:hover {
+     border-color: #00d4ff;
+     background: rgba(0, 140, 255, 0.18);
+}
+
+.fh-navbar__logout-btn:disabled {
+     opacity: 0.55;
+     cursor: wait;
+}
+
+.fh-navbar__auth-wait {
+     color: #9cb6ca;
+     font-size: 12px;
+}
+
+.fh-navbar__auth-error {
+     position: absolute;
+     right: 24px;
+     top: 100%;
+
+     padding: 9px 14px;
+
+     background: #401522;
+     border: 1px solid #ec6077;
+
+     color: #fff;
+     font-size: 12px;
+
+     border-radius: 10px;
+}
+
+.fh-navbar__mobile-profile,
+.fh-navbar__mobile-logout {
+     display: none;
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 900px) {
+     .fh-navbar__logout-btn {
+          display: none;
+     }
+
+     .fh-navbar__account-btn {
+          padding: 10px 13px;
+     }
+
+     .fh-navbar__mobile-profile {
+          display: flex;
+     }
+
+     .fh-navbar__mobile-logout {
+          display: flex;
+          width: 100%;
+
+          align-items: center;
+          gap: 12px;
+
+          padding: 14px 18px;
+
+          border: 1px solid rgba(0, 180, 255, 0.35);
+          border-radius: 12px;
+
+          background: rgba(0, 130, 255, 0.1);
+
+          color: #fff;
+          cursor: pointer;
+          font-size: 14px;
+     }
+}
+
+@media (max-width: 450px) {
+     .fh-navbar__account-btn span {
+          max-width: 57px;
+     }
+}

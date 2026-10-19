@@ -1,0 +1,854 @@
+/* =====================================================
+   FIXHUB ADMIN SIDEBAR
+   LIGHT + DARK THEME
+===================================================== */
+
+/* =====================================================
+   DEFAULT DARK THEME
+===================================================== */
+
+.fh-admin-shell {
+     --fh-admin-bg: #07101b;
+     --fh-admin-sidebar-bg: #0d1723;
+     --fh-admin-card: #142130;
+     --fh-admin-text: #f4f8ff;
+     --fh-admin-muted: #8d9dad;
+     --fh-admin-border: #203144;
+
+     --fh-admin-blue: #008cff;
+     --fh-admin-blue-light: #00b9ff;
+
+     --fh-admin-hover: #172b42;
+     --fh-admin-active: #102b4e;
+
+     background: var(--fh-admin-bg);
+     color: var(--fh-admin-text);
+
+     min-height: 100vh;
+
+     display: flex;
+}
+
+/* =====================================================
+   LIGHT THEME
+===================================================== */
+
+html[data-fixhub-admin-theme="light"] .fh-admin-shell {
+     --fh-admin-bg: #f3f7fc;
+     --fh-admin-sidebar-bg: #ffffff;
+     --fh-admin-card: #f1f5fb;
+     --fh-admin-text: #121923;
+     --fh-admin-muted: #798696;
+     --fh-admin-border: #e4eaf2;
+
+     --fh-admin-hover: #f1f6ff;
+     --fh-admin-active: #e7f1ff;
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.fh-admin-sidebar {
+     width: 274px;
+     min-width: 274px;
+
+     height: 100vh;
+     height: 100dvh;
+
+     position: sticky;
+     top: 0;
+
+     display: flex;
+     flex-direction: column;
+
+     overflow-y: auto;
+     overflow-x: hidden;
+
+     padding: 23px 15px 17px;
+
+     background: var(--fh-admin-sidebar-bg);
+
+     border-right: 1px solid var(--fh-admin-border);
+
+     scrollbar-width: thin;
+
+     scrollbar-color:
+          var(--fh-admin-border) transparent;
+
+     z-index: 1000;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.fh-admin-sidebar-header {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+
+     padding: 4px 11px 23px;
+}
+
+/* =====================================================
+   BRAND
+===================================================== */
+
+.fh-admin-brand {
+     display: flex;
+     align-items: center;
+
+     gap: 11px;
+}
+
+.fh-admin-brand-icon {
+     width: 31px;
+     height: 34px;
+
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+
+     gap: 4px;
+}
+
+.fh-admin-brand-icon span {
+     display: block;
+
+     height: 7px;
+
+     background: linear-gradient(100deg,
+               #006dff,
+               #00c4ff);
+
+     border-radius: 3px 8px 3px 8px;
+
+     transform: skewX(-25deg);
+}
+
+.fh-admin-brand-icon span:nth-child(1) {
+     width: 30px;
+}
+
+.fh-admin-brand-icon span:nth-child(2) {
+     width: 23px;
+}
+
+.fh-admin-brand-icon span:nth-child(3) {
+     width: 16px;
+}
+
+.fh-admin-brand-text h2 {
+     margin: 0;
+
+     font-size: 25px;
+     font-weight: 850;
+
+     letter-spacing: -1.5px;
+     line-height: 1;
+}
+
+.fh-admin-brand-text h2 span {
+     color: #008cff;
+}
+
+.fh-admin-brand-text p {
+     margin: 5px 0 0;
+
+     font-size: 7px;
+     font-weight: 700;
+
+     letter-spacing: 1.5px;
+
+     color: var(--fh-admin-muted);
+}
+
+/* =====================================================
+   ADMIN PROFILE
+===================================================== */
+
+.fh-admin-profile {
+     display: flex;
+     align-items: center;
+
+     gap: 11px;
+
+     padding: 13px;
+
+     margin: 5px 2px 21px;
+
+     border: 1px solid var(--fh-admin-border);
+     border-radius: 14px;
+
+     background: var(--fh-admin-card);
+}
+
+.fh-admin-profile-avatar {
+     width: 42px;
+     height: 42px;
+
+     flex-shrink: 0;
+
+     display: flex;
+     align-items: center;
+     justify-content: center;
+
+     border-radius: 50%;
+
+     background: linear-gradient(135deg,
+               #007aff,
+               #00c8ff);
+
+     color: white;
+
+     font-size: 19px;
+     font-weight: 800;
+}
+
+.fh-admin-profile-info {
+     flex: 1;
+     min-width: 0;
+}
+
+.fh-admin-profile-info h3 {
+     margin: 0 0 4px;
+
+     color: var(--fh-admin-text);
+
+     font-size: 13px;
+     font-weight: 750;
+}
+
+.fh-admin-profile-info p {
+     margin: 0;
+
+     font-size: 10px;
+     color: var(--fh-admin-muted);
+
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+}
+
+.fh-admin-profile-verified {
+     color: #008cff;
+     flex-shrink: 0;
+}
+
+/* =====================================================
+   MENU HEADING
+===================================================== */
+
+.fh-admin-menu-heading {
+     padding: 0 14px;
+
+     margin-bottom: 13px;
+
+     color: var(--fh-admin-muted);
+
+     font-size: 10px;
+     font-weight: 700;
+
+     letter-spacing: 1.7px;
+}
+
+/* =====================================================
+   MENU
+===================================================== */
+
+.fh-admin-nav {
+     display: flex;
+     flex-direction: column;
+
+     gap: 4px;
+}
+
+.fh-admin-nav-item {
+     position: relative;
+
+     display: flex;
+     align-items: center;
+
+     gap: 13px;
+
+     min-height: 46px;
+
+     padding: 0 13px;
+
+     border-radius: 11px;
+
+     color: var(--fh-admin-muted);
+
+     text-decoration: none;
+
+     font-size: 13px;
+     font-weight: 550;
+
+     transition:
+          background 0.22s ease,
+          color 0.22s ease;
+}
+
+.fh-admin-nav-item:hover {
+     background: var(--fh-admin-hover);
+     color: var(--fh-admin-text);
+}
+
+/* =====================================================
+   ACTIVE MENU
+===================================================== */
+
+.fh-admin-nav-item-active {
+     background: var(--fh-admin-active) !important;
+
+     color: var(--fh-admin-blue) !important;
+
+     font-weight: 750;
+}
+
+.fh-admin-nav-item-active::before {
+     content: "";
+
+     position: absolute;
+     left: 0;
+
+     width: 3px;
+     height: 24px;
+
+     border-radius: 0 4px 4px 0;
+
+     background: #008cff;
+}
+
+/* =====================================================
+   NAVIGATION ICON
+===================================================== */
+
+.fh-admin-nav-item-icon {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+
+     width: 21px;
+     height: 21px;
+
+     flex-shrink: 0;
+}
+
+.fh-admin-nav-item-active .fh-admin-nav-item-icon {
+     color: #008cff;
+}
+
+.fh-admin-nav-item-label {
+     flex: 1;
+     min-width: 0;
+
+     overflow: hidden;
+     text-overflow: ellipsis;
+
+     white-space: nowrap;
+}
+
+.fh-admin-nav-arrow {
+     opacity: 0;
+
+     transition: opacity 0.2s ease;
+}
+
+.fh-admin-nav-item:hover .fh-admin-nav-arrow {
+     opacity: 0.65;
+}
+
+/* =====================================================
+   NOTIFICATION BADGE
+===================================================== */
+
+.fh-admin-notification-badge {
+     min-width: 21px;
+     height: 21px;
+
+     padding: 0 5px;
+
+     display: flex;
+     align-items: center;
+     justify-content: center;
+
+     border-radius: 50px;
+
+     background: #ff3b45;
+     color: #ffffff;
+
+     font-size: 10px;
+     font-weight: 800;
+}
+
+/* =====================================================
+   SIDEBAR FOOTER
+===================================================== */
+
+.fh-admin-sidebar-footer {
+     margin-top: auto;
+     padding-top: 30px;
+}
+
+/* =====================================================
+   THEME CARD
+===================================================== */
+
+.fh-admin-theme-card {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+
+     gap: 10px;
+
+     padding: 13px 10px;
+
+     background: var(--fh-admin-card);
+
+     border: 1px solid var(--fh-admin-border);
+     border-radius: 13px;
+
+     margin-bottom: 14px;
+}
+
+.fh-admin-theme-info {
+     display: flex;
+     align-items: center;
+
+     gap: 10px;
+
+     min-width: 0;
+}
+
+.fh-admin-theme-icon {
+     width: 33px;
+     height: 33px;
+
+     flex-shrink: 0;
+
+     display: flex;
+     align-items: center;
+     justify-content: center;
+
+     color: #008cff;
+
+     background: var(--fh-admin-active);
+
+     border-radius: 9px;
+}
+
+.fh-admin-theme-text {
+     min-width: 0;
+}
+
+.fh-admin-theme-text h4 {
+     margin: 0 0 4px;
+
+     font-size: 12px;
+
+     color: var(--fh-admin-text);
+}
+
+.fh-admin-theme-text p {
+     margin: 0;
+
+     color: var(--fh-admin-muted);
+
+     font-size: 9px;
+}
+
+/* =====================================================
+   THEME SWITCH
+===================================================== */
+
+.fh-admin-theme-switch {
+     width: 43px;
+     height: 25px;
+
+     flex-shrink: 0;
+
+     position: relative;
+
+     border: none;
+     border-radius: 50px;
+
+     background: #a5b1bd;
+
+     cursor: pointer;
+
+     transition: background 0.25s ease;
+}
+
+.fh-admin-theme-switch-active {
+     background: #008cff;
+}
+
+.fh-admin-theme-switch-circle {
+     width: 19px;
+     height: 19px;
+
+     position: absolute;
+
+     top: 3px;
+     left: 3px;
+
+     border-radius: 50%;
+
+     background: #ffffff;
+
+     transition: transform 0.25s ease;
+}
+
+.fh-admin-theme-switch-active .fh-admin-theme-switch-circle {
+     transform: translateX(18px);
+}
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+.fh-admin-logout-btn {
+     display: flex;
+     align-items: center;
+
+     gap: 12px;
+
+     width: 100%;
+
+     padding: 14px;
+
+     background: transparent;
+     border: none;
+
+     border-radius: 10px;
+
+     color: #ff474f;
+
+     font-family: inherit;
+     font-size: 13px;
+     font-weight: 700;
+
+     cursor: pointer;
+
+     transition: background 0.2s ease;
+}
+
+.fh-admin-logout-btn:hover {
+     background: rgba(255, 65, 75, 0.09);
+}
+
+.fh-admin-logout-btn:disabled {
+     opacity: 0.5;
+     cursor: not-allowed;
+}
+
+/* =====================================================
+   COPYRIGHT
+===================================================== */
+
+.fh-admin-sidebar-bottom {
+     display: flex;
+     justify-content: space-between;
+
+     padding: 13px 10px 0;
+
+     margin-top: 10px;
+
+     border-top: 1px solid var(--fh-admin-border);
+
+     color: var(--fh-admin-muted);
+
+     font-size: 10px;
+}
+
+.fh-admin-sidebar-bottom p {
+     margin: 0;
+}
+
+/* =====================================================
+   MOBILE HEADER (HIDDEN ON DESKTOP)
+===================================================== */
+
+.fh-admin-mobile-header {
+     display: none;
+}
+
+.fh-admin-sidebar-close {
+     display: none;
+}
+
+.fh-admin-sidebar-overlay {
+     display: none;
+}
+
+/* =====================================================
+   MAIN CONTENT LAYOUT
+===================================================== */
+
+.fh-admin-main {
+     flex: 1;
+
+     min-width: 0;
+
+     padding: 28px;
+
+     background: var(--fh-admin-bg);
+
+     color: var(--fh-admin-text);
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 960px) {
+
+     .fh-admin-shell {
+          flex-direction: column;
+     }
+
+     /* MOBILE HEADER */
+
+     .fh-admin-mobile-header {
+          display: flex;
+
+          align-items: center;
+          justify-content: space-between;
+
+          gap: 12px;
+
+          width: 100%;
+          height: 69px;
+
+          padding: 0 17px;
+
+          background: var(--fh-admin-sidebar-bg);
+
+          border-bottom: 1px solid var(--fh-admin-border);
+
+          position: sticky;
+          top: 0;
+
+          z-index: 950;
+     }
+
+     /* HAMBURGER */
+
+     .fh-admin-mobile-menu-btn {
+          width: 38px;
+          height: 38px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          flex-shrink: 0;
+
+          background: transparent;
+
+          border: none;
+
+          color: var(--fh-admin-text);
+
+          cursor: pointer;
+     }
+
+     /* HEADER LOGO */
+
+     .fh-admin-mobile-header .fh-admin-brand {
+          gap: 7px;
+     }
+
+     .fh-admin-mobile-header .fh-admin-brand-text h2 {
+          font-size: 22px;
+     }
+
+     .fh-admin-mobile-header .fh-admin-brand-text p {
+          font-size: 6px;
+     }
+
+     .fh-admin-mobile-header .fh-admin-brand-icon {
+          width: 25px;
+     }
+
+     /* MOBILE RIGHT SIDE */
+
+     .fh-admin-mobile-header-right {
+          display: flex;
+          align-items: center;
+
+          gap: 8px;
+     }
+
+     .fh-admin-theme-icon-btn {
+          width: 36px;
+          height: 36px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          border: none;
+          border-radius: 50%;
+
+          color: var(--fh-admin-text);
+
+          background: var(--fh-admin-card);
+
+          cursor: pointer;
+     }
+
+     .fh-admin-mobile-avatar {
+          width: 34px;
+          height: 34px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 50%;
+
+          background: linear-gradient(135deg,
+                    #006bff,
+                    #00c3ff);
+
+          color: #fff;
+
+          font-size: 14px;
+          font-weight: 700;
+     }
+
+     /* OVERLAY */
+
+     .fh-admin-sidebar-overlay {
+          display: block;
+
+          position: fixed;
+          inset: 0;
+
+          width: 100%;
+          height: 100%;
+
+          padding: 0;
+
+          border: none;
+
+          background: rgba(0, 0, 0, 0.65);
+
+          backdrop-filter: blur(4px);
+
+          z-index: 990;
+
+          cursor: pointer;
+     }
+
+     /* SIDEBAR DRAWER */
+
+     .fh-admin-sidebar {
+          position: fixed;
+
+          top: 0;
+          left: 0;
+
+          width: min(330px, calc(100vw - 35px));
+          min-width: 0;
+
+          height: 100vh;
+          height: 100dvh;
+
+          padding: 24px 15px 17px;
+
+          transform: translateX(-110%);
+
+          transition: transform 0.3s ease;
+
+          z-index: 1000;
+
+          box-shadow:
+               15px 0 50px rgba(0, 0, 0, 0.25);
+     }
+
+     .fh-admin-sidebar-open {
+          transform: translateX(0);
+     }
+
+     /* CLOSE BUTTON */
+
+     .fh-admin-sidebar-close {
+          width: 35px;
+          height: 35px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          border: 1px solid var(--fh-admin-border);
+
+          border-radius: 9px;
+
+          background: var(--fh-admin-card);
+
+          color: var(--fh-admin-text);
+
+          cursor: pointer;
+     }
+
+     /* MENU */
+
+     .fh-admin-nav-item {
+          min-height: 48px;
+          font-size: 14px;
+     }
+
+     /* MAIN CONTENT */
+
+     .fh-admin-main {
+          width: 100%;
+
+          padding: 20px 14px 35px;
+     }
+}
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 390px) {
+
+     .fh-admin-mobile-header {
+          padding: 0 11px;
+     }
+
+     .fh-admin-mobile-header .fh-admin-brand-text h2 {
+          font-size: 20px;
+     }
+
+     .fh-admin-mobile-header .fh-admin-brand-icon {
+          display: none;
+     }
+
+     .fh-admin-main {
+          padding: 15px 11px 25px;
+     }
+}
+
+/* =====================================================
+   ACCESSIBILITY
+===================================================== */
+
+.fh-admin-sidebar a:focus-visible,
+.fh-admin-sidebar button:focus-visible,
+.fh-admin-mobile-header button:focus-visible {
+     outline: 2px solid #00bfff;
+     outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+     .fh-admin-sidebar,
+     .fh-admin-sidebar * {
+          transition: none !important;
+     }
+}

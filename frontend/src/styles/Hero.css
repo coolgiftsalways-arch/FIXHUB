@@ -1,0 +1,1557 @@
+/* ==========================================================
+   FIXHUB — PREMIUM AWWWARDS HERO
+   FULL RESPONSIVE DESIGN
+========================================================== */
+
+.fh-hero {
+     --fh-blue: #008cff;
+     --fh-cyan: #00d4ff;
+     --fh-dark: #050a12;
+     --fh-text: #ffffff;
+     --fh-muted: #c2d0e0;
+
+     --fh-navbar-height: 78px;
+
+     position: relative;
+
+     width: 100%;
+
+     min-height: calc(100svh - var(--fh-navbar-height));
+
+     display: flex;
+     flex-direction: column;
+
+     background: var(--fh-dark);
+
+     color: var(--fh-text);
+
+     overflow: hidden;
+     isolation: isolate;
+}
+
+.fh-hero,
+.fh-hero * {
+     box-sizing: border-box;
+}
+
+/* ==========================================================
+   BACKGROUND SCENE
+========================================================== */
+
+.fh-hero__scene {
+     position: absolute;
+
+     top: 0;
+     right: 0;
+
+     width: 76%;
+     height: 100%;
+
+     z-index: 0;
+
+     overflow: hidden;
+
+     pointer-events: none;
+}
+
+/* ==========================================================
+   TECHNICIAN
+========================================================== */
+
+.fh-hero__technician {
+     position: absolute;
+
+     inset: 0;
+
+     width: 100%;
+     height: 100%;
+}
+
+.fh-hero__technician-image {
+     display: block;
+
+     width: 100%;
+     height: 100%;
+
+     object-fit: cover;
+     object-position: 38% center;
+
+     filter:
+          brightness(0.82) contrast(1.08) saturate(1.02);
+
+     transform-origin: center;
+}
+
+/* ==========================================================
+   BACKGROUND DARK GRADIENT
+========================================================== */
+
+.fh-hero__shade {
+     position: absolute;
+
+     inset: 0;
+
+     z-index: 1;
+
+     pointer-events: none;
+
+     background:
+          linear-gradient(90deg,
+               #050a12 0%,
+               rgba(5, 10, 18, 0.99) 18%,
+               rgba(5, 10, 18, 0.92) 32%,
+               rgba(5, 10, 18, 0.6) 48%,
+               rgba(5, 10, 18, 0.13) 75%,
+               rgba(5, 10, 18, 0.12) 100%),
+          linear-gradient(0deg,
+               rgba(5, 10, 18, 0.8),
+               transparent 35%);
+}
+
+/* ==========================================================
+   BLUE GLOW IMAGE
+========================================================== */
+
+.fh-hero__blue-glow {
+     position: absolute;
+
+     inset: 0;
+
+     width: 100%;
+     height: 100%;
+
+     z-index: 2;
+
+     opacity: 0.45;
+
+     pointer-events: none;
+
+     mix-blend-mode: screen;
+}
+
+.fh-hero__blue-glow img {
+     width: 100%;
+     height: 100%;
+
+     display: block;
+
+     object-fit: cover;
+
+     -webkit-mask-image:
+          radial-gradient(ellipse,
+               black 20%,
+               transparent 80%);
+
+     mask-image:
+          radial-gradient(ellipse,
+               black 20%,
+               transparent 80%);
+}
+
+/* ==========================================================
+   HERO DECORATION
+========================================================== */
+
+.fh-hero__decoration {
+     position: absolute;
+
+     inset: 0;
+
+     width: 100%;
+     height: 100%;
+
+     z-index: 2;
+
+     opacity: 0.22;
+
+     pointer-events: none;
+
+     mix-blend-mode: screen;
+}
+
+.fh-hero__decoration img {
+     display: block;
+
+     width: 100%;
+     height: 100%;
+
+     object-fit: cover;
+}
+
+/* ==========================================================
+   BROKEN PHONE
+========================================================== */
+
+.fh-hero__broken-phone {
+     position: absolute;
+
+     top: 34%;
+     left: 56%;
+
+     width: clamp(130px, 14vw, 235px);
+
+     z-index: 3;
+
+     pointer-events: none;
+}
+
+.fh-hero__broken-phone-image {
+     display: block;
+
+     width: 100%;
+     height: auto;
+
+     object-fit: contain;
+
+     mix-blend-mode: screen;
+
+     filter:
+          drop-shadow(0 16px 35px rgba(0, 122, 255, 0.45));
+
+     -webkit-mask-image:
+          radial-gradient(ellipse at center,
+               black 40%,
+               transparent 85%);
+
+     mask-image:
+          radial-gradient(ellipse at center,
+               black 40%,
+               transparent 85%);
+
+     animation:
+          fh-phone-floating 4s ease-in-out infinite;
+}
+
+@keyframes fh-phone-floating {
+
+     0%,
+     100% {
+          transform:
+               translateY(0) rotate(-4deg);
+     }
+
+     50% {
+          transform:
+               translateY(-14px) rotate(1deg);
+     }
+}
+
+/* ==========================================================
+   MAIN HERO CONTAINER
+========================================================== */
+
+.fh-hero__container {
+     position: relative;
+
+     z-index: 4;
+
+     width: min(1440px, 92%);
+
+     margin: 0 auto;
+
+     flex: 1 0 auto;
+
+     display: flex;
+     align-items: center;
+
+     padding: clamp(28px, 4vh, 65px) 0;
+}
+
+/* ==========================================================
+   HERO CONTENT
+========================================================== */
+
+.fh-hero__content {
+     position: relative;
+
+     display: flex;
+     flex-direction: column;
+
+     align-items: flex-start;
+
+     width: 100%;
+     max-width: 580px;
+
+     min-width: 0;
+
+     z-index: 5;
+}
+
+/* ==========================================================
+   HERO BADGE
+========================================================== */
+
+.fh-hero__badge {
+     display: inline-flex;
+     align-items: center;
+
+     gap: 10px;
+
+     width: fit-content;
+
+     padding: 10px 16px;
+
+     background: rgba(0, 38, 70, 0.4);
+
+     border: 1px solid rgba(0, 167, 255, 0.5);
+
+     border-radius: 50px;
+
+     backdrop-filter: blur(12px);
+
+     color: #d4efff;
+
+     font-size: 10px;
+     font-weight: 700;
+
+     letter-spacing: 2px;
+
+     line-height: 1.4;
+}
+
+/* BADGE DOT */
+
+.fh-hero__badge-dot {
+     display: inline-block;
+
+     width: 8px;
+     height: 8px;
+
+     flex-shrink: 0;
+
+     border-radius: 50%;
+
+     background: #00d4ff;
+
+     box-shadow:
+          0 0 8px #00d4ff,
+          0 0 20px #008cff;
+}
+
+/* ==========================================================
+   HERO HEADING
+========================================================== */
+
+.fh-hero__heading {
+     width: 100%;
+
+     margin: 20px 0 16px;
+
+     font-family:
+          "Space Grotesk",
+          "DM Sans",
+          sans-serif;
+
+     font-size: clamp(42px, 4.4vw, 68px);
+
+     font-weight: 800;
+
+     line-height: 1.07;
+
+     letter-spacing: -0.05em;
+
+     color: #ffffff;
+}
+
+/* HEADING LINES */
+
+.fh-hero__heading-line {
+     display: block;
+}
+
+/* BLUE GRADIENT TEXT */
+
+.fh-hero__heading-gradient {
+     background: linear-gradient(90deg,
+               #008cff 0%,
+               #1baaff 50%,
+               #00d4ff 100%);
+
+     -webkit-background-clip: text;
+     background-clip: text;
+
+     -webkit-text-fill-color: transparent;
+
+     color: transparent;
+}
+
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
+
+.fh-hero__description {
+     width: 100%;
+     max-width: 500px;
+
+     margin: 0;
+
+     color: #c6d5e5;
+
+     font-size: 14px;
+     font-weight: 400;
+
+     line-height: 1.75;
+
+     letter-spacing: 0;
+}
+
+/* ==========================================================
+   HERO BUTTONS
+========================================================== */
+
+.fh-hero__buttons {
+     position: relative;
+
+     display: flex;
+     align-items: center;
+
+     flex-wrap: wrap;
+
+     gap: 14px;
+
+     width: 100%;
+
+     margin-top: 25px;
+
+     flex-shrink: 0;
+
+     z-index: 2;
+}
+
+/* BUTTON GENERAL */
+
+.fh-hero__button {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+
+     position: relative;
+
+     gap: 11px;
+
+     min-height: 50px;
+
+     padding: 13px 22px;
+
+     border-radius: 50px;
+
+     font-size: 13px;
+     font-weight: 700;
+
+     line-height: 1.2;
+
+     white-space: nowrap;
+
+     text-decoration: none;
+
+     transition:
+          transform 0.3s ease,
+          background 0.3s ease,
+          box-shadow 0.3s ease;
+}
+
+.fh-hero__button svg {
+     flex-shrink: 0;
+}
+
+/* PRIMARY BUTTON */
+
+.fh-hero__button-primary {
+     color: #ffffff;
+
+     background: linear-gradient(100deg,
+               #006aff,
+               #00c6ff);
+
+     border: 1px solid rgba(0, 190, 255, 0.5);
+
+     box-shadow:
+          0 8px 25px rgba(0, 136, 255, 0.24);
+}
+
+.fh-hero__button-primary:hover {
+     transform: translateY(-3px);
+
+     box-shadow:
+          0 12px 30px rgba(0, 140, 255, 0.42);
+}
+
+/* OUTLINE BUTTON */
+
+.fh-hero__button-outline {
+     color: #ffffff;
+
+     background: rgba(5, 10, 18, 0.45);
+
+     border: 1px solid rgba(255, 255, 255, 0.7);
+
+     backdrop-filter: blur(12px);
+}
+
+.fh-hero__button-outline:hover {
+     transform: translateY(-3px);
+
+     background: rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================================
+   SERVICE BENEFITS
+   FIXES BUTTON OVERLAPPING
+========================================================== */
+
+.fh-hero__benefits {
+     position: relative;
+
+     display: flex;
+     align-items: center;
+
+     flex-wrap: wrap;
+
+     gap: 17px;
+
+     width: 100%;
+
+     min-height: 42px;
+
+     margin-top: 27px;
+
+     padding: 0;
+
+     flex-shrink: 0;
+
+     z-index: 1;
+}
+
+/* EACH BENEFIT */
+
+.fh-hero__benefit {
+     display: flex;
+     align-items: center;
+
+     gap: 9px;
+
+     min-width: 0;
+
+     color: #e3efff;
+
+     font-size: 11px;
+     font-weight: 500;
+
+     line-height: 1.45;
+}
+
+.fh-hero__benefit svg {
+     width: 26px;
+     height: 26px;
+
+     flex-shrink: 0;
+
+     color: var(--fh-cyan);
+
+     stroke-width: 1.8;
+
+     filter:
+          drop-shadow(0 0 8px rgba(0, 170, 255, 0.25));
+}
+
+/* BENEFIT DIVIDER */
+
+.fh-hero__benefit-divider {
+     width: 1px;
+     height: 32px;
+
+     flex-shrink: 0;
+
+     background: rgba(0, 168, 255, 0.45);
+}
+
+/* ==========================================================
+   MEMBERSHIP CONTAINER
+========================================================== */
+
+.fh-hero__membership {
+     position: relative;
+
+     display: grid;
+
+     grid-template-columns:
+          minmax(0, 1fr) 1px minmax(0, 1fr);
+
+     width: 100%;
+     max-width: 560px;
+
+     min-width: 0;
+
+     margin-top: 28px;
+
+     padding: 20px 22px;
+
+     border: 1px solid rgba(0, 145, 255, 0.45);
+
+     border-radius: 18px;
+
+     background: linear-gradient(125deg,
+               rgba(3, 29, 55, 0.94),
+               rgba(4, 17, 35, 0.9));
+
+     backdrop-filter: blur(20px);
+
+     box-shadow:
+          0 15px 40px rgba(0, 0, 0, 0.25);
+
+     overflow: hidden;
+}
+
+/* SUBTLE BACKGROUND GLOW */
+
+.fh-hero__membership::before {
+     content: "";
+
+     position: absolute;
+
+     top: -100px;
+     left: -100px;
+
+     width: 230px;
+     height: 230px;
+
+     background: rgba(0, 153, 255, 0.09);
+
+     border-radius: 50%;
+
+     filter: blur(55px);
+
+     pointer-events: none;
+}
+
+/* ==========================================================
+   MEMBERSHIP PLANS
+========================================================== */
+
+.fh-hero__plan {
+     position: relative;
+
+     display: flex;
+     flex-direction: column;
+
+     min-width: 0;
+
+     padding: 0 17px;
+
+     color: #ffffff;
+
+     text-decoration: none;
+
+     transition: transform 0.3s ease;
+}
+
+.fh-hero__plan:first-child {
+     padding-left: 0;
+}
+
+.fh-hero__plan:last-child {
+     padding-right: 0;
+}
+
+.fh-hero__plan:hover {
+     transform: translateY(-3px);
+}
+
+/* PRICE */
+
+.fh-hero__price {
+     display: block;
+
+     color: #00ccff;
+
+     font-size: 36px;
+     font-weight: 800;
+
+     line-height: 1.1;
+
+     letter-spacing: -1px;
+}
+
+/* PLAN TITLE */
+
+.fh-hero__plan h3 {
+     margin: 7px 0 0;
+
+     font-size: 13px;
+     font-weight: 700;
+
+     line-height: 1.35;
+
+     letter-spacing: 0;
+
+     color: #ffffff;
+}
+
+/* PLAN DESCRIPTION */
+
+.fh-hero__plan p {
+     margin: 8px 0 0;
+
+     font-size: 10px;
+
+     line-height: 1.6;
+
+     color: #acc3d8;
+}
+
+/* MEMBERSHIP DIVIDER */
+
+.fh-hero__membership-divider {
+     width: 1px;
+     height: 100%;
+
+     background: rgba(0, 161, 255, 0.42);
+}
+
+/* ==========================================================
+   FREE SERVICE OFFER
+========================================================== */
+
+.fh-hero__offer {
+     display: inline-flex;
+     align-items: center;
+
+     gap: 10px;
+
+     width: fit-content;
+     max-width: 100%;
+
+     margin-top: 14px;
+
+     padding: 11px 15px;
+
+     border: 1px solid rgba(0, 164, 255, 0.53);
+
+     border-radius: 50px;
+
+     background: rgba(3, 35, 68, 0.86);
+
+     backdrop-filter: blur(15px);
+
+     color: #ffffff;
+
+     font-size: 11px;
+     font-weight: 500;
+
+     line-height: 1.5;
+
+     text-decoration: none;
+
+     transition:
+          transform 0.3s ease,
+          background 0.3s ease;
+}
+
+.fh-hero__offer:hover {
+     transform: translateY(-3px);
+
+     background: rgba(0, 89, 160, 0.55);
+}
+
+.fh-hero__offer svg {
+     width: 18px;
+     height: 18px;
+
+     flex-shrink: 0;
+
+     color: #5ad6ff;
+}
+
+.fh-hero__offer strong {
+     color: #00d4ff;
+
+     font-weight: 800;
+}
+
+/* ==========================================================
+   RIGHT FLOATING SERVICE CARDS
+========================================================== */
+
+.fh-hero__services {
+     position: absolute;
+
+     top: 14%;
+     right: 3%;
+
+     z-index: 5;
+
+     display: flex;
+     flex-direction: column;
+
+     gap: 10px;
+}
+
+/* SERVICE CARD */
+
+.fh-hero__service-card {
+     display: flex;
+     align-items: center;
+
+     gap: 10px;
+
+     width: 150px;
+
+     min-height: 55px;
+
+     padding: 9px 11px;
+
+     border: 1px solid rgba(255, 255, 255, 0.2);
+
+     border-radius: 12px;
+
+     background: rgba(7, 18, 31, 0.65);
+
+     backdrop-filter: blur(18px);
+
+     color: #ffffff;
+
+     text-decoration: none;
+
+     transition:
+          transform 0.3s ease,
+          background 0.3s ease,
+          border-color 0.3s ease;
+}
+
+.fh-hero__service-card:hover {
+     transform: translateX(-5px);
+
+     background: rgba(0, 76, 143, 0.7);
+
+     border-color: var(--fh-cyan);
+}
+
+/* SERVICE ICON */
+
+.fh-hero__service-icon {
+     display: grid;
+     place-items: center;
+
+     width: 36px;
+     height: 36px;
+
+     flex-shrink: 0;
+
+     border: 1px solid rgba(0, 167, 255, 0.5);
+
+     border-radius: 10px;
+
+     color: #d9f3ff;
+}
+
+.fh-hero__service-icon svg {
+     width: 20px;
+     height: 20px;
+}
+
+/* SERVICE NAME */
+
+.fh-hero__service-name {
+     color: #ffffff;
+
+     font-size: 10px;
+     font-weight: 700;
+
+     line-height: 1.4;
+}
+
+.fh-hero__service-name small {
+     display: block;
+
+     margin-top: 2px;
+
+     color: #c1d2e2;
+
+     font-size: 9px;
+     font-weight: 400;
+}
+
+/* ==========================================================
+   BRANDS STRIP
+========================================================== */
+
+.fh-hero__brands {
+     position: relative;
+
+     z-index: 6;
+
+     width: 100%;
+
+     flex-shrink: 0;
+
+     margin-top: auto;
+
+     background: rgba(3, 13, 27, 0.94);
+
+     border-top: 1px solid rgba(0, 145, 255, 0.25);
+
+     border-bottom: 1px solid rgba(0, 145, 255, 0.16);
+
+     backdrop-filter: blur(18px);
+}
+
+/* BRAND ROW */
+
+.fh-hero__brands-inner {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+
+     gap: 30px;
+
+     width: min(1440px, 92%);
+
+     min-height: 64px;
+
+     margin: 0 auto;
+
+     padding: 18px 0;
+
+     overflow-x: auto;
+
+     scrollbar-width: none;
+}
+
+.fh-hero__brands-inner::-webkit-scrollbar {
+     display: none;
+}
+
+/* BRAND NAME */
+
+.fh-hero__brand {
+     flex-shrink: 0;
+
+     color: #e0e8f3;
+
+     font-size: 13px;
+     font-weight: 700;
+
+     letter-spacing: -0.3px;
+
+     white-space: nowrap;
+
+     opacity: 0.85;
+
+     transition:
+          color 0.3s ease,
+          opacity 0.3s ease,
+          transform 0.3s ease;
+}
+
+.fh-hero__brand:hover {
+     color: #00d4ff;
+
+     opacity: 1;
+
+     transform: translateY(-3px);
+}
+
+/* ==========================================================
+   LARGE DESKTOP
+========================================================== */
+
+@media (min-width: 1500px) {
+     .fh-hero__content {
+          max-width: 640px;
+     }
+
+     .fh-hero__heading {
+          font-size: clamp(59px, 4.5vw, 74px);
+     }
+
+     .fh-hero__description {
+          font-size: 15px;
+     }
+
+     .fh-hero__membership {
+          max-width: 590px;
+     }
+
+     .fh-hero__broken-phone {
+          left: 54%;
+          width: 240px;
+     }
+}
+
+/* ==========================================================
+   LAPTOP
+========================================================== */
+
+@media (max-width: 1350px) {
+     .fh-hero__container {
+          padding: 30px 0;
+     }
+
+     .fh-hero__content {
+          max-width: 550px;
+     }
+
+     .fh-hero__heading {
+          font-size: clamp(40px, 4.1vw, 59px);
+     }
+
+     .fh-hero__description {
+          max-width: 470px;
+          font-size: 13px;
+     }
+
+     .fh-hero__buttons {
+          margin-top: 23px;
+     }
+
+     .fh-hero__benefits {
+          margin-top: 24px;
+     }
+
+     .fh-hero__membership {
+          margin-top: 25px;
+          max-width: 535px;
+     }
+
+     .fh-hero__price {
+          font-size: 33px;
+     }
+
+     .fh-hero__broken-phone {
+          left: 58%;
+          width: 175px;
+     }
+
+     .fh-hero__service-card {
+          width: 135px;
+          min-height: 50px;
+          padding: 8px;
+     }
+
+     .fh-hero__service-icon {
+          width: 31px;
+          height: 31px;
+     }
+}
+
+/* ==========================================================
+   SHORT LAPTOP SCREENS
+========================================================== */
+
+@media (min-width: 769px) and (max-height: 760px) {
+     .fh-hero__container {
+          padding: 22px 0;
+     }
+
+     .fh-hero__badge {
+          padding: 8px 13px;
+          font-size: 9px;
+     }
+
+     .fh-hero__heading {
+          margin: 14px 0 12px;
+          font-size: clamp(37px, 4vw, 53px);
+     }
+
+     .fh-hero__description {
+          font-size: 12px;
+          line-height: 1.6;
+     }
+
+     .fh-hero__buttons {
+          margin-top: 20px;
+     }
+
+     .fh-hero__button {
+          min-height: 45px;
+          padding: 11px 19px;
+          font-size: 12px;
+     }
+
+     .fh-hero__benefits {
+          margin-top: 22px;
+          min-height: 36px;
+     }
+
+     .fh-hero__benefit {
+          font-size: 10px;
+     }
+
+     .fh-hero__benefit svg {
+          width: 23px;
+          height: 23px;
+     }
+
+     .fh-hero__membership {
+          margin-top: 21px;
+          padding: 15px 18px;
+     }
+
+     .fh-hero__price {
+          font-size: 30px;
+     }
+
+     .fh-hero__plan h3 {
+          font-size: 12px;
+     }
+
+     .fh-hero__plan p {
+          font-size: 9px;
+          margin-top: 5px;
+     }
+
+     .fh-hero__offer {
+          margin-top: 12px;
+          padding: 9px 13px;
+          font-size: 10px;
+     }
+
+     .fh-hero__brands-inner {
+          min-height: 54px;
+          padding: 12px 0;
+     }
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 1100px) {
+     .fh-hero {
+          --fh-navbar-height: 72px;
+     }
+
+     .fh-hero__scene {
+          width: 82%;
+     }
+
+     .fh-hero__content {
+          max-width: min(550px, 65%);
+     }
+
+     .fh-hero__heading {
+          font-size: clamp(38px, 4.4vw, 48px);
+     }
+
+     .fh-hero__heading-line {
+          white-space: normal;
+     }
+
+     .fh-hero__description {
+          font-size: 12px;
+     }
+
+     .fh-hero__membership {
+          max-width: 100%;
+     }
+
+     .fh-hero__services {
+          display: none;
+     }
+
+     .fh-hero__broken-phone {
+          left: auto;
+          right: 7%;
+          top: 37%;
+          width: 145px;
+     }
+
+     .fh-hero__shade {
+          background:
+               linear-gradient(90deg,
+                    #050a12 0%,
+                    rgba(5, 10, 18, 0.98) 24%,
+                    rgba(5, 10, 18, 0.8) 50%,
+                    rgba(5, 10, 18, 0.15) 100%),
+               linear-gradient(0deg,
+                    rgba(5, 10, 18, 0.75),
+                    transparent 35%);
+     }
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 768px) {
+     .fh-hero {
+          --fh-navbar-height: 68px;
+
+          min-height: auto;
+
+          display: flex;
+          flex-direction: column;
+     }
+
+     /* BACKGROUND IMAGE AT TOP */
+
+     .fh-hero__scene {
+          top: 0;
+          right: 0;
+
+          width: 100%;
+          height: 360px;
+     }
+
+     .fh-hero__technician-image {
+          object-position: 43% center;
+
+          filter:
+               brightness(0.85) contrast(1.06);
+     }
+
+     /* PHOTO FADE */
+
+     .fh-hero__shade {
+          background: linear-gradient(180deg,
+                    rgba(5, 10, 18, 0.06) 0%,
+                    rgba(5, 10, 18, 0.1) 135px,
+                    rgba(5, 10, 18, 0.65) 275px,
+                    #050a12 365px,
+                    #050a12 100%);
+     }
+
+     .fh-hero__blue-glow {
+          opacity: 0.3;
+     }
+
+     .fh-hero__decoration {
+          opacity: 0.15;
+     }
+
+     /* BROKEN PHONE */
+
+     .fh-hero__broken-phone {
+          top: 145px;
+
+          right: 4%;
+          left: auto;
+
+          width: 125px;
+     }
+
+     /* CONTENT */
+
+     .fh-hero__container {
+          display: block;
+
+          width: 92%;
+
+          margin: 0 auto;
+
+          padding: 305px 0 45px;
+     }
+
+     .fh-hero__content {
+          max-width: 100%;
+          width: 100%;
+     }
+
+     /* BADGE */
+
+     .fh-hero__badge {
+          padding: 9px 12px;
+
+          font-size: 9px;
+
+          letter-spacing: 1.5px;
+     }
+
+     /* HEADING */
+
+     .fh-hero__heading {
+          margin: 22px 0 16px;
+
+          font-size: clamp(37px, 8vw, 57px);
+
+          line-height: 1.08;
+     }
+
+     /* DESCRIPTION */
+
+     .fh-hero__description {
+          max-width: 100%;
+
+          font-size: 14px;
+          line-height: 1.7;
+     }
+
+     /* BUTTONS */
+
+     .fh-hero__buttons {
+          gap: 12px;
+          margin-top: 25px;
+     }
+
+     .fh-hero__button {
+          min-height: 50px;
+
+          padding: 13px 20px;
+
+          font-size: 12px;
+     }
+
+     /* BENEFITS */
+
+     .fh-hero__benefits {
+          gap: 13px;
+
+          min-height: 40px;
+
+          margin-top: 28px;
+
+          justify-content: space-between;
+     }
+
+     .fh-hero__benefit {
+          gap: 7px;
+
+          font-size: 10px;
+     }
+
+     .fh-hero__benefit svg {
+          width: 23px;
+          height: 23px;
+     }
+
+     .fh-hero__benefit-divider {
+          height: 28px;
+     }
+
+     /* MEMBERSHIP */
+
+     .fh-hero__membership {
+          max-width: 100%;
+
+          margin-top: 29px;
+
+          padding: 20px 16px;
+     }
+
+     .fh-hero__plan {
+          padding: 0 13px;
+     }
+
+     .fh-hero__price {
+          font-size: 33px;
+     }
+
+     .fh-hero__plan h3 {
+          font-size: 12px;
+     }
+
+     .fh-hero__plan p {
+          font-size: 10px;
+     }
+
+     /* OFFER */
+
+     .fh-hero__offer {
+          margin-top: 15px;
+          font-size: 11px;
+     }
+
+     /* BRANDS */
+
+     .fh-hero__brands-inner {
+          justify-content: flex-start;
+
+          gap: 30px;
+
+          min-height: 60px;
+
+          padding: 18px 0;
+     }
+}
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 480px) {
+     .fh-hero__scene {
+          height: 320px;
+     }
+
+     .fh-hero__container {
+          padding-top: 270px;
+          padding-bottom: 35px;
+     }
+
+     .fh-hero__shade {
+          background: linear-gradient(180deg,
+                    rgba(5, 10, 18, 0.06) 0%,
+                    rgba(5, 10, 18, 0.2) 125px,
+                    rgba(5, 10, 18, 0.7) 245px,
+                    #050a12 325px,
+                    #050a12 100%);
+     }
+
+     .fh-hero__broken-phone {
+          top: 115px;
+          right: 3%;
+
+          width: 105px;
+     }
+
+     .fh-hero__badge {
+          font-size: 8px;
+          letter-spacing: 1px;
+     }
+
+     .fh-hero__heading {
+          font-size: clamp(32px, 9vw, 43px);
+
+          margin: 19px 0 15px;
+     }
+
+     .fh-hero__description {
+          font-size: 13px;
+     }
+
+     /* TWO BUTTONS IN ONE ROW */
+
+     .fh-hero__buttons {
+          display: grid;
+
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
+          gap: 10px;
+
+          width: 100%;
+
+          margin-top: 23px;
+     }
+
+     .fh-hero__button {
+          min-width: 0;
+          min-height: 47px;
+
+          gap: 6px;
+
+          padding: 12px 7px;
+
+          font-size: 10px;
+     }
+
+     .fh-hero__button svg {
+          width: 15px;
+          height: 15px;
+     }
+
+     /* BENEFITS */
+
+     .fh-hero__benefits {
+          margin-top: 25px;
+
+          gap: 7px;
+
+          flex-wrap: nowrap;
+     }
+
+     .fh-hero__benefit {
+          gap: 5px;
+          font-size: 9px;
+     }
+
+     .fh-hero__benefit svg {
+          width: 20px;
+          height: 20px;
+     }
+
+     .fh-hero__benefit-divider {
+          height: 27px;
+     }
+
+     /* MEMBERSHIP */
+
+     .fh-hero__membership {
+          margin-top: 25px;
+
+          padding: 16px 12px;
+     }
+
+     .fh-hero__plan {
+          padding: 0 10px;
+     }
+
+     .fh-hero__price {
+          font-size: 29px;
+     }
+
+     .fh-hero__plan h3 {
+          font-size: 11px;
+     }
+
+     .fh-hero__plan p {
+          font-size: 9px;
+     }
+
+     /* FREE OFFER */
+
+     .fh-hero__offer {
+          font-size: 10px;
+
+          padding: 11px 12px;
+     }
+
+     .fh-hero__offer svg {
+          width: 16px;
+          height: 16px;
+     }
+
+     /* BRANDS */
+
+     .fh-hero__brand {
+          font-size: 13px;
+     }
+}
+
+/* ==========================================================
+   EXTRA SMALL PHONES
+========================================================== */
+
+@media (max-width: 360px) {
+     .fh-hero__heading {
+          font-size: 31px;
+     }
+
+     .fh-hero__badge {
+          font-size: 7px;
+     }
+
+     .fh-hero__button {
+          font-size: 9px;
+     }
+
+     .fh-hero__benefit {
+          font-size: 8px;
+     }
+
+     .fh-hero__benefit svg {
+          width: 18px;
+          height: 18px;
+     }
+
+     .fh-hero__price {
+          font-size: 26px;
+     }
+
+     .fh-hero__membership {
+          padding: 14px 9px;
+     }
+}
+
+/* ==========================================================
+   ACCESSIBILITY
+========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+     .fh-hero *,
+     .fh-hero *::before,
+     .fh-hero *::after {
+          animation: none !important;
+          transition: none !important;
+     }
+}

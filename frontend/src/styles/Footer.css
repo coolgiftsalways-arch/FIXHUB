@@ -1,0 +1,1223 @@
+/* ==========================================================
+   FIXHUB — PREMIUM FOOTER
+   AWWWARDS INSPIRED DESIGN
+========================================================== */
+
+.fh-footer {
+     --footer-bg: #020d1a;
+     --footer-primary: #008cff;
+     --footer-cyan: #00d4ff;
+     --footer-white: #ffffff;
+     --footer-muted: #a5b6ca;
+
+     position: relative;
+
+     width: 100%;
+
+     background:
+          radial-gradient(ellipse at 50% -35%,
+               rgba(0, 123, 255, 0.1),
+               transparent 65%),
+          linear-gradient(180deg,
+               #03101f,
+               #020b17);
+
+     color: var(--footer-white);
+
+     border-top: 1px solid rgba(0, 160, 255, 0.32);
+
+     overflow: hidden;
+     isolation: isolate;
+}
+
+.fh-footer *,
+.fh-footer *::before,
+.fh-footer *::after {
+     box-sizing: border-box;
+}
+
+/* ==========================================================
+   SUBTLE BACKGROUND GLOW
+========================================================== */
+
+.fh-footer::before {
+     content: "";
+
+     position: absolute;
+
+     width: 650px;
+     height: 650px;
+
+     top: -440px;
+     left: 25%;
+
+     background: rgba(0, 125, 255, 0.055);
+
+     border-radius: 50%;
+
+     filter: blur(100px);
+
+     pointer-events: none;
+
+     z-index: -1;
+}
+
+/* ==========================================================
+   MAIN CONTAINER
+========================================================== */
+
+.fh-footer__container {
+     width: min(1600px, 94%);
+
+     margin: 0 auto;
+
+     padding: 78px 0 70px;
+}
+
+/* ==========================================================
+   FIVE-COLUMN GRID
+========================================================== */
+
+.fh-footer__grid {
+     display: grid;
+
+     grid-template-columns:
+          1.45fr 0.95fr 1.1fr 1.3fr 1.1fr;
+
+     gap: clamp(22px, 2.1vw, 42px);
+
+     align-items: start;
+}
+
+/* ==========================================================
+   GENERAL COLUMN
+========================================================== */
+
+.fh-footer__column {
+     position: relative;
+
+     min-width: 0;
+
+     padding-left: 24px;
+
+     border-left: 1px solid rgba(0, 140, 255, 0.12);
+}
+
+.fh-footer__brand-column {
+     min-width: 0;
+}
+
+/* ==========================================================
+   FOOTER LOGO
+========================================================== */
+
+.fh-footer__logo {
+     display: inline-flex;
+     align-items: center;
+
+     gap: 15px;
+
+     text-decoration: none;
+
+     color: #ffffff;
+
+     width: fit-content;
+}
+
+/* ==========================================================
+   LOGO SYMBOL
+========================================================== */
+
+.fh-footer__logo-symbol {
+     position: relative;
+
+     width: 56px;
+     height: 60px;
+
+     flex-shrink: 0;
+
+     transition: transform 0.4s ease;
+}
+
+.fh-footer__logo:hover .fh-footer__logo-symbol {
+     transform: rotate(-5deg) scale(1.05);
+}
+
+/* LOGO SHAPES */
+
+.fh-footer__logo-line {
+     position: absolute;
+
+     display: block;
+
+     background: linear-gradient(125deg,
+               #007bff,
+               #00d4ff);
+
+     transform: skewX(-24deg);
+
+     border-radius: 4px;
+
+     box-shadow:
+          0 0 18px rgba(0, 140, 255, 0.15);
+}
+
+.fh-footer__logo-line.line-one {
+     top: 3px;
+     left: 12px;
+
+     width: 45px;
+     height: 15px;
+}
+
+.fh-footer__logo-line.line-two {
+     top: 24px;
+     left: 6px;
+
+     width: 36px;
+     height: 15px;
+}
+
+.fh-footer__logo-line.line-three {
+     top: 44px;
+     left: 0;
+
+     width: 24px;
+     height: 14px;
+}
+
+/* ==========================================================
+   LOGO TEXT
+========================================================== */
+
+.fh-footer__logo-text {
+     display: flex;
+     flex-direction: column;
+
+     justify-content: center;
+
+     min-width: 0;
+}
+
+.fh-footer__logo-title {
+     display: block;
+
+     font-family:
+          "Space Grotesk",
+          "DM Sans",
+          sans-serif;
+
+     font-size: clamp(32px, 2.6vw, 46px);
+
+     font-weight: 800;
+
+     letter-spacing: -2px;
+
+     line-height: 1;
+
+     white-space: nowrap;
+}
+
+.fh-footer__logo-title span {
+     color: var(--footer-primary);
+}
+
+.fh-footer__logo-subtitle {
+     display: block;
+
+     margin-top: 7px;
+
+     color: #e0eaf4;
+
+     font-size: 9px;
+     font-weight: 700;
+
+     letter-spacing: 1.3px;
+
+     white-space: nowrap;
+}
+
+/* ==========================================================
+   BRAND DESCRIPTION
+========================================================== */
+
+.fh-footer__about {
+     max-width: 310px;
+
+     margin-top: 28px;
+
+     color: #d0dce9;
+
+     font-size: 14px;
+     font-weight: 400;
+
+     line-height: 1.9;
+}
+
+/* ==========================================================
+   SECTION HEADINGS
+========================================================== */
+
+.fh-footer__heading {
+     margin-bottom: 27px;
+}
+
+.fh-footer__heading h3 {
+     margin: 0;
+
+     font-family:
+          "Space Grotesk",
+          "DM Sans",
+          sans-serif;
+
+     color: #f7fbff;
+
+     font-size: 18px;
+     font-weight: 700;
+
+     line-height: 1.3;
+
+     letter-spacing: -0.3px;
+}
+
+.fh-footer__heading h3 span {
+     color: var(--footer-primary);
+}
+
+.fh-footer__heading-line {
+     display: block;
+
+     width: 38px;
+     height: 3px;
+
+     margin-top: 15px;
+
+     background: linear-gradient(90deg,
+               #008cff,
+               #00d4ff);
+
+     border-radius: 20px;
+
+     box-shadow:
+          0 0 13px rgba(0, 150, 255, 0.18);
+}
+
+/* ==========================================================
+   FOOTER LINKS
+========================================================== */
+
+.fh-footer__links {
+     display: flex;
+     flex-direction: column;
+
+     gap: 18px;
+
+     margin: 0;
+     padding: 0;
+
+     list-style: none;
+}
+
+.fh-footer__links li {
+     margin: 0;
+     padding: 0;
+}
+
+.fh-footer__links a {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+
+     gap: 15px;
+
+     width: 100%;
+
+     color: #cbd7e5;
+
+     font-size: 13px;
+     font-weight: 400;
+
+     text-decoration: none;
+
+     transition:
+          color 0.3s ease,
+          transform 0.3s ease;
+}
+
+.fh-footer__links a svg {
+     flex-shrink: 0;
+
+     color: #b3c5da;
+
+     transition:
+          color 0.3s ease,
+          transform 0.3s ease;
+}
+
+.fh-footer__links a:hover {
+     color: var(--footer-cyan);
+
+     transform: translateX(4px);
+}
+
+.fh-footer__links a:hover svg {
+     color: var(--footer-cyan);
+
+     transform: translateX(4px);
+}
+
+/* ==========================================================
+   CONTACT LIST
+========================================================== */
+
+.fh-footer__contact-list {
+     display: flex;
+     flex-direction: column;
+
+     gap: 25px;
+}
+
+/* ==========================================================
+   CONTACT ITEM
+========================================================== */
+
+.fh-footer__contact-item {
+     display: flex;
+     align-items: flex-start;
+
+     gap: 14px;
+}
+
+/* ==========================================================
+   CONTACT ICON
+========================================================== */
+
+.fh-footer__contact-icon {
+     display: grid;
+     place-items: center;
+
+     width: 43px;
+     height: 43px;
+
+     flex-shrink: 0;
+
+     border: 1px solid rgba(0, 157, 255, 0.65);
+
+     border-radius: 50%;
+
+     color: #00bfff;
+
+     background: rgba(0, 119, 255, 0.035);
+
+     transition:
+          background 0.3s ease,
+          box-shadow 0.3s ease,
+          transform 0.3s ease;
+}
+
+.fh-footer__contact-item:hover .fh-footer__contact-icon {
+     background: rgba(0, 135, 255, 0.14);
+
+     box-shadow:
+          0 0 22px rgba(0, 145, 255, 0.16);
+
+     transform: translateY(-3px);
+}
+
+/* ==========================================================
+   CONTACT TEXT
+========================================================== */
+
+.fh-footer__contact-text {
+     min-width: 0;
+     padding-top: 3px;
+}
+
+.fh-footer__contact-text h4 {
+     margin: 0;
+
+     color: #ffffff;
+
+     font-size: 13px;
+     font-weight: 700;
+
+     line-height: 1.5;
+
+     overflow-wrap: anywhere;
+}
+
+.fh-footer__contact-text h4 a {
+     color: inherit;
+
+     text-decoration: none;
+
+     transition: color 0.3s ease;
+}
+
+.fh-footer__contact-text h4 a:hover {
+     color: var(--footer-cyan);
+}
+
+.fh-footer__contact-text p {
+     margin-top: 5px;
+
+     color: #a6b9ce;
+
+     font-size: 11px;
+
+     line-height: 1.6;
+}
+
+/* ==========================================================
+   NEWSLETTER BOX
+========================================================== */
+
+.fh-footer__newsletter {
+     position: relative;
+
+     width: 100%;
+     min-width: 0;
+
+     padding: 25px 21px;
+
+     border: 1px solid rgba(0, 137, 255, 0.42);
+
+     border-radius: 17px;
+
+     background: linear-gradient(145deg,
+               rgba(4, 27, 52, 0.65),
+               rgba(2, 13, 28, 0.8));
+
+     box-shadow:
+          inset 0 0 20px rgba(0, 125, 255, 0.025),
+          0 15px 35px rgba(0, 0, 0, 0.1);
+
+     overflow: hidden;
+}
+
+/* SUBTLE GLOW */
+
+.fh-footer__newsletter::before {
+     content: "";
+
+     position: absolute;
+
+     width: 150px;
+     height: 150px;
+
+     top: -100px;
+     right: -70px;
+
+     border-radius: 50%;
+
+     background: rgba(0, 140, 255, 0.12);
+
+     filter: blur(45px);
+
+     pointer-events: none;
+}
+
+.fh-footer__newsletter .fh-footer__heading {
+     margin-bottom: 22px;
+}
+
+.fh-footer__newsletter .fh-footer__heading h3 {
+     font-size: 22px;
+     line-height: 1.25;
+}
+
+.fh-footer__newsletter-description {
+     margin: 0 0 25px;
+
+     color: #c5d4e4;
+
+     font-size: 13px;
+
+     line-height: 1.8;
+}
+
+/* ==========================================================
+   NEWSLETTER FORM
+========================================================== */
+
+.fh-footer__newsletter-form {
+     display: flex;
+     flex-direction: column;
+
+     gap: 12px;
+}
+
+/* ==========================================================
+   EMAIL INPUT BOX
+========================================================== */
+
+.fh-footer__input-box {
+     display: flex;
+     align-items: center;
+
+     gap: 12px;
+
+     width: 100%;
+     min-height: 49px;
+
+     padding: 0 14px;
+
+     border: 1px solid rgba(0, 148, 255, 0.45);
+
+     border-radius: 12px;
+
+     background: rgba(3, 25, 47, 0.85);
+
+     color: #86d8ff;
+
+     transition:
+          border-color 0.3s ease,
+          box-shadow 0.3s ease;
+}
+
+.fh-footer__input-box:focus-within {
+     border-color: #00c8ff;
+
+     box-shadow:
+          0 0 0 3px rgba(0, 190, 255, 0.07);
+}
+
+.fh-footer__input-box svg {
+     flex-shrink: 0;
+}
+
+/* INPUT */
+
+.fh-footer__input-box input {
+     width: 100%;
+     min-width: 0;
+     height: 48px;
+
+     padding: 0;
+
+     border: none !important;
+     outline: none !important;
+
+     background: transparent !important;
+
+     box-shadow: none !important;
+
+     color: #ffffff;
+
+     font-size: 12px;
+     font-weight: 400;
+}
+
+.fh-footer__input-box input::placeholder {
+     color: #8cabc6;
+}
+
+.fh-footer__input-box input:focus {
+     outline: none;
+     box-shadow: none;
+}
+
+/* ==========================================================
+   SUBSCRIBE BUTTON
+========================================================== */
+
+.fh-footer__subscribe-btn {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+
+     gap: 12px;
+
+     width: 100%;
+     min-height: 49px;
+
+     padding: 12px 20px;
+
+     border: 1px solid rgba(0, 177, 255, 0.5);
+
+     border-radius: 50px;
+
+     background: linear-gradient(100deg,
+               #007bff,
+               #00c6ff);
+
+     color: #ffffff;
+
+     font-family: inherit;
+
+     font-size: 14px;
+     font-weight: 700;
+
+     cursor: pointer;
+
+     box-shadow:
+          0 7px 23px rgba(0, 140, 255, 0.2);
+
+     transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease,
+          filter 0.3s ease;
+}
+
+.fh-footer__subscribe-btn:hover:not(:disabled) {
+     transform: translateY(-3px);
+
+     box-shadow:
+          0 10px 28px rgba(0, 140, 255, 0.33);
+
+     filter: brightness(1.08);
+}
+
+.fh-footer__subscribe-btn:disabled {
+     cursor: not-allowed;
+
+     opacity: 0.7;
+}
+
+/* ==========================================================
+   SPINNER
+========================================================== */
+
+.fh-footer__spinner {
+     animation: fh-footer-spin 1s linear infinite;
+}
+
+@keyframes fh-footer-spin {
+     to {
+          transform: rotate(360deg);
+     }
+}
+
+/* ==========================================================
+   NEWSLETTER MESSAGE
+========================================================== */
+
+.fh-footer__form-message {
+     display: flex;
+     align-items: center;
+
+     gap: 7px;
+
+     margin-top: 2px;
+
+     font-size: 11px;
+
+     line-height: 1.6;
+}
+
+.fh-footer__form-message.success {
+     color: #47e6a0;
+}
+
+.fh-footer__form-message.error {
+     color: #ff8d99;
+}
+
+/* ==========================================================
+   FOOTER BOTTOM
+========================================================== */
+
+.fh-footer__bottom {
+     position: relative;
+
+     width: 100%;
+
+     border-top: 1px solid rgba(0, 148, 255, 0.24);
+
+     background: rgba(2, 10, 21, 0.48);
+}
+
+/* ==========================================================
+   BOTTOM CONTAINER
+========================================================== */
+
+.fh-footer__bottom-container {
+     width: min(1600px, 94%);
+
+     min-height: 90px;
+
+     margin: 0 auto;
+
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+
+     gap: 30px;
+
+     padding: 22px 0;
+}
+
+/* ==========================================================
+   COPYRIGHT
+========================================================== */
+
+.fh-footer__copyright {
+     margin: 0;
+
+     color: #c6d3e3;
+
+     font-size: 13px;
+     font-weight: 400;
+
+     line-height: 1.6;
+}
+
+/* ==========================================================
+   SOCIAL AREA
+========================================================== */
+
+.fh-footer__socials {
+     display: flex;
+     align-items: center;
+
+     gap: 22px;
+}
+
+.fh-footer__follow-title {
+     color: #f0f5fb;
+
+     font-size: 14px;
+     font-weight: 700;
+
+     white-space: nowrap;
+}
+
+.fh-footer__social-divider {
+     width: 1px;
+     height: 34px;
+
+     background: rgba(0, 150, 255, 0.42);
+}
+
+/* ==========================================================
+   SOCIAL ICON LIST
+========================================================== */
+
+.fh-footer__social-list {
+     display: flex;
+     align-items: center;
+
+     gap: 11px;
+}
+
+/* ==========================================================
+   SINGLE SOCIAL BUTTON
+========================================================== */
+
+.fh-footer__social {
+     display: grid;
+     place-items: center;
+
+     width: 41px;
+     height: 41px;
+
+     flex-shrink: 0;
+
+     border: 1px solid rgba(0, 145, 255, 0.56);
+
+     border-radius: 50%;
+
+     background: rgba(1, 18, 35, 0.75);
+
+     text-decoration: none;
+
+     cursor: default;
+
+     transition:
+          transform 0.3s ease,
+          border-color 0.3s ease,
+          background 0.3s ease,
+          box-shadow 0.3s ease;
+}
+
+a.fh-footer__social {
+     cursor: pointer;
+}
+
+a.fh-footer__social:hover {
+     transform: translateY(-4px);
+
+     background: rgba(0, 110, 200, 0.12);
+
+     box-shadow:
+          0 0 20px rgba(0, 145, 255, 0.2);
+}
+
+/* ==========================================================
+   SOCIAL BRAND COLORS
+========================================================== */
+
+/* INSTAGRAM */
+
+.fh-footer__social.instagram {
+     color: #ff3d85;
+}
+
+/* WHATSAPP */
+
+.fh-footer__social.whatsapp {
+     color: #25d366;
+}
+
+/* YOUTUBE */
+
+.fh-footer__social.youtube {
+     color: #ff2525;
+}
+
+/* FACEBOOK */
+
+.fh-footer__social.facebook {
+     color: #1877f2;
+}
+
+/* X */
+
+.fh-footer__social.twitter {
+     color: #ffffff;
+}
+
+/* ==========================================================
+   LARGE DESKTOP
+========================================================== */
+
+@media (min-width: 1600px) {
+     .fh-footer__container {
+          padding: 90px 0 80px;
+     }
+
+     .fh-footer__grid {
+          gap: 45px;
+     }
+
+     .fh-footer__heading h3 {
+          font-size: 20px;
+     }
+
+     .fh-footer__links a {
+          font-size: 14px;
+     }
+}
+
+/* ==========================================================
+   LAPTOP
+========================================================== */
+
+@media (max-width: 1350px) {
+     .fh-footer__container {
+          padding: 65px 0 60px;
+     }
+
+     .fh-footer__grid {
+          grid-template-columns:
+               1.25fr 0.9fr 1fr 1.2fr;
+
+          gap: 30px;
+     }
+
+     .fh-footer__newsletter {
+          grid-column: 2 / 5;
+
+          display: grid;
+
+          grid-template-columns: 1fr 1.5fr;
+
+          column-gap: 30px;
+
+          align-items: center;
+     }
+
+     .fh-footer__newsletter .fh-footer__heading {
+          grid-column: 1;
+          grid-row: 1;
+     }
+
+     .fh-footer__newsletter-description {
+          grid-column: 1;
+          grid-row: 2;
+
+          margin-bottom: 0;
+     }
+
+     .fh-footer__newsletter-form {
+          grid-column: 2;
+          grid-row: 1 / 3;
+     }
+
+     .fh-footer__newsletter .fh-footer__heading h3 {
+          font-size: 20px;
+     }
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 1024px) {
+     .fh-footer__grid {
+          grid-template-columns:
+               repeat(2, minmax(0, 1fr));
+
+          gap: 48px 30px;
+     }
+
+     .fh-footer__brand-column {
+          grid-column: 1 / -1;
+     }
+
+     .fh-footer__about {
+          max-width: 480px;
+     }
+
+     .fh-footer__newsletter {
+          grid-column: 1 / -1;
+
+          display: block;
+     }
+
+     .fh-footer__newsletter-description {
+          margin-bottom: 25px;
+     }
+
+     .fh-footer__newsletter-form {
+          max-width: 450px;
+     }
+
+     .fh-footer__column {
+          padding-left: 20px;
+     }
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 768px) {
+     .fh-footer__container {
+          width: 90%;
+
+          padding: 60px 0 50px;
+     }
+
+     .fh-footer__grid {
+          grid-template-columns:
+               minmax(0, 1fr);
+
+          gap: 42px;
+     }
+
+     /* BRAND */
+
+     .fh-footer__brand-column {
+          grid-column: auto;
+     }
+
+     .fh-footer__logo-symbol {
+          transform: scale(0.85);
+
+          transform-origin: left center;
+
+          margin-right: -7px;
+     }
+
+     .fh-footer__logo-title {
+          font-size: 34px;
+     }
+
+     .fh-footer__logo-subtitle {
+          font-size: 8px;
+     }
+
+     .fh-footer__about {
+          margin-top: 22px;
+
+          max-width: 100%;
+
+          font-size: 13px;
+     }
+
+     /* COLUMN */
+
+     .fh-footer__column {
+          padding-left: 0;
+
+          border-left: none;
+     }
+
+     /* HEADING */
+
+     .fh-footer__heading {
+          margin-bottom: 23px;
+     }
+
+     .fh-footer__heading h3 {
+          font-size: 19px;
+     }
+
+     /* LINKS */
+
+     .fh-footer__links {
+          gap: 17px;
+     }
+
+     .fh-footer__links a {
+          font-size: 13px;
+     }
+
+     /* CONTACT */
+
+     .fh-footer__contact-list {
+          gap: 24px;
+     }
+
+     /* NEWSLETTER */
+
+     .fh-footer__newsletter {
+          grid-column: auto;
+
+          padding: 25px 20px;
+     }
+
+     .fh-footer__newsletter .fh-footer__heading h3 {
+          font-size: 22px;
+     }
+
+     /* BOTTOM */
+
+     .fh-footer__bottom-container {
+          width: 90%;
+
+          min-height: auto;
+
+          flex-direction: column;
+
+          justify-content: center;
+
+          gap: 24px;
+
+          padding: 29px 0;
+     }
+
+     .fh-footer__copyright {
+          text-align: center;
+
+          font-size: 12px;
+     }
+
+     .fh-footer__socials {
+          flex-wrap: wrap;
+
+          justify-content: center;
+
+          gap: 13px;
+     }
+
+     .fh-footer__follow-title {
+          font-size: 13px;
+     }
+
+     .fh-footer__social-list {
+          gap: 9px;
+     }
+
+     .fh-footer__social {
+          width: 38px;
+          height: 38px;
+     }
+}
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 480px) {
+     .fh-footer__container {
+          padding: 50px 0 42px;
+     }
+
+     .fh-footer__grid {
+          gap: 35px;
+     }
+
+     .fh-footer__logo-title {
+          font-size: 31px;
+     }
+
+     .fh-footer__about {
+          font-size: 12px;
+
+          line-height: 1.8;
+     }
+
+     .fh-footer__heading h3 {
+          font-size: 18px;
+     }
+
+     .fh-footer__contact-icon {
+          width: 40px;
+          height: 40px;
+     }
+
+     .fh-footer__contact-text h4 {
+          font-size: 12px;
+     }
+
+     .fh-footer__contact-text p {
+          font-size: 10px;
+     }
+
+     .fh-footer__newsletter {
+          padding: 23px 17px;
+     }
+
+     .fh-footer__newsletter-description {
+          font-size: 12px;
+     }
+
+     .fh-footer__socials {
+          flex-direction: column;
+
+          gap: 13px;
+     }
+
+     .fh-footer__social-divider {
+          display: none;
+     }
+
+     .fh-footer__social {
+          width: 39px;
+          height: 39px;
+     }
+}
+
+/* ==========================================================
+   ACCESSIBILITY
+========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+     .fh-footer *,
+     .fh-footer *::before,
+     .fh-footer *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+     }
+}
+
+/* ==========================================
+   REMOVE FOOTER BOTTOM SECTION COMPLETELY
+========================================== */
+
+.fh-footer__bottom,
+.fh-footer__bottom-container,
+.fh-footer__copyright,
+.fh-footer__socials,
+.fh-footer__social-list,
+.fh-footer__follow-title,
+.fh-footer__social-divider {
+     display: none !important;
+}
+
+.fh-footer__container {
+     padding-bottom: 35px;
+}

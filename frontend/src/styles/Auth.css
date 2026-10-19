@@ -1,0 +1,603 @@
+/* ================================================
+   FIXHUB AUTHENTICATION
+================================================ */
+
+.fxa-page {
+     --accent: #008cff;
+     --cyan: #00d4ff;
+     --muted: #a8bdd3;
+
+     min-height: calc(100vh - 78px);
+
+     padding: clamp(38px, 5vw, 80px) 24px;
+
+     background:
+          radial-gradient(ellipse at 85% 10%,
+               rgba(0, 128, 255, 0.12),
+               transparent 45%),
+          #020b15;
+
+     color: #fff;
+}
+
+.fxa-page *,
+.fxa-page *::before,
+.fxa-page *::after {
+     box-sizing: border-box;
+}
+
+.fxa-page button,
+.fxa-page input,
+.fxa-page textarea {
+     font: inherit;
+}
+
+.fxa-loading {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: #b6d5ee;
+}
+
+/* ================================================
+   LOGIN LAYOUT
+================================================ */
+
+.fxa-shell {
+     width: min(1180px, 100%);
+     margin: 0 auto;
+
+     display: grid;
+     grid-template-columns:
+          minmax(0, 1fr) minmax(0, 1.05fr);
+
+     gap: 28px;
+     align-items: stretch;
+}
+
+/* ================================================
+   BRAND SIDE
+================================================ */
+
+.fxa-side {
+     padding: clamp(30px, 5vw, 60px);
+
+     border: 1px solid rgba(0, 160, 255, 0.21);
+     border-radius: 25px;
+
+     background:
+          linear-gradient(145deg,
+               rgba(0, 99, 192, 0.2),
+               rgba(3, 17, 33, 0.92)),
+          radial-gradient(circle at 95% 95%,
+               rgba(0, 220, 255, 0.13),
+               transparent 48%);
+
+     display: flex;
+     flex-direction: column;
+}
+
+.fxa-eyebrow {
+     display: inline-flex;
+     align-items: center;
+     gap: 9px;
+
+     color: #00cfff;
+
+     text-transform: uppercase;
+     font-size: 11px;
+     letter-spacing: 1.7px;
+     font-weight: 750;
+}
+
+.fxa-side h1 {
+     font-family: "Space Grotesk", sans-serif;
+
+     margin: 55px 0 22px;
+
+     font-size: clamp(42px, 4.2vw, 66px);
+     letter-spacing: -0.05em;
+     line-height: 1.1;
+}
+
+.fxa-side h1 span,
+.fxa-profile-header h1 span {
+     color: #00bfff;
+}
+
+.fxa-side>p {
+     font-size: 15px;
+     line-height: 1.8;
+     max-width: 420px;
+     color: #c6d7e9;
+}
+
+.fxa-benefits {
+     display: grid;
+     gap: 20px;
+
+     margin: 43px 0;
+}
+
+.fxa-benefits>div {
+     display: flex;
+     gap: 16px;
+     align-items: center;
+     font-size: 14px;
+}
+
+.fxa-benefits svg {
+     color: #00cfff;
+}
+
+.fxa-side-note {
+     display: block;
+     margin-top: auto;
+
+     color: #8fb0ca;
+
+     line-height: 1.7;
+     font-size: 12px;
+}
+
+/* ================================================
+   LOGIN CARD
+================================================ */
+
+.fxa-card,
+.fxa-profile-card {
+     background: linear-gradient(155deg,
+               #081d33,
+               #041323 75%);
+
+     border: 1px solid rgba(0, 153, 255, 0.4);
+     border-radius: 25px;
+
+     padding: clamp(25px, 3.5vw, 45px);
+
+     box-shadow:
+          0 25px 55px rgba(0, 0, 0, 0.2);
+}
+
+/* TABS */
+
+.fxa-tabs {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+
+     gap: 5px;
+
+     border: 1px solid rgba(0, 150, 255, 0.28);
+     border-radius: 13px;
+
+     padding: 5px;
+     background: #031324;
+}
+
+.fxa-tabs button {
+     background: transparent;
+     border: 0;
+
+     color: #b3cce2;
+     cursor: pointer;
+
+     font-size: 13px;
+     font-weight: 700;
+
+     padding: 12px;
+     border-radius: 9px;
+}
+
+.fxa-tabs button.active {
+     background: linear-gradient(110deg,
+               #006cf0,
+               #00aeff);
+
+     color: #fff;
+}
+
+/* ================================================
+   CARD HEADER
+================================================ */
+
+.fxa-card-head {
+     margin: 31px 0 25px;
+}
+
+.fxa-card-head h2 {
+     font-family: "Space Grotesk", sans-serif;
+
+     font-size: clamp(26px, 2.4vw, 38px);
+
+     margin: 10px 0;
+     letter-spacing: -0.04em;
+}
+
+.fxa-card-head p {
+     color: var(--muted);
+
+     font-size: 13px;
+     line-height: 1.7;
+
+     margin: 0;
+}
+
+/* ================================================
+   FORM
+================================================ */
+
+.fxa-form {
+     display: grid;
+     gap: 17px;
+}
+
+.fxa-two-col {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 13px;
+}
+
+.fxa-field {
+     display: grid;
+     gap: 8px;
+     min-width: 0;
+}
+
+.fxa-field>span {
+     color: #e0ebf7;
+     font-size: 12px;
+     font-weight: 650;
+}
+
+.fxa-input {
+     display: flex;
+     align-items: center;
+     gap: 11px;
+
+     border: 1px solid rgba(0, 153, 255, 0.29);
+     background: #020e1e;
+
+     border-radius: 11px;
+     padding: 0 13px;
+     min-height: 49px;
+
+     transition:
+          border-color 0.25s,
+          box-shadow 0.25s;
+}
+
+.fxa-input:focus-within {
+     border-color: #00bcff;
+
+     box-shadow:
+          0 0 0 3px rgba(0, 170, 255, 0.1);
+}
+
+.fxa-input>svg {
+     color: #00bbff;
+     flex: none;
+}
+
+.fxa-input input,
+.fxa-input textarea {
+     display: block;
+
+     background: transparent;
+     border: 0;
+     outline: none;
+
+     color: #fff;
+     font-size: 13px;
+
+     width: 100%;
+     min-width: 0;
+
+     padding: 13px 0;
+}
+
+.fxa-input input::placeholder,
+.fxa-input textarea::placeholder {
+     color: #6785a0;
+}
+
+.fxa-input input:disabled {
+     color: #8ca7bd;
+     cursor: not-allowed;
+}
+
+.fxa-textarea {
+     align-items: flex-start;
+}
+
+.fxa-textarea>svg {
+     margin-top: 15px;
+}
+
+.fxa-input textarea {
+     resize: vertical;
+}
+
+/* PASSWORD VISIBILITY */
+
+.fxa-eye {
+     flex: none;
+
+     border: 0;
+     color: #87a9c6;
+     background: none;
+
+     padding: 6px;
+     cursor: pointer;
+}
+
+/* ================================================
+   SUBMIT BUTTON
+================================================ */
+
+.fxa-submit {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+
+     gap: 10px;
+
+     margin-top: 5px;
+
+     padding: 15px 18px;
+
+     border: 0;
+     border-radius: 11px;
+
+     background: linear-gradient(110deg,
+               #006eff,
+               #00b9ff);
+
+     color: #fff;
+     text-decoration: none;
+
+     font-size: 14px;
+     font-weight: 750;
+
+     cursor: pointer;
+
+     transition:
+          filter 0.2s,
+          transform 0.2s;
+}
+
+.fxa-submit:hover:not(:disabled) {
+     filter: brightness(1.1);
+     transform: translateY(-2px);
+}
+
+.fxa-submit:disabled {
+     opacity: 0.65;
+     cursor: wait;
+}
+
+.fxa-footnote {
+     display: flex;
+     align-items: flex-start;
+     gap: 8px;
+
+     color: #7f9db7;
+
+     font-size: 11px;
+     line-height: 1.6;
+
+     margin: 0;
+}
+
+.fxa-footnote svg {
+     color: #00bdff;
+     flex: none;
+}
+
+/* ================================================
+   MESSAGES
+================================================ */
+
+.fxa-error,
+.fxa-success {
+     padding: 12px 14px;
+     font-size: 12px;
+     line-height: 1.6;
+
+     border-radius: 9px;
+     margin: 0;
+}
+
+.fxa-error {
+     color: #ffb3bc;
+     background: rgba(255, 60, 85, 0.08);
+     border: 1px solid rgba(255, 60, 85, 0.25);
+}
+
+.fxa-success {
+     color: #9af1c3;
+     background: rgba(25, 213, 120, 0.08);
+     border: 1px solid rgba(25, 213, 120, 0.25);
+}
+
+.fxa-bottom-note {
+     margin: 25px 0 0;
+
+     font-size: 12px;
+     color: #9cb6cb;
+     text-align: center;
+}
+
+.fxa-bottom-note a {
+     color: #00cbff;
+     text-decoration: none;
+}
+
+/* ================================================
+   PROFILE
+================================================ */
+
+.fxa-profile-container {
+     width: min(1100px, 100%);
+     margin: 0 auto;
+}
+
+.fxa-profile-header {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+
+     gap: 20px;
+     margin: 5px 0 30px;
+}
+
+.fxa-profile-header h1 {
+     font-size: clamp(30px, 3vw, 49px);
+
+     margin: 10px 0;
+     letter-spacing: -0.04em;
+}
+
+.fxa-profile-header p {
+     margin: 0;
+     font-size: 14px;
+     color: #9cb4ce;
+}
+
+.fxa-profile-layout {
+     display: grid;
+     grid-template-columns: 1.2fr 0.8fr;
+
+     gap: 22px;
+     align-items: start;
+}
+
+.fxa-profile-card h2 {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+
+     margin: 0 0 22px;
+     font-size: 25px;
+}
+
+.fxa-profile-card h2 svg {
+     color: #00bfff;
+}
+
+.fxa-logout {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+
+     border: 1px solid rgba(0, 174, 255, 0.4);
+     background: #061b32;
+
+     color: #f4faff;
+     border-radius: 40px;
+
+     padding: 12px 20px;
+     font-size: 13px;
+
+     cursor: pointer;
+}
+
+.fxa-logout:disabled {
+     opacity: 0.6;
+     cursor: wait;
+}
+
+.fxa-profile-side {
+     min-height: 320px;
+}
+
+.fxa-profile-side h2 {
+     line-height: 1.2;
+     margin-top: 24px;
+}
+
+.fxa-profile-side>p {
+     color: #b4c8dd;
+     line-height: 1.75;
+     font-size: 14px;
+}
+
+.fxa-profile-side .fxa-side-note {
+     margin-top: 40px;
+}
+
+.fxa-link-submit {
+     margin-top: 30px;
+}
+
+/* ================================================
+   TABLET
+================================================ */
+
+@media (max-width: 900px) {
+     .fxa-shell {
+          grid-template-columns: 1fr;
+     }
+
+     .fxa-side h1 {
+          margin: 22px 0;
+     }
+
+     .fxa-side {
+          padding: 30px;
+     }
+
+     .fxa-benefits {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+
+          gap: 14px;
+          margin: 24px 0;
+     }
+
+     .fxa-benefits>div {
+          font-size: 12px;
+     }
+
+     .fxa-profile-layout {
+          grid-template-columns: 1fr;
+     }
+}
+
+/* ================================================
+   MOBILE
+================================================ */
+
+@media (max-width: 550px) {
+     .fxa-page {
+          padding: 26px 14px;
+     }
+
+     .fxa-side {
+          display: none;
+     }
+
+     .fxa-card,
+     .fxa-profile-card {
+          padding: 22px 18px;
+          border-radius: 17px;
+     }
+
+     .fxa-two-col {
+          grid-template-columns: 1fr;
+     }
+
+     .fxa-profile-header {
+          align-items: flex-start;
+          flex-direction: column;
+     }
+
+     .fxa-profile-header h1 {
+          font-size: 31px;
+     }
+}
+
+@media (prefers-reduced-motion: reduce) {
+     .fxa-page * {
+          transition: none !important;
+     }
+}

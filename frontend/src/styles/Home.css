@@ -1,0 +1,2189 @@
+/* =========================================================
+   FIXHUB — PREMIUM HOMEPAGE
+   AWWWARDS INSPIRED
+
+   SECTIONS BELOW HERO
+========================================================= */
+
+/* =========================================================
+   01. ROOT
+========================================================= */
+
+.fxh-home {
+     --fxh-bg: #020b15;
+     --fxh-bg-light: #061525;
+     --fxh-surface: #071b2e;
+
+     --fxh-blue: #008cff;
+     --fxh-cyan: #00cfff;
+
+     --fxh-white: #ffffff;
+     --fxh-muted: #b2c5d9;
+
+     position: relative;
+
+     width: 100%;
+
+     background: var(--fxh-bg);
+
+     color: var(--fxh-white);
+
+     overflow: hidden;
+}
+
+.fxh-home *,
+.fxh-home *::before,
+.fxh-home *::after {
+     box-sizing: border-box;
+}
+
+.fxh-container {
+     width: min(1440px, 92%);
+
+     margin: 0 auto;
+}
+
+/* =========================================================
+   02. COMMON SECTION TAG
+========================================================= */
+
+.fxh-section-tag {
+     display: inline-flex;
+     align-items: center;
+
+     gap: 9px;
+
+     margin-bottom: 12px;
+
+     color: #d3e8fa;
+
+     font-size: 10px;
+     font-weight: 700;
+
+     letter-spacing: 1.7px;
+
+     text-transform: uppercase;
+}
+
+.fxh-section-tag-icon {
+     display: grid;
+     place-items: center;
+
+     width: 20px;
+     height: 20px;
+
+     border: 1px solid var(--fxh-cyan);
+     border-radius: 50%;
+
+     color: var(--fxh-cyan);
+
+     background: rgba(0, 160, 255, 0.07);
+}
+
+/* =========================================================
+   03. COMMON HEADING
+========================================================= */
+
+.fxh-heading {
+     margin: 0 0 10px;
+
+     color: #ffffff;
+
+     font-family:
+          "Space Grotesk",
+          "DM Sans",
+          sans-serif;
+
+     font-size: clamp(27px, 2.7vw, 43px);
+
+     font-weight: 800;
+
+     line-height: 1.13;
+
+     letter-spacing: -0.045em;
+}
+
+.fxh-heading span {
+     background: linear-gradient(90deg,
+               #008cff,
+               #00d4ff);
+
+     -webkit-background-clip: text;
+     background-clip: text;
+
+     -webkit-text-fill-color: transparent;
+     color: transparent;
+}
+
+.fxh-section-desc {
+     max-width: 530px;
+
+     margin: 0;
+
+     color: var(--fxh-muted);
+
+     font-size: 13px;
+     line-height: 1.7;
+}
+
+/* =========================================================
+   04. COMMON SECTION HEADER
+========================================================= */
+
+.fxh-section-header {
+     display: flex;
+     align-items: end;
+     justify-content: space-between;
+
+     gap: 25px;
+
+     margin-bottom: 23px;
+}
+
+.fxh-header-content {
+     min-width: 0;
+}
+
+/* =========================================================
+   05. OUTLINE BUTTON
+========================================================= */
+
+.fxh-outline-button {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+
+     gap: 13px;
+
+     flex-shrink: 0;
+
+     min-height: 44px;
+
+     padding: 11px 20px;
+
+     border: 1px solid rgba(255, 255, 255, 0.65);
+
+     border-radius: 50px;
+
+     background: rgba(5, 14, 27, 0.65);
+
+     color: #ffffff;
+
+     font-size: 12px;
+     font-weight: 700;
+
+     text-decoration: none;
+
+     transition:
+          background 0.3s ease,
+          border-color 0.3s ease,
+          transform 0.3s ease;
+}
+
+.fxh-outline-button:hover {
+     transform: translateY(-3px);
+
+     border-color: var(--fxh-cyan);
+
+     background: rgba(0, 142, 255, 0.12);
+}
+
+/* =========================================================
+   06. OUR SERVICES SECTION
+========================================================= */
+
+.fxh-services {
+     position: relative;
+
+     width: 100%;
+
+     padding: 60px 0 65px;
+
+     background:
+          radial-gradient(ellipse at 70% 0%,
+               rgba(0, 130, 255, 0.055),
+               transparent 50%),
+          #020b15;
+}
+
+/* =========================================================
+   07. SERVICES GRID
+========================================================= */
+
+.fxh-services-grid {
+     display: grid;
+
+     grid-template-columns: repeat(6,
+               minmax(0, 1fr));
+
+     gap: 14px;
+}
+
+/* =========================================================
+   08. SERVICE CARD
+========================================================= */
+
+.fxh-service-card {
+     position: relative;
+
+     display: block;
+
+     width: 100%;
+     min-width: 0;
+
+     height: clamp(180px, 16vw, 240px);
+
+     border: 1px solid rgba(0, 150, 255, 0.45);
+
+     border-radius: 13px;
+
+     background: #061729;
+
+     color: white;
+
+     text-decoration: none;
+
+     overflow: hidden;
+     isolation: isolate;
+
+     transition:
+          transform 0.35s ease,
+          border-color 0.35s ease,
+          box-shadow 0.35s ease;
+}
+
+.fxh-service-card:hover {
+     transform: translateY(-7px);
+
+     border-color: #00c6ff;
+
+     box-shadow:
+          0 14px 35px rgba(0, 110, 255, 0.17);
+}
+
+/* =========================================================
+   09. SERVICE IMAGE
+========================================================= */
+
+.fxh-service-image {
+     position: absolute;
+     inset: 0;
+
+     z-index: 0;
+
+     width: 100%;
+     height: 100%;
+}
+
+.fxh-service-image img {
+     display: block;
+
+     width: 100%;
+     height: 100%;
+
+     object-fit: cover;
+     object-position: center;
+
+     transition:
+          transform 0.8s cubic-bezier(0.2,
+               0.8,
+               0.2,
+               1);
+}
+
+.fxh-service-card:hover img {
+     transform: scale(1.12);
+}
+
+/* =========================================================
+   10. SERVICE OVERLAY
+========================================================= */
+
+.fxh-service-overlay {
+     position: absolute;
+     inset: 0;
+
+     z-index: 1;
+
+     pointer-events: none;
+
+     background: linear-gradient(180deg,
+               rgba(2, 10, 20, 0.1) 0%,
+               rgba(2, 10, 20, 0.12) 38%,
+               rgba(2, 10, 20, 0.8) 75%,
+               #020b15 100%);
+}
+
+/* =========================================================
+   11. SERVICE NUMBER
+========================================================= */
+
+.fxh-service-number {
+     position: absolute;
+
+     top: 12px;
+     left: 12px;
+
+     z-index: 2;
+
+     color: rgba(255, 255, 255, 0.55);
+
+     font-size: 10px;
+     font-weight: 700;
+
+     letter-spacing: 1px;
+}
+
+/* =========================================================
+   12. SERVICE TOP ICON
+========================================================= */
+
+.fxh-service-top-icon {
+     position: absolute;
+
+     top: 11px;
+     right: 11px;
+
+     z-index: 2;
+
+     display: grid;
+     place-items: center;
+
+     width: 31px;
+     height: 31px;
+
+     border: 1px solid rgba(0, 185, 255, 0.5);
+
+     border-radius: 9px;
+
+     background: rgba(0, 18, 35, 0.55);
+
+     backdrop-filter: blur(8px);
+
+     color: #00cfff;
+}
+
+/* =========================================================
+   13. SERVICE BOTTOM CONTENT
+========================================================= */
+
+.fxh-service-content {
+     position: absolute;
+
+     bottom: 13px;
+     left: 12px;
+     right: 12px;
+
+     z-index: 3;
+
+     display: flex;
+     align-items: end;
+     justify-content: space-between;
+
+     gap: 8px;
+}
+
+.fxh-service-title {
+     min-width: 0;
+}
+
+.fxh-service-title h3 {
+     margin: 0;
+
+     color: #ffffff;
+
+     font-size: 14px;
+     font-weight: 700;
+
+     line-height: 1.3;
+
+     letter-spacing: -0.02em;
+}
+
+.fxh-service-title p {
+     margin: 2px 0 0;
+
+     color: #d8e8fa;
+
+     font-size: 12px;
+
+     line-height: 1.3;
+}
+
+/* =========================================================
+   14. SERVICE ARROW
+========================================================= */
+
+.fxh-service-arrow {
+     display: grid;
+     place-items: center;
+
+     width: 31px;
+     height: 31px;
+
+     flex-shrink: 0;
+
+     border: 1px solid #00baff;
+
+     border-radius: 50%;
+
+     background: rgba(0, 45, 85, 0.7);
+
+     color: #ffffff;
+
+     transition:
+          transform 0.3s ease,
+          background 0.3s ease;
+}
+
+.fxh-service-card:hover .fxh-service-arrow {
+     transform: rotate(45deg);
+
+     background: #008cff;
+}
+
+/* =========================================================
+   15. WHY CHOOSE FIXHUB SECTION
+========================================================= */
+
+.fxh-why {
+     position: relative;
+
+     width: 100%;
+
+     min-height: 345px;
+
+     padding: 55px 0;
+
+     background:
+          linear-gradient(110deg,
+               #030c18 0%,
+               #04162c 52%,
+               #03101e 100%);
+
+     border-top: 1px solid rgba(0, 140, 255, 0.12);
+     border-bottom: 1px solid rgba(0, 140, 255, 0.18);
+
+     overflow: hidden;
+}
+
+/* =========================================================
+   16. BACKGROUND GLOW
+========================================================= */
+
+.fxh-why-glow {
+     position: absolute;
+
+     top: -130px;
+     right: 14%;
+
+     width: 620px;
+     height: 620px;
+
+     background: radial-gradient(circle,
+               rgba(0, 120, 255, 0.2),
+               transparent 65%);
+
+     filter: blur(45px);
+
+     pointer-events: none;
+}
+
+/* =========================================================
+   17. WHY CHOOSE LAYOUT
+========================================================= */
+
+.fxh-why-layout {
+     position: relative;
+
+     display: grid;
+
+     grid-template-columns:
+          minmax(0, 0.95fr) minmax(0, 1.25fr);
+
+     align-items: center;
+
+     gap: 45px;
+
+     min-height: 260px;
+}
+
+/* =========================================================
+   18. WHY CHOOSE TEXT
+========================================================= */
+
+.fxh-why-content {
+     position: relative;
+
+     z-index: 3;
+}
+
+.fxh-why-content .fxh-heading {
+     font-size: clamp(32px, 3.1vw, 47px);
+}
+
+.fxh-why-content .fxh-section-desc {
+     max-width: 475px;
+
+     margin-top: 16px;
+}
+
+/* =========================================================
+   19. TRUST FEATURE ROW
+========================================================= */
+
+.fxh-why-features {
+     display: grid;
+
+     grid-template-columns:
+          repeat(4, minmax(0, 1fr));
+
+     gap: 14px;
+
+     margin-top: 35px;
+}
+
+/* =========================================================
+   20. SINGLE FEATURE
+========================================================= */
+
+.fxh-why-feature {
+     display: flex;
+     align-items: center;
+
+     gap: 9px;
+
+     min-width: 0;
+}
+
+.fxh-why-feature-icon {
+     display: grid;
+     place-items: center;
+
+     width: 42px;
+     height: 42px;
+
+     flex-shrink: 0;
+
+     border: 1px solid #00bfff;
+     border-radius: 50%;
+
+     color: #00cfff;
+
+     background: rgba(0, 135, 255, 0.07);
+}
+
+.fxh-why-feature span {
+     color: #f1f7ff;
+
+     font-size: 11px;
+     font-weight: 600;
+
+     line-height: 1.4;
+}
+
+.fxh-why-feature small {
+     display: block;
+
+     color: #b7c9dc;
+
+     font-size: 10px;
+     font-weight: 400;
+}
+
+/* =========================================================
+   21. WHY CHOOSE VISUAL
+========================================================= */
+
+.fxh-why-visual {
+     position: relative;
+
+     width: 100%;
+     height: 325px;
+
+     min-width: 0;
+}
+
+/* =========================================================
+   22. TECHNICIAN IMAGE
+========================================================= */
+
+.fxh-why-technician {
+     position: absolute;
+
+     inset: -10px 0 -10px 15%;
+
+     z-index: 1;
+
+     overflow: hidden;
+
+     border-radius: 18px;
+
+     -webkit-mask-image: linear-gradient(90deg,
+               transparent,
+               black 18%,
+               black 85%,
+               transparent);
+
+     mask-image: linear-gradient(90deg,
+               transparent,
+               black 18%,
+               black 85%,
+               transparent);
+}
+
+.fxh-why-technician img {
+     display: block;
+
+     width: 100%;
+     height: 100%;
+
+     object-fit: cover;
+     object-position: 42% center;
+
+     filter:
+          brightness(0.85) contrast(1.06);
+}
+
+/* =========================================================
+   23. FLOATING MOBILE
+========================================================= */
+
+.fxh-why-floating-phone {
+     position: absolute;
+
+     top: 11%;
+     left: -4%;
+
+     z-index: 2;
+
+     width: 38%;
+     max-width: 280px;
+
+     border-radius: 14px;
+
+     box-shadow:
+          0 10px 40px rgba(0, 95, 255, 0.18);
+
+     transform: rotate(-13deg);
+}
+
+/* =========================================================
+   24. TRUST BADGE
+========================================================= */
+
+.fxh-why-stat {
+     position: absolute;
+
+     top: 13%;
+     left: 37%;
+
+     z-index: 3;
+
+     display: flex;
+     flex-direction: column;
+
+     align-items: center;
+     justify-content: center;
+
+     width: 132px;
+     height: 110px;
+
+     padding: 12px;
+
+     border: 1px solid rgba(0, 171, 255, 0.7);
+
+     border-radius: 15px;
+
+     background: rgba(2, 24, 48, 0.78);
+
+     backdrop-filter: blur(15px);
+
+     text-align: center;
+}
+
+.fxh-why-stat-icon {
+     color: #00cfff;
+}
+
+.fxh-why-stat strong {
+     color: #ffffff;
+
+     font-size: 15px;
+     font-weight: 800;
+
+     line-height: 1.4;
+}
+
+.fxh-why-stat>span {
+     color: #b7d6ec;
+
+     font-size: 10px;
+}
+
+/* =========================================================
+   25. TRUST CHECKLIST
+========================================================= */
+
+.fxh-why-checklist {
+     position: absolute;
+
+     top: 15%;
+     right: 0;
+
+     z-index: 4;
+
+     display: flex;
+     flex-direction: column;
+
+     gap: 13px;
+
+     width: 193px;
+
+     padding: 18px 14px;
+
+     border: 1px solid rgba(0, 149, 255, 0.43);
+
+     border-radius: 13px;
+
+     background: rgba(2, 17, 32, 0.83);
+
+     backdrop-filter: blur(14px);
+}
+
+.fxh-why-check-item {
+     display: flex;
+     align-items: center;
+
+     gap: 9px;
+
+     color: #e8f4ff;
+
+     font-size: 10px;
+     font-weight: 500;
+}
+
+.fxh-why-check-item span {
+     display: grid;
+     place-items: center;
+
+     width: 20px;
+     height: 20px;
+
+     flex-shrink: 0;
+
+     border-radius: 50%;
+
+     background: #008cff;
+
+     color: #ffffff;
+}
+
+/* =========================================================
+   26. MEMBERSHIP SECTION
+========================================================= */
+
+.fxh-membership {
+     position: relative;
+
+     width: 100%;
+
+     padding: 56px 0 38px;
+
+     background:
+          radial-gradient(ellipse at 85% 40%,
+               rgba(0, 128, 255, 0.12),
+               transparent 43%),
+          #020b15;
+
+     border-bottom: 1px solid rgba(0, 140, 255, 0.17);
+
+     overflow: hidden;
+}
+
+/* =========================================================
+   27. MEMBERSHIP LAYOUT
+========================================================= */
+
+.fxh-membership-layout {
+     display: grid;
+
+     grid-template-columns:
+          minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 0.42fr);
+
+     gap: 25px;
+
+     align-items: center;
+}
+
+/* =========================================================
+   28. MEMBERSHIP INTRO
+========================================================= */
+
+.fxh-membership-intro {
+     position: relative;
+
+     z-index: 2;
+}
+
+.fxh-membership-intro .fxh-heading {
+     font-size: clamp(30px, 2.7vw, 43px);
+}
+
+.fxh-membership-intro .fxh-section-desc {
+     margin-top: 15px;
+}
+
+/* =========================================================
+   29. MEMBERSHIP EXPLORE BUTTON
+========================================================= */
+
+.fxh-membership-explore {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+
+     gap: 12px;
+
+     min-height: 43px;
+
+     margin-top: 24px;
+     padding: 11px 20px;
+
+     border: 1px solid rgba(0, 161, 255, 0.5);
+
+     border-radius: 50px;
+
+     background: linear-gradient(100deg,
+               #006bff,
+               #00bfff);
+
+     color: #ffffff;
+
+     font-size: 12px;
+     font-weight: 700;
+
+     text-decoration: none;
+
+     transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+}
+
+.fxh-membership-explore:hover {
+     transform: translateY(-3px);
+
+     box-shadow:
+          0 8px 25px rgba(0, 140, 255, 0.25);
+}
+
+/* =========================================================
+   30. MEMBERSHIP CARDS
+========================================================= */
+
+.fxh-membership-cards {
+     display: grid;
+
+     grid-template-columns: repeat(2,
+               minmax(0, 1fr));
+
+     gap: 15px;
+
+     min-width: 0;
+}
+
+/* =========================================================
+   31. MEMBERSHIP PLAN CARD
+========================================================= */
+
+.fxh-plan-card {
+     position: relative;
+
+     display: flex;
+     flex-direction: column;
+
+     min-width: 0;
+
+     min-height: 270px;
+
+     padding: 23px 20px 17px;
+
+     border: 1px solid rgba(0, 150, 255, 0.47);
+
+     border-radius: 14px;
+
+     background: linear-gradient(145deg,
+               rgba(4, 28, 53, 0.83),
+               rgba(2, 16, 32, 0.92));
+
+     transition:
+          transform 0.3s ease,
+          border-color 0.3s ease,
+          box-shadow 0.3s ease;
+}
+
+.fxh-plan-card:hover {
+     transform: translateY(-6px);
+
+     border-color: #00c6ff;
+
+     box-shadow:
+          0 14px 30px rgba(0, 113, 255, 0.14);
+}
+
+.fxh-plan-card-premium {
+     background: linear-gradient(145deg,
+               rgba(5, 35, 68, 0.88),
+               rgba(3, 20, 40, 0.92));
+}
+
+/* =========================================================
+   32. PLAN PRICE
+========================================================= */
+
+.fxh-plan-price {
+     color: #00cfff;
+
+     font-size: 36px;
+     font-weight: 800;
+
+     letter-spacing: -1.5px;
+
+     line-height: 1.1;
+}
+
+.fxh-plan-price span {
+     font-size: 26px;
+}
+
+/* =========================================================
+   33. PLAN TITLE
+========================================================= */
+
+.fxh-plan-card h3 {
+     margin: 10px 0 8px;
+
+     color: #ffffff;
+
+     font-size: 13px;
+     font-weight: 700;
+
+     line-height: 1.4;
+
+     letter-spacing: 0;
+}
+
+/* =========================================================
+   34. PLAN DESCRIPTION
+========================================================= */
+
+.fxh-plan-description {
+     min-height: 43px;
+
+     margin: 0;
+
+     color: #b6c8dc;
+
+     font-size: 10px;
+
+     line-height: 1.55;
+}
+
+/* =========================================================
+   35. PLAN FEATURES
+========================================================= */
+
+.fxh-plan-features {
+     display: flex;
+     flex-direction: column;
+
+     gap: 8px;
+
+     margin-top: 16px;
+     margin-bottom: 18px;
+}
+
+.fxh-plan-feature {
+     display: flex;
+     align-items: center;
+
+     gap: 8px;
+
+     color: #e0ecf8;
+
+     font-size: 10px;
+
+     line-height: 1.4;
+}
+
+.fxh-plan-check {
+     display: grid;
+     place-items: center;
+
+     width: 16px;
+     height: 16px;
+
+     flex-shrink: 0;
+
+     border-radius: 50%;
+
+     background: #008cff;
+
+     color: #ffffff;
+}
+
+/* =========================================================
+   36. PLAN BUTTON
+========================================================= */
+
+.fxh-plan-button {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+
+     gap: 10px;
+
+     width: 100%;
+     min-height: 39px;
+
+     margin-top: auto;
+     padding: 10px;
+
+     border-radius: 8px;
+
+     background: linear-gradient(100deg,
+               #007bff,
+               #00c6ff);
+
+     color: #ffffff;
+
+     font-size: 11px;
+     font-weight: 700;
+
+     text-decoration: none;
+
+     transition:
+          filter 0.3s ease,
+          transform 0.3s ease;
+}
+
+.fxh-plan-button:hover {
+     filter: brightness(1.13);
+
+     transform: translateY(-2px);
+}
+
+.fxh-plan-button-light {
+     background: linear-gradient(100deg,
+               #d7efff,
+               #ffffff);
+
+     color: #041326;
+}
+
+/* =========================================================
+   37. MEMBERSHIP IMAGE
+========================================================= */
+
+.fxh-membership-visual {
+     position: relative;
+
+     min-width: 0;
+
+     height: 270px;
+
+     overflow: visible;
+}
+
+.fxh-membership-visual>img {
+     display: block;
+
+     width: 100%;
+     height: 100%;
+
+     object-fit: cover;
+     object-position: 40% center;
+
+     border-radius: 15px;
+
+     opacity: 0.9;
+
+     -webkit-mask-image: linear-gradient(90deg,
+               transparent 0%,
+               black 15%,
+               black 100%);
+
+     mask-image: linear-gradient(90deg,
+               transparent 0%,
+               black 15%,
+               black 100%);
+}
+
+/* =========================================================
+   38. FIRST SERVICE FREE BADGE
+========================================================= */
+
+.fxh-free-badge {
+     position: absolute;
+
+     top: -20px;
+     right: -5px;
+
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+
+     gap: 2px;
+
+     width: 116px;
+     height: 116px;
+
+     border: 1px solid #00baff;
+
+     border-radius: 50%;
+
+     background: radial-gradient(circle,
+               #064b83,
+               #031528 78%);
+
+     box-shadow:
+          0 0 25px rgba(0, 130, 255, 0.27);
+
+     text-align: center;
+
+     color: #ffffff;
+}
+
+.fxh-free-badge span {
+     font-size: 12px;
+     font-weight: 800;
+
+     line-height: 1.2;
+}
+
+.fxh-free-badge strong {
+     font-size: 19px;
+     font-weight: 900;
+
+     color: #00cfff;
+}
+
+.fxh-free-badge svg {
+     margin-top: 4px;
+
+     color: #00d4ff;
+}
+
+/* =========================================================
+   39. MEMBERSHIP TERMS
+========================================================= */
+
+.fxh-membership-note {
+     width: min(1440px, 92%);
+
+     margin: 18px auto 0;
+
+     color: #7e94aa;
+
+     font-size: 10px;
+
+     line-height: 1.6;
+}
+
+/* =========================================================
+   40. HOW IT WORKS
+========================================================= */
+
+.fxh-how {
+     position: relative;
+
+     width: 100%;
+
+     padding: 56px 0;
+
+     background:
+          linear-gradient(110deg,
+               #020b15,
+               #04182a,
+               #020b15);
+
+     border-bottom: 1px solid rgba(0, 140, 255, 0.2);
+}
+
+/* =========================================================
+   41. HOW LAYOUT
+========================================================= */
+
+.fxh-how-layout {
+     display: grid;
+
+     grid-template-columns:
+          minmax(0, 0.9fr) minmax(0, 1.6fr);
+
+     align-items: center;
+
+     gap: 45px;
+}
+
+/* =========================================================
+   42. HOW INTRO
+========================================================= */
+
+.fxh-how-intro .fxh-heading {
+     font-size: clamp(29px, 2.5vw, 40px);
+}
+
+.fxh-how-intro .fxh-section-desc {
+     margin-top: 13px;
+}
+
+/* =========================================================
+   43. THREE STEPS GRID
+========================================================= */
+
+.fxh-steps {
+     display: grid;
+
+     grid-template-columns: repeat(3,
+               minmax(0, 1fr));
+
+     gap: 28px;
+}
+
+/* =========================================================
+   44. SINGLE STEP
+========================================================= */
+
+.fxh-step {
+     position: relative;
+
+     min-width: 0;
+
+     padding: 5px 10px 5px 0;
+}
+
+/* =========================================================
+   45. STEP TOP
+========================================================= */
+
+.fxh-step-top {
+     display: flex;
+     align-items: center;
+
+     gap: 15px;
+
+     margin-bottom: 13px;
+}
+
+/* =========================================================
+   46. STEP NUMBER
+========================================================= */
+
+.fxh-step-number {
+     color: #00bfff;
+
+     font-size: 25px;
+     font-weight: 800;
+
+     letter-spacing: -1px;
+}
+
+/* =========================================================
+   47. STEP ICON
+========================================================= */
+
+.fxh-step-icon {
+     display: grid;
+     place-items: center;
+
+     width: 57px;
+     height: 57px;
+
+     border-radius: 50%;
+
+     background: linear-gradient(145deg,
+               rgba(0, 140, 255, 0.22),
+               rgba(0, 70, 140, 0.07));
+
+     color: #00cfff;
+}
+
+/* =========================================================
+   48. STEP TEXT
+========================================================= */
+
+.fxh-step h3 {
+     margin: 0 0 8px;
+
+     color: #ffffff;
+
+     font-size: 13px;
+     font-weight: 700;
+
+     letter-spacing: 0;
+}
+
+.fxh-step p {
+     max-width: 205px;
+
+     margin: 0;
+
+     color: #b3c4d6;
+
+     font-size: 11px;
+     line-height: 1.65;
+}
+
+/* =========================================================
+   49. STEP CONNECTING ARROW
+========================================================= */
+
+.fxh-step-arrow {
+     position: absolute;
+
+     top: 31px;
+     right: -18px;
+
+     color: #d8ecff;
+}
+
+/* =========================================================
+   50. TESTIMONIALS SECTION
+========================================================= */
+
+.fxh-testimonials {
+     position: relative;
+
+     width: 100%;
+
+     padding: 55px 0 65px;
+
+     background: #020b15;
+}
+
+/* =========================================================
+   51. TESTIMONIALS LAYOUT
+========================================================= */
+
+.fxh-testimonials-layout {
+     display: grid;
+
+     grid-template-columns:
+          minmax(0, 0.72fr) minmax(0, 1.8fr);
+
+     gap: 35px;
+
+     align-items: center;
+}
+
+/* =========================================================
+   52. TESTIMONIAL INTRO
+========================================================= */
+
+.fxh-testimonials-intro .fxh-heading {
+     font-size: clamp(29px, 2.5vw, 41px);
+}
+
+.fxh-testimonials-intro .fxh-section-desc {
+     margin-top: 12px;
+}
+
+/* =========================================================
+   53. REVIEW CONTENT
+========================================================= */
+
+.fxh-testimonial-content {
+     position: relative;
+
+     min-width: 0;
+
+     padding-top: 24px;
+}
+
+/* =========================================================
+   54. SLIDER CONTROLS
+========================================================= */
+
+.fxh-review-controls {
+     position: absolute;
+
+     top: -23px;
+     right: 0;
+
+     display: flex;
+     align-items: center;
+
+     gap: 8px;
+}
+
+.fxh-review-controls button {
+     display: grid;
+     place-items: center;
+
+     width: 31px;
+     height: 31px;
+
+     padding: 0;
+
+     border: 1px solid #00baff;
+     border-radius: 50%;
+
+     background: transparent;
+
+     color: #00cfff;
+
+     cursor: pointer;
+
+     transition:
+          background 0.3s ease,
+          color 0.3s ease;
+}
+
+.fxh-review-controls button:hover {
+     background: #008cff;
+
+     color: #ffffff;
+}
+
+/* =========================================================
+   55. REVIEW SLIDER
+========================================================= */
+
+.fxh-reviews {
+     display: flex;
+
+     gap: 14px;
+
+     overflow-x: auto;
+
+     scroll-behavior: smooth;
+     scroll-snap-type: x mandatory;
+
+     scrollbar-width: none;
+}
+
+.fxh-reviews::-webkit-scrollbar {
+     display: none;
+}
+
+/* =========================================================
+   56. REVIEW CARD
+========================================================= */
+
+.fxh-review-card {
+     display: flex;
+     flex-direction: column;
+
+     flex: 0 0 calc((100% - 28px) / 3);
+
+     min-width: 0;
+
+     min-height: 190px;
+
+     padding: 18px;
+
+     border: 1px solid rgba(0, 149, 255, 0.43);
+
+     border-radius: 13px;
+
+     background: linear-gradient(145deg,
+               rgba(5, 29, 52, 0.8),
+               rgba(3, 16, 31, 0.9));
+
+     scroll-snap-align: start;
+
+     transition:
+          border-color 0.3s ease,
+          transform 0.3s ease;
+}
+
+.fxh-review-card:hover {
+     border-color: #00cfff;
+}
+
+/* =========================================================
+   57. REVIEW TOP
+========================================================= */
+
+.fxh-review-top {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+
+     gap: 10px;
+
+     margin-bottom: 14px;
+}
+
+.fxh-review-quote {
+     display: grid;
+     place-items: center;
+
+     width: 34px;
+     height: 34px;
+
+     border-radius: 50%;
+
+     background: rgba(0, 140, 255, 0.14);
+
+     color: #00cfff;
+}
+
+.fxh-review-status {
+     color: #00cfff;
+
+     font-size: 9px;
+     font-weight: 700;
+
+     letter-spacing: 1px;
+}
+
+/* =========================================================
+   58. REVIEW TEXT
+========================================================= */
+
+.fxh-review-card h3 {
+     margin: 0 0 9px;
+
+     color: #ffffff;
+
+     font-size: 13px;
+     font-weight: 700;
+
+     letter-spacing: 0;
+}
+
+.fxh-review-text {
+     margin: 0 0 17px;
+
+     color: #b7c9dc;
+
+     font-size: 11px;
+     line-height: 1.7;
+}
+
+/* =========================================================
+   59. REVIEW BOTTOM
+========================================================= */
+
+.fxh-review-bottom {
+     display: flex;
+     align-items: center;
+
+     gap: 10px;
+
+     margin-top: auto;
+
+     padding-top: 12px;
+
+     border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================================
+   60. REVIEW AVATAR ICON
+   SVG ONLY — NO PROFILE IMAGE
+========================================================= */
+
+.fxh-review-avatar {
+     display: grid;
+     place-items: center;
+
+     width: 35px;
+     height: 35px;
+
+     flex-shrink: 0;
+
+     border: 1px solid rgba(0, 160, 255, 0.3);
+
+     border-radius: 50%;
+
+     background: #09243c;
+
+     color: #00cfff;
+}
+
+.fxh-review-bottom>div:nth-child(2) {
+     display: flex;
+     flex-direction: column;
+
+     gap: 3px;
+
+     min-width: 0;
+}
+
+.fxh-review-bottom strong {
+     color: #ffffff;
+
+     font-size: 10px;
+     font-weight: 700;
+}
+
+.fxh-review-bottom small {
+     color: #9eb4c9;
+
+     font-size: 9px;
+}
+
+/* =========================================================
+   61. REVIEW CHECK
+========================================================= */
+
+.fxh-review-check {
+     flex-shrink: 0;
+
+     margin-left: auto;
+
+     color: #00bfff;
+}
+
+/* =========================================================
+   62. LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1600px) {
+     .fxh-services {
+          padding: 75px 0;
+     }
+
+     .fxh-service-card {
+          height: 245px;
+     }
+
+     .fxh-why,
+     .fxh-membership,
+     .fxh-how,
+     .fxh-testimonials {
+          padding-top: 70px;
+          padding-bottom: 70px;
+     }
+}
+
+/* =========================================================
+   63. LAPTOP
+========================================================= */
+
+@media (max-width: 1350px) {
+     .fxh-heading {
+          font-size: 32px;
+     }
+
+     .fxh-services-grid {
+          gap: 10px;
+     }
+
+     .fxh-service-card {
+          height: 190px;
+     }
+
+     .fxh-service-title h3 {
+          font-size: 12px;
+     }
+
+     .fxh-service-title p {
+          font-size: 10px;
+     }
+
+     .fxh-service-arrow {
+          width: 27px;
+          height: 27px;
+     }
+
+     .fxh-why-layout {
+          gap: 25px;
+     }
+
+     .fxh-why-features {
+          gap: 8px;
+     }
+
+     .fxh-why-feature {
+          gap: 6px;
+     }
+
+     .fxh-why-feature-icon {
+          width: 35px;
+          height: 35px;
+     }
+
+     .fxh-why-feature span {
+          font-size: 10px;
+     }
+
+     .fxh-why-checklist {
+          width: 175px;
+     }
+
+     .fxh-membership-layout {
+          gap: 16px;
+     }
+
+     .fxh-plan-card {
+          padding: 18px 13px 15px;
+     }
+
+     .fxh-plan-price {
+          font-size: 32px;
+     }
+
+     .fxh-plan-feature {
+          font-size: 9px;
+     }
+
+     .fxh-review-card {
+          padding: 14px;
+     }
+}
+
+/* =========================================================
+   64. TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+     .fxh-services-grid {
+          grid-template-columns: repeat(3,
+                    minmax(0, 1fr));
+
+          gap: 15px;
+     }
+
+     .fxh-service-card {
+          height: 230px;
+     }
+
+     .fxh-service-title h3 {
+          font-size: 15px;
+     }
+
+     .fxh-service-title p {
+          font-size: 12px;
+     }
+
+     .fxh-why-layout {
+          grid-template-columns: 1fr;
+
+          gap: 25px;
+     }
+
+     .fxh-why-content {
+          max-width: 100%;
+     }
+
+     .fxh-why-visual {
+          height: 340px;
+     }
+
+     .fxh-why-features {
+          max-width: 600px;
+     }
+
+     .fxh-membership-layout {
+          grid-template-columns:
+               minmax(0, 1fr) minmax(0, 1.4fr);
+     }
+
+     .fxh-membership-visual {
+          display: none;
+     }
+
+     .fxh-how-layout {
+          grid-template-columns: 1fr;
+
+          gap: 35px;
+     }
+
+     .fxh-testimonials-layout {
+          grid-template-columns: 1fr;
+
+          gap: 25px;
+     }
+
+     .fxh-review-card {
+          min-height: 195px;
+     }
+}
+
+/* =========================================================
+   65. MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+     .fxh-container {
+          width: 92%;
+     }
+
+     /* COMMON */
+
+     .fxh-heading {
+          font-size: clamp(27px, 6vw, 38px);
+     }
+
+     .fxh-section-desc {
+          font-size: 12px;
+     }
+
+     .fxh-section-tag {
+          font-size: 9px;
+     }
+
+     /* SERVICES */
+
+     .fxh-services {
+          padding: 48px 0 55px;
+     }
+
+     .fxh-section-header {
+          align-items: flex-start;
+
+          flex-direction: column;
+
+          gap: 17px;
+     }
+
+     .fxh-outline-button {
+          min-height: 40px;
+
+          font-size: 11px;
+     }
+
+     .fxh-services-grid {
+          grid-template-columns: repeat(2,
+                    minmax(0, 1fr));
+
+          gap: 12px;
+     }
+
+     .fxh-service-card {
+          height: 215px;
+     }
+
+     .fxh-service-content {
+          left: 11px;
+          right: 11px;
+          bottom: 11px;
+     }
+
+     .fxh-service-title h3 {
+          font-size: 13px;
+     }
+
+     .fxh-service-title p {
+          font-size: 11px;
+     }
+
+     /* WHY CHOOSE */
+
+     .fxh-why {
+          padding: 50px 0;
+     }
+
+     .fxh-why-layout {
+          grid-template-columns: 1fr;
+
+          gap: 25px;
+     }
+
+     .fxh-why-content .fxh-heading {
+          font-size: clamp(29px, 6vw, 39px);
+     }
+
+     .fxh-why-features {
+          grid-template-columns: repeat(2,
+                    minmax(0, 1fr));
+
+          gap: 17px;
+     }
+
+     .fxh-why-feature span {
+          font-size: 11px;
+     }
+
+     .fxh-why-visual {
+          height: 300px;
+     }
+
+     .fxh-why-technician {
+          inset: 0 0 0 5%;
+     }
+
+     .fxh-why-stat {
+          left: 28%;
+          top: 9%;
+
+          width: 110px;
+          height: 100px;
+     }
+
+     .fxh-why-checklist {
+          right: 0;
+
+          width: 155px;
+
+          gap: 11px;
+
+          padding: 13px 10px;
+     }
+
+     .fxh-why-check-item {
+          font-size: 9px;
+     }
+
+     /* MEMBERSHIP */
+
+     .fxh-membership {
+          padding: 50px 0 40px;
+     }
+
+     .fxh-membership-layout {
+          grid-template-columns: 1fr;
+
+          gap: 27px;
+     }
+
+     .fxh-membership-intro .fxh-heading {
+          font-size: clamp(29px, 6vw, 39px);
+     }
+
+     .fxh-membership-cards {
+          gap: 12px;
+     }
+
+     .fxh-plan-card {
+          min-height: 265px;
+
+          padding: 18px 13px;
+     }
+
+     .fxh-plan-price {
+          font-size: 34px;
+     }
+
+     .fxh-plan-card h3 {
+          font-size: 12px;
+     }
+
+     .fxh-plan-description {
+          font-size: 9px;
+     }
+
+     .fxh-plan-feature {
+          font-size: 9px;
+     }
+
+     .fxh-membership-visual {
+          display: block;
+
+          width: 100%;
+          height: 220px;
+     }
+
+     .fxh-membership-visual>img {
+          object-position: center;
+     }
+
+     .fxh-free-badge {
+          right: 10px;
+          top: -15px;
+
+          width: 100px;
+          height: 100px;
+     }
+
+     .fxh-membership-note {
+          width: 92%;
+     }
+
+     /* HOW IT WORKS */
+
+     .fxh-how {
+          padding: 50px 0;
+     }
+
+     .fxh-how-layout {
+          gap: 30px;
+     }
+
+     .fxh-how-intro .fxh-heading {
+          font-size: clamp(28px, 6vw, 37px);
+     }
+
+     .fxh-steps {
+          grid-template-columns: 1fr;
+
+          gap: 22px;
+     }
+
+     .fxh-step {
+          display: grid;
+
+          grid-template-columns: 75px 1fr;
+
+          column-gap: 15px;
+
+          align-items: center;
+
+          padding: 0 0 20px;
+
+          border-bottom: 1px solid rgba(0, 150, 255, 0.16);
+     }
+
+     .fxh-step-top {
+          grid-row: span 2;
+
+          flex-direction: column;
+
+          gap: 7px;
+
+          margin-bottom: 0;
+     }
+
+     .fxh-step-number {
+          font-size: 19px;
+     }
+
+     .fxh-step-icon {
+          width: 48px;
+          height: 48px;
+     }
+
+     .fxh-step-icon svg {
+          width: 25px;
+          height: 25px;
+     }
+
+     .fxh-step h3 {
+          margin-bottom: 4px;
+     }
+
+     .fxh-step p {
+          max-width: 100%;
+     }
+
+     .fxh-step-arrow {
+          display: none;
+     }
+
+     /* TESTIMONIALS */
+
+     .fxh-testimonials {
+          padding: 50px 0;
+     }
+
+     .fxh-review-card {
+          flex-basis: min(290px, 80vw);
+     }
+
+     .fxh-review-controls {
+          top: -30px;
+     }
+}
+
+/* =========================================================
+   66. SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+     .fxh-heading {
+          font-size: 28px;
+     }
+
+     .fxh-service-card {
+          height: 185px;
+     }
+
+     .fxh-service-title h3 {
+          font-size: 12px;
+     }
+
+     .fxh-service-title p {
+          font-size: 10px;
+     }
+
+     .fxh-service-arrow {
+          width: 26px;
+          height: 26px;
+     }
+
+     .fxh-service-arrow svg {
+          width: 16px;
+          height: 16px;
+     }
+
+     .fxh-why-visual {
+          height: 250px;
+     }
+
+     .fxh-why-floating-phone {
+          width: 35%;
+     }
+
+     .fxh-why-checklist {
+          width: 142px;
+
+          padding: 12px 9px;
+     }
+
+     .fxh-why-check-item {
+          font-size: 8px;
+     }
+
+     .fxh-why-stat {
+          left: 22%;
+
+          width: 95px;
+          height: 90px;
+     }
+
+     .fxh-why-stat strong {
+          font-size: 12px;
+     }
+
+     .fxh-plan-card {
+          padding: 16px 11px;
+
+          min-height: 280px;
+     }
+
+     .fxh-plan-price {
+          font-size: 30px;
+     }
+
+     .fxh-plan-price span {
+          font-size: 22px;
+     }
+
+     .fxh-plan-card h3 {
+          font-size: 11px;
+     }
+
+     .fxh-plan-description {
+          font-size: 9px;
+     }
+
+     .fxh-plan-features {
+          gap: 7px;
+     }
+
+     .fxh-plan-feature {
+          font-size: 8px;
+     }
+
+     .fxh-plan-button {
+          font-size: 10px;
+     }
+}
+
+/* =========================================================
+   67. REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+     .fxh-home *,
+     .fxh-home *::before,
+     .fxh-home *::after {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+     }
+}

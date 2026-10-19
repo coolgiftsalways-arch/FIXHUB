@@ -1,0 +1,526 @@
+/* =========================================================
+   FIXHUB — GLOBAL CSS
+   Premium Doorstep Mobile Repair Website
+========================================================= */
+
+/* GOOGLE FONTS */
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+/* =========================================================
+   ROOT VARIABLES
+========================================================= */
+
+:root {
+  --primary: #008cff;
+  --secondary: #00d4ff;
+
+  --background: #050a12;
+  --background-light: #0b1422;
+
+  --surface: #111c2d;
+  --surface-hover: #17263d;
+
+  --white: #ffffff;
+  --text-primary: #f5f7fb;
+  --text-secondary: #a0afc2;
+  --text-muted: #718096;
+
+  --border: rgba(255, 255, 255, 0.1);
+
+  --gradient-primary: linear-gradient(135deg,
+      #007bff 0%,
+      #00cfff 100%);
+
+  --font-primary: "DM Sans", sans-serif;
+  --font-heading: "Space Grotesk", sans-serif;
+
+  --container-width: 1400px;
+
+  --transition: 0.3s ease;
+}
+
+/* =========================================================
+   GLOBAL RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  scroll-behavior: auto;
+  scroll-padding-top: 90px;
+}
+
+body {
+  width: 100%;
+  min-width: 320px;
+  min-height: 100vh;
+
+  background: var(--background);
+  color: var(--text-primary);
+
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: 400;
+
+  line-height: 1.6;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* =========================================================
+   TYPOGRAPHY
+========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+h1 {
+  font-size: clamp(42px, 6vw, 96px);
+}
+
+h2 {
+  font-size: clamp(32px, 4vw, 64px);
+}
+
+h3 {
+  font-size: clamp(20px, 2vw, 32px);
+}
+
+p {
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
+}
+
+img,
+video {
+  display: block;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* =========================================================
+   CUSTOM SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050a12;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg,
+      #008cff,
+      #00d4ff);
+
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00d4ff;
+}
+
+/* =========================================================
+   TEXT SELECTION
+========================================================= */
+
+::selection {
+  background: #008cff;
+  color: white;
+}
+
+/* =========================================================
+   LAYOUT CONTAINER
+========================================================= */
+
+.container {
+  width: 92%;
+  max-width: var(--container-width);
+  margin-inline: auto;
+}
+
+.section {
+  position: relative;
+  width: 100%;
+  padding: 110px 0;
+}
+
+/* =========================================================
+   GRADIENT TEXT
+========================================================= */
+
+.gradient-text {
+  background: linear-gradient(90deg,
+      #008cff,
+      #00d4ff);
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  padding: 15px 30px;
+
+  border: none;
+  border-radius: 50px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  text-align: center;
+  white-space: nowrap;
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 10px 30px rgba(0, 140, 255, 0.3);
+}
+
+.btn-outline {
+  background: transparent;
+  color: white;
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  border-color: var(--secondary);
+}
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
+
+.section-heading {
+  margin-bottom: 50px;
+}
+
+.section-heading.center {
+  text-align: center;
+}
+
+.section-tag {
+  display: inline-block;
+
+  margin-bottom: 16px;
+
+  color: var(--secondary);
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.section-title {
+  margin-bottom: 20px;
+}
+
+.section-description {
+  max-width: 650px;
+
+  color: var(--text-secondary);
+
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.section-heading.center .section-description {
+  margin-inline: auto;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+  border-radius: 20px;
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+
+  background: var(--surface-hover);
+
+  border-color: rgba(0, 212, 255, 0.25);
+}
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+input,
+textarea,
+select {
+  width: 100%;
+
+  padding: 14px 18px;
+
+  background: #111c2d;
+  color: white;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  outline: none;
+
+  transition: border-color 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #78889d;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   GSAP + LOCOMOTIVE SCROLL
+========================================================= */
+
+[data-scroll-container] {
+  min-height: 100vh;
+}
+
+/* GPU acceleration for selected animated elements */
+
+.will-animate {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.gsap-reveal {
+  transform: translateZ(0);
+}
+
+/* Prevent horizontal overflow */
+
+main {
+  width: 100%;
+  min-height: 60vh;
+}
+
+/* =========================================================
+   LOADING SCREEN
+========================================================= */
+
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--background);
+}
+
+/* =========================================================
+   TABLET RESPONSIVE
+========================================================= */
+
+@media (max-width: 1024px) {
+
+  .section {
+    padding: 85px 0;
+  }
+
+  .container {
+    width: 94%;
+  }
+
+}
+
+/* =========================================================
+   MOBILE RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  body {
+    font-size: 14px;
+  }
+
+  .container {
+    width: 92%;
+  }
+
+  .section {
+    padding: 70px 0;
+  }
+
+  h1 {
+    font-size: clamp(40px, 10vw, 60px);
+  }
+
+  h2 {
+    font-size: clamp(28px, 7vw, 44px);
+  }
+
+  h3 {
+    font-size: 22px;
+  }
+
+  .section-heading {
+    margin-bottom: 35px;
+  }
+
+  .section-description {
+    font-size: 14px;
+  }
+
+  .btn {
+    padding: 14px 24px;
+    font-size: 13px;
+  }
+
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .section {
+    padding: 60px 0;
+  }
+
+  .container {
+    width: 92%;
+  }
+
+  h1 {
+    font-size: 42px;
+  }
+
+  h2 {
+    font-size: 30px;
+  }
+
+  .btn {
+    padding: 13px 20px;
+  }
+
+}
+
+/* =========================================================
+   ACCESSIBILITY — REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto !important;
+  }
+
+}
