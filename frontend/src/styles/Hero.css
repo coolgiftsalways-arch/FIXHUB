@@ -1555,3 +1555,151 @@
           transition: none !important;
      }
 }
+
+.fh-hero__pricing {
+     margin-top: 26px;
+     border: 1px solid rgba(0, 190, 255, .38);
+     border-radius: 22px;
+     background: linear-gradient(135deg, rgba(2, 36, 64, .96), rgba(2, 11, 27, .95));
+     padding: 20px;
+     color: #fff
+}
+
+.fh-hero__pricing-head {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 10px;
+     flex-wrap: wrap;
+     margin-bottom: 16px
+}
+
+.fh-hero__pricing-head span {
+     color: #00c7ff;
+     font-size: 11px;
+     letter-spacing: 2px;
+     font-weight: 800
+}
+
+.fh-hero__pricing-head strong {
+     font-size: 15px
+}
+
+.fh-hero__pricing-grid {
+     display: grid;
+     grid-template-columns: repeat(5, minmax(0, 1fr));
+     gap: 9px
+}
+
+.fh-hero__pricing-item {
+     min-width: 0;
+     text-decoration: none;
+     color: white;
+     padding: 15px 10px;
+     border-radius: 13px;
+     border: 1px solid rgba(0, 193, 255, .24);
+     background: rgba(3, 23, 43, .85);
+     display: flex;
+     flex-direction: column;
+     gap: 7px;
+     transition: transform .2s, border-color .2s
+}
+
+.fh-hero__pricing-item:hover {
+     transform: translateY(-3px);
+     border-color: #00c7ff
+}
+
+.fh-hero__pricing-item small {
+     font-size: 9px;
+     color: #8caec5;
+     letter-spacing: 1px
+}
+
+.fh-hero__pricing-item span {
+     font-size: 12px;
+     font-weight: 600;
+     line-height: 1.35
+}
+
+.fh-hero__pricing-item strong {
+     color: #00c7ff;
+     font-size: clamp(20px, 2.2vw, 30px)
+}
+
+.fh-hero__pricing-note,
+.fh-hero__deals-note {
+     font-size: 11px;
+     line-height: 1.5;
+     color: #a6bed0;
+     margin: 12px 0 0
+}
+
+.fh-hero__deals {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 12px;
+     margin-top: 14px
+}
+
+.fh-hero__deal {
+     display: flex;
+     align-items: center;
+     gap: 12px;
+     text-decoration: none;
+     color: #fff;
+     border: 1px solid rgba(0, 199, 255, .45);
+     border-radius: 15px;
+     padding: 14px;
+     background: linear-gradient(110deg, rgba(0, 131, 204, .27), rgba(2, 23, 47, .93))
+}
+
+.fh-hero__deal>span {
+     display: flex;
+     flex: 1;
+     flex-direction: column;
+     gap: 4px
+}
+
+.fh-hero__deal strong {
+     font-size: 14px;
+     color: #fff
+}
+
+.fh-hero__deal small {
+     font-size: 11px;
+     color: #c5e0ed
+}
+
+.fh-hero__deal-second {
+     border-color: rgba(255, 201, 69, .55);
+     background: linear-gradient(110deg, rgba(146, 79, 0, .26), rgba(2, 23, 47, .93))
+}
+
+.fh-hero__deal-second strong {
+     color: #ffd166
+}
+
+@media(max-width:900px) {
+     .fh-hero__pricing-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr))
+     }
+}
+
+@media(max-width:560px) {
+     .fh-hero__pricing {
+          padding: 14px
+     }
+
+     .fh-hero__pricing-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr))
+     }
+
+     .fh-hero__deals {
+          grid-template-columns: 1fr
+     }
+
+     .fh-hero__pricing-item strong {
+          font-size: 24px
+     }
+}

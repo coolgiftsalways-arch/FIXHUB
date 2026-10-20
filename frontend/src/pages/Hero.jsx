@@ -143,7 +143,7 @@ export default function Hero() {
         )
 
         .from(
-          ".fh-hero__membership",
+          ".fh-hero__pricing",
           {
             y: 35,
             opacity: 0,
@@ -153,7 +153,7 @@ export default function Hero() {
         )
 
         .from(
-          ".fh-hero__offer",
+          ".fh-hero__deals",
           {
             y: 20,
             opacity: 0,
@@ -417,51 +417,61 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* =================================
-              MEMBERSHIP PLANS
-          ================================= */}
-
-          <div className="fh-hero__membership">
-            {/* ₹499 PLAN */}
-
-            <Link to="/membership?plan=499" className="fh-hero__plan">
-              <span className="fh-hero__price">₹499</span>
-
-              <h3>Other Brands</h3>
-
-              <p>
-                Oppo, Vivo, OnePlus, Realme, Xiaomi, Redmi, POCO, Motorola and
-                more.
-              </p>
+          {/* REPAIR PRICES */}
+          <div className="fh-hero__pricing">
+            <div className="fh-hero__pricing-head">
+              <span>FIXHUB REPAIR PRICING</span>
+              <strong>One Service. One Clear Charge.</strong>
+            </div>
+            <div className="fh-hero__pricing-grid">
+              {[
+                ["Up to ₹20,000", "₹499"],
+                ["₹20,001 – ₹50,000", "₹699"],
+                ["₹50,001 – ₹90,000", "₹999"],
+                ["₹90,001 – ₹1,30,000", "₹1,299"],
+                ["Above ₹1,30,000", "₹1,699"],
+              ].map(([value, price]) => (
+                <Link
+                  to="/book-repair"
+                  className="fh-hero__pricing-item"
+                  key={price}
+                >
+                  <small>PHONE VALUE</small>
+                  <span>{value}</span>
+                  <strong>{price}</strong>
+                </Link>
+              ))}
+            </div>
+            <p className="fh-hero__pricing-note">
+              Charges apply per repair service. Replacement parts are charged
+              separately.
+            </p>
+          </div>
+          <div className="fh-hero__deals">
+            <Link to="/book-repair" className="fh-hero__deal">
+              <Gift size={23} />
+              <span>
+                <strong>FIRST SERVICE FREE*</strong>
+                <small>Original parts and proper repair documents</small>
+              </span>
+              <ArrowUpRight size={20} />
             </Link>
-
-            <span className="fh-hero__membership-divider" />
-
-            {/* ₹999 PLAN */}
-
-            <Link to="/membership?plan=999" className="fh-hero__plan">
-              <span className="fh-hero__price">₹999</span>
-
-              <h3>iPhone & Samsung</h3>
-
-              <p>Exclusively for Apple iPhone and Samsung mobile users.</p>
+            <Link
+              to="/book-repair"
+              className="fh-hero__deal fh-hero__deal-second"
+            >
+              <Gift size={23} />
+              <span>
+                <strong>2 SERVICES — 30% OFF</strong>
+                <small>Discount on combined service charges</small>
+              </span>
+              <ArrowUpRight size={20} />
             </Link>
           </div>
-
-          {/* =================================
-              FREE FIRST SERVICE
-          ================================= */}
-
-          <Link to="/membership" className="fh-hero__offer">
-            <Gift size={20} />
-
-            <span>
-              Get your first eligible mobile service <strong>FREE</strong> with
-              membership!*
-            </span>
-
-            <ArrowUpRight size={17} />
-          </Link>
+          <p className="fh-hero__deals-note">
+            *First eligible service charge waived; replacement parts extra.
+            Offers cannot be combined.
+          </p>
         </div>
       </div>
 

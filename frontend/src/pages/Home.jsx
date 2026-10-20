@@ -23,6 +23,9 @@ import {
   Settings2,
   Droplets,
   Gift,
+  Percent,
+  FileCheck2,
+  IndianRupee,
   BadgeCheck,
   Check,
   Clock3,
@@ -166,45 +169,18 @@ const trustFeatures = [
 ];
 
 // =====================================================
-// MEMBERSHIP PLANS
+// DEVICE-VALUE-BASED REPAIR SERVICE CHARGES
 // =====================================================
 
-const membershipPlans = [
-  {
-    id: "499",
-    price: "499",
-    title: "Other Brands Plan",
-
-    description:
-      "Oppo, Vivo, OnePlus, Realme, Xiaomi, Redmi, POCO, Motorola and more.",
-
-    features: [
-      "First eligible service FREE*",
-      "Doorstep repair booking",
-      "Repair status updates",
-      "Membership benefits",
-    ],
-
-    premium: false,
-  },
-
-  {
-    id: "999",
-    price: "999",
-    title: "iPhone & Samsung Plan",
-
-    description: "Exclusively for Apple iPhone and Samsung mobile users.",
-
-    features: [
-      "First eligible service FREE*",
-      "Doorstep repair booking",
-      "Repair status updates",
-      "Membership benefits",
-    ],
-
-    premium: true,
-  },
+const repairPricing = [
+  { range: "Up to ₹20,000", charge: 499 },
+  { range: "₹20,001 – ₹50,000", charge: 699 },
+  { range: "₹50,001 – ₹90,000", charge: 999 },
+  { range: "₹90,001 – ₹1,30,000", charge: 1299 },
+  { range: "Above ₹1,30,000", charge: 1699 },
 ];
+
+const rupees = (amount) => `₹${amount.toLocaleString("en-IN")}`;
 
 // =====================================================
 // HOW IT WORKS DATA
@@ -502,120 +478,108 @@ function WhyChooseSection() {
 }
 
 // =====================================================
-// 03 — MEMBERSHIP PLANS
+// 03 — REPAIR PRICING & SPECIAL OFFERS
 // =====================================================
 
-function MembershipSection() {
+function RepairOffersSection() {
   return (
-    <section className="fxh-membership" id="home-membership">
-      <div className="fxh-container fxh-membership-layout">
-        {/* LEFT SIDE */}
-
-        <div className="fxh-membership-intro" data-fxh-reveal>
-          <SectionTag>MEMBERSHIP PLANS</SectionTag>
-
-          <h2 className="fxh-heading">
-            Save More with
-            <br />
-            <span>FixHub Membership</span>
-          </h2>
-
-          <p className="fxh-section-desc">
-            Choose the right plan for your device and enjoy membership benefits,
-            including your first eligible service FREE.
-          </p>
-
-          <Link to="/membership" className="fxh-membership-explore">
-            Explore Membership
-            <ArrowUpRight size={17} />
+    <section className="fxh-offers" id="home-repair-offers">
+      <div className="fxh-container">
+        <div className="fxh-offers-heading" data-fxh-reveal>
+          <div>
+            <SectionTag>FIXHUB SPECIAL OFFERS</SectionTag>
+            <h2 className="fxh-heading">
+              Simple Pricing. <span>Better Savings.</span>
+            </h2>
+            <p className="fxh-section-desc">
+              One service charge per repair, based on your phone's value.
+              Know the service fee before you book.
+            </p>
+          </div>
+          <Link className="fxh-outline-button" to="/book-repair">
+            Book a Repair <ArrowRight size={17} />
           </Link>
         </div>
 
-        {/* MEMBERSHIP CARDS */}
-
-        <div className="fxh-membership-cards">
-          {membershipPlans.map((plan) => (
-            <div
-              key={plan.id}
-              className={`fxh-plan-card ${
-                plan.premium ? "fxh-plan-card-premium" : ""
-              }`}
-              data-fxh-reveal
-            >
-              {/* PRICE */}
-
-              <div className="fxh-plan-price">
-                <span>₹</span>
-
-                {plan.price}
+        <div className="fxh-offers-grid">
+          <div className="fxh-offers-pricing" data-fxh-reveal>
+            <div className="fxh-offers-pricing-head">
+              <div>
+                <span className="fxh-offers-eyebrow">REPAIR SERVICE CHARGES</span>
+                <h3>One Fixing Charge</h3>
               </div>
-
-              {/* PLAN NAME */}
-
-              <h3>{plan.title}</h3>
-
-              {/* DESCRIPTION */}
-
-              <p className="fxh-plan-description">{plan.description}</p>
-
-              {/* FEATURES */}
-
-              <div className="fxh-plan-features">
-                {plan.features.map((feature) => (
-                  <div className="fxh-plan-feature" key={feature}>
-                    <span className="fxh-plan-check">
-                      <Check size={12} />
-                    </span>
-
-                    <span>{feature}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* BUTTON */}
-
-              <Link
-                to={`/membership?plan=${plan.id}`}
-                className={`fxh-plan-button ${
-                  plan.premium ? "fxh-plan-button-light" : ""
-                }`}
-              >
-                Get Started
-                <ArrowRight size={16} />
-              </Link>
+              <IndianRupee size={30} aria-hidden="true" />
             </div>
-          ))}
-        </div>
+            <div className="fxh-offers-table-wrap">
+              <table className="fxh-offers-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Mobile phone value</th>
+                    <th scope="col">Per repair service</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {repairPricing.map(({ range, charge }) => (
+                    <tr key={range}>
+                      <td>{range}</td>
+                      <td><strong>{rupees(charge)}</strong></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="fxh-offers-note">
+              Service/labour charges only. Replacement parts, where required,
+              are billed separately. Final estimate is confirmed before repair.
+            </p>
+          </div>
 
-        {/* MEMBERSHIP IMAGE */}
+          <div className="fxh-offers-promos">
+            <div className="fxh-offers-promo fxh-offers-promo-free" data-fxh-reveal>
+              <div className="fxh-offers-promo-icon"><Gift size={27} /></div>
+              <span className="fxh-offers-eyebrow">WELCOME OFFER</span>
+              <h3>FIRST SERVICE <span>FREE*</span></h3>
+              <p>
+                Your first eligible repair service charge is on us.
+                We use original parts and provide proper repair documents.
+              </p>
+              <div className="fxh-offers-pills">
+                <span><BadgeCheck size={15} /> Original parts</span>
+                <span><FileCheck2 size={15} /> Invoice & documents</span>
+              </div>
+            </div>
 
-        <div className="fxh-membership-visual" data-fxh-reveal>
-          <img
-            src={membershipImg}
-            alt="FixHub premium mobile repair membership"
-            loading="lazy"
-          />
-
-          {/* FREE SERVICE BADGE */}
-
-          <div className="fxh-free-badge">
-            <span>FIRST</span>
-
-            <span>SERVICE</span>
-
-            <strong>FREE*</strong>
-
-            <Gift size={24} />
+            <div className="fxh-offers-promo fxh-offers-promo-discount" data-fxh-reveal>
+              <div className="fxh-offers-promo-icon"><Percent size={27} /></div>
+              <span className="fxh-offers-eyebrow">COMBO REPAIR OFFER</span>
+              <h3>2 SERVICES <span>30% OFF</span></h3>
+              <p>
+                Book two eligible repair services together and save 30%
+                on their combined service charges.
+              </p>
+              <div className="fxh-offers-pills">
+                <span><Check size={15} /> Display + battery</span>
+                <span><Check size={15} /> Camera + speaker</span>
+              </div>
+            </div>
           </div>
         </div>
+
+        <div className="fxh-offers-footer" data-fxh-reveal>
+          <div>
+            <ShieldCheck size={22} />
+            <span>Professional technicians • Transparent service fees • Repair documentation</span>
+          </div>
+          <Link to="/book-repair">Claim Your Offer <ArrowUpRight size={18} /></Link>
+        </div>
+        <p className="fxh-offers-terms">
+          *First-service offer applies to the service/labour fee of one eligible repair;
+          replacement parts are charged separately. The 30% discount applies to
+          service/labour charges for two eligible repairs and cannot be combined
+          with the free-first-service offer unless explicitly approved by FixHub.
+          Availability and eligibility are subject to confirmation at booking.
+        </p>
       </div>
-
-      {/* MEMBERSHIP TERMS */}
-
-      <p className="fxh-membership-note">
-        *Free-service eligibility and replacement-part charges depend on
-        membership terms.
-      </p>
     </section>
   );
 }
@@ -897,9 +861,9 @@ export default function Home() {
 
         <WhyChooseSection />
 
-        {/* 03 — MEMBERSHIP PLANS */}
+        {/* 03 — REPAIR PRICING & OFFERS */}
 
-        <MembershipSection />
+        <RepairOffersSection />
 
         {/* 04 — HOW IT WORKS */}
 
