@@ -5,6 +5,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { existsSync } from "node:fs";
 
 // ==========================================
 // IMPORT ROUTES
@@ -18,6 +21,8 @@ import fixhubAuthRoutes from "./routes/fixhubAuthRoutes.js";
 // ==========================================
 
 dotenv.config();
+
+const isProduction = process.env.NODE_ENV === "production";
 // ==========================================
 // FIX MONGODB ATLAS DNS CONNECTION
 // ==========================================
@@ -27,6 +32,14 @@ dns.setServers(["8.8.8.8", "1.1.1.1"]);
 console.log("✅ MongoDB DNS configured");
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Frontend production build: FIXHUB/frontend/dist
+const frontendDistPath = path.resolve(
+  __dirname,
+  "../frontend/dist",
+);
 
 const PORT = Number(process.env.PORT) || 5000;
 
@@ -42,18 +55,22 @@ app.disable("x-powered-by");
 
 app.use(helmet());
 
-// ==========================================
-// CORS CONFIGURATION
-// ==========================================
 
-app.use(
-  cors({
-    origin: CLIENT_URL,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }),
-);
+ // ==========================================
+ // CORS CONFIGURATION
+ // ==========================================
+
+if (!isProduction) {
+  app.use(
+    cors({
+      origin: CLIENT_URL,
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    }),
+  );
+}
+
 
 // ==========================================
 // EXPRESS MIDDLEWARE
@@ -65,17 +82,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-// ==========================================
-// ROOT ROUTE
-// ==========================================
-
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    application: "FIXHUB",
-    message: "FIXHUB Backend API is running",
-  });
-});
 
 // ==========================================
 // MONGODB CONNECTION STATUS
@@ -179,6 +185,41 @@ async function connectDatabase() {
   console.log("📦 Database Name:", mongoose.connection.name);
 }
 
+// ==========================================
+// SERVE REACT FRONTEND IN PRODUCTION
+// ==========================================
+
+if (isProduction) {
+  if (!existsSync(path.join(frontendDistPath, "index.html"))) {
+    throw new Error(
+      "Frontend build not found. Run npm run build in frontend first.",
+    );
+  }
+
+  // Serve Vite-generated JS, CSS, images and other assets.
+  app.use(express.static(frontendDistPath));
+
+  // API requests must not fall through to React's index.html.
+  app.use("/api", (req, res) => {
+    res.status(404).json({
+      success: false,
+      message: "API endpoint not found",
+    });
+  });
+
+  // Support direct navigation and page refreshes in React Router.
+  app.get("/{*path}", (req, res) => {
+    res.sendFile(path.join(frontendDistPath, "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.status(200).json({
+      success: true,
+      application: "FIXHUB",
+      message: "FIXHUB Backend API is running",
+    });
+  });
+}
 // ==========================================
 // START SERVER
 // ==========================================

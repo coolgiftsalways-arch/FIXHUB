@@ -1,0 +1,13 @@
+
+{
+  "name": "fixhub",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:frontend": "npm --prefix frontend install",
+    "install:backend": "npm --prefix backend install",
+    "build:frontend": "npm --prefix frontend run build",
+    "build": "npm run install:frontend && npm run build:frontend && npm run install:backend",
+    "start": "npm --prefix backend start"
+  }
+}
