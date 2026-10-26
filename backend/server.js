@@ -41,7 +41,7 @@ const frontendDistPath = path.resolve(
   "../frontend/dist",
 );
 
-const PORT = Number(process.env.PORT) || 5000;
+const PORT = Number(process.env.PORT) || 3000;
 
 const MONGO_URI = process.env.MONGO_URI;
 
