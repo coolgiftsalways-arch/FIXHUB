@@ -601,3 +601,99 @@
           transition: none !important;
      }
 }
+
+/* ================================================
+   FIXHUB EMAIL VERIFICATION
+   FORGOT PASSWORD
+   RESET PASSWORD
+================================================ */
+
+/* ================================================
+   RECOVERY PAGE
+================================================ */
+
+.fxa-recovery-page {
+     display: grid;
+     align-items: center;
+     justify-items: center;
+}
+
+/* ================================================
+   RECOVERY CARD
+================================================ */
+
+.fxa-recovery-card {
+     width: min(100%, 540px);
+}
+
+/* ================================================
+   RECOVERY HEADING
+================================================ */
+
+.fxa-recovery-card .fxa-card-head {
+     margin-top: 24px;
+}
+
+/* ================================================
+   RECOVERY BUTTON
+================================================ */
+
+.fxa-recovery-card .fxa-submit {
+     margin-top: 24px;
+}
+
+/* ================================================
+   LOGIN RECOVERY LINKS
+================================================ */
+
+.fxa-recovery-links {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     flex-wrap: wrap;
+
+     gap: 10px 20px;
+}
+
+/* ================================================
+   RECOVERY LINK STYLING
+================================================ */
+
+.fxa-recovery-links a,
+.fxa-recovery-card a:not(.fxa-submit) {
+     color: #00cfff;
+
+     font-size: 12px;
+     font-weight: 650;
+
+     text-decoration: none;
+
+     transition: color 0.25s ease;
+}
+
+.fxa-recovery-links a:hover,
+.fxa-recovery-card a:not(.fxa-submit):hover {
+     color: #ffffff;
+     text-decoration: underline;
+}
+
+/* ================================================
+   RESPONSIVE DESIGN
+================================================ */
+
+@media (max-width: 550px) {
+     .fxa-recovery-page {
+          padding: 28px 14px;
+     }
+
+     .fxa-recovery-card {
+          width: 100%;
+          padding: 24px 19px;
+     }
+
+     .fxa-recovery-links {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 12px;
+     }
+}

@@ -19,19 +19,19 @@ import {
 } from "lucide-react";
 
 // ==========================================
-// AUTH CONTEXT
+// FIXHUB AUTHENTICATION CONTEXT
 // ==========================================
 
 import { useAuth } from "../../context/AuthContext.jsx";
 
 // ==========================================
-// CSS
+// FIXHUB AUTHENTICATION CSS
 // ==========================================
 
 import "../../styles/Auth.css";
 
 // ==========================================
-// DEFAULT REGISTRATION FORM
+// INITIAL REGISTRATION FORM
 // ==========================================
 
 const initialForm = {
@@ -43,7 +43,7 @@ const initialForm = {
 };
 
 // ==========================================
-// LOGIN COMPONENT
+// FIXHUB LOGIN / CREATE ACCOUNT
 // ==========================================
 
 export default function Login() {
@@ -68,6 +68,8 @@ export default function Login() {
   const [submitting, setSubmitting] = useState(false);
 
   const [error, setError] = useState("");
+
+  const [notice, setNotice] = useState("");
 
   const navigate = useNavigate();
 
@@ -99,19 +101,18 @@ export default function Login() {
       [name]: value,
     }));
 
-    if (error) {
-      setError("");
-    }
+    setError("");
   };
 
   // ========================================
-  // CHANGE LOGIN / REGISTER MODE
+  // SWITCH LOGIN / REGISTER
   // ========================================
 
   const changeMode = (newMode) => {
     setMode(newMode);
 
     setError("");
+    setNotice("");
 
     setShowPassword(false);
 
@@ -122,7 +123,7 @@ export default function Login() {
   };
 
   // ========================================
-  // LOGIN / REGISTRATION SUBMISSION
+  // HANDLE LOGIN / REGISTRATION
   // ========================================
 
   const handleSubmit = async (event) => {
@@ -131,14 +132,16 @@ export default function Login() {
     if (submitting) return;
 
     setSubmitting(true);
+
     setError("");
+    setNotice("");
 
     try {
-      if (mode === "register") {
-        // ==================================
-        // VALIDATE REGISTRATION
-        // ==================================
+      // ====================================
+      // CREATE NEW CUSTOMER ACCOUNT
+      // ====================================
 
+      if (mode === "register") {
         const fullName = form.fullName.trim();
 
         const email = form.email.trim().toLowerCase();
@@ -149,41 +152,72 @@ export default function Login() {
 
         const password = form.password;
 
+        // VALIDATE NAME
+
         if (fullName.length < 2) {
           throw new Error("Please enter your full name.");
         }
+
+        // VALIDATE EMAIL
 
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           throw new Error("Please enter a valid email address.");
         }
 
+        // VALIDATE PHONE
+
         if (!/^[6-9]\d{9}$/.test(phone)) {
           throw new Error("Enter a valid 10-digit mobile number.");
         }
 
+        // VALIDATE ADDRESS
+
         if (address.length < 10) {
-          throw new Error("Please enter your complete address.");
+          throw new Error("Please enter your complete home address.");
         }
+
+        // VALIDATE PASSWORD
 
         if (password.length < 8) {
           throw new Error("Password must contain at least 8 characters.");
         }
 
-        // ==================================
-        // CREATE CUSTOMER ACCOUNT
-        // ==================================
+        // ====================================
+        // REGISTER CUSTOMER
+        // ====================================
 
-        await register({
+        const result = await register({
           fullName,
           email,
           phone,
           address,
           password,
         });
+
+        // ====================================
+        // EMAIL VERIFICATION REQUIRED
+        // ====================================
+
+        if (result?.requiresVerification) {
+          setMode("login");
+
+          setIdentifier(email);
+
+          setForm((previous) => ({
+            ...previous,
+            password: "",
+          }));
+
+          setNotice(
+            "Account created! Please check your email inbox and spam folder. Click the verification link to activate your FIXHUB account.",
+          );
+
+          return;
+        }
       } else {
-        // ==================================
+        // ====================================
         // CUSTOMER LOGIN
-        // ==================================
+        // ====================================
 
         if (!identifier.trim()) {
           throw new Error("Please enter your email or mobile number.");
@@ -199,16 +233,14 @@ export default function Login() {
         });
       }
 
-      // ==================================
-      // REDIRECT AFTER SUCCESS
-      // ==================================
+      // ====================================
+      // REDIRECT TO PROFILE
+      // ====================================
 
       navigate(destination, {
         replace: true,
       });
     } catch (err) {
-      console.error("Authentication error:", err);
-
       setError(err.message || "Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
@@ -216,7 +248,7 @@ export default function Login() {
   };
 
   // ========================================
-  // LOADING SCREEN
+  // CHECK CUSTOMER SESSION
   // ========================================
 
   if (loading) {
@@ -224,7 +256,7 @@ export default function Login() {
       <div className="fxa-page fxa-loading">
         <LoaderCircle size={25} className="fxa-loader" />
 
-        <span>Checking your account...</span>
+        <span>Checking your FIXHUB account...</span>
       </div>
     );
   }
@@ -249,7 +281,7 @@ export default function Login() {
         ================================== */}
 
         <aside className="fxa-side">
-          {/* BADGE */}
+          {/* BRAND BADGE */}
 
           <span className="fxa-eyebrow">
             <ShieldCheck size={16} />
@@ -296,7 +328,7 @@ export default function Login() {
             </div>
           </div>
 
-          {/* SESSION INFO */}
+          {/* SESSION MESSAGE */}
 
           <span className="fxa-side-note">
             Your login stays active when you close and reopen the website, while
@@ -305,13 +337,11 @@ export default function Login() {
         </aside>
 
         {/* ==================================
-            RIGHT LOGIN CARD
+            RIGHT AUTHENTICATION CARD
         ================================== */}
 
         <section className="fxa-card">
-          {/* ==================================
-              LOGIN / REGISTER TABS
-          ================================== */}
+          {/* LOGIN / REGISTER TABS */}
 
           <div className="fxa-tabs">
             <button
@@ -334,7 +364,7 @@ export default function Login() {
           </div>
 
           {/* ==================================
-              CARD HEADING
+              CARD HEADER
           ================================== */}
 
           <div className="fxa-card-head">
@@ -354,7 +384,7 @@ export default function Login() {
           </div>
 
           {/* ==================================
-              FORM
+              AUTHENTICATION FORM
           ================================== */}
 
           <form className="fxa-form" onSubmit={handleSubmit}>
@@ -410,7 +440,7 @@ export default function Login() {
                     </div>
                   </label>
 
-                  {/* MOBILE NUMBER */}
+                  {/* MOBILE */}
 
                   <label className="fxa-field">
                     <span>Mobile Number *</span>
@@ -424,13 +454,13 @@ export default function Login() {
                         placeholder="10-digit mobile number"
                         value={form.phone}
                         onChange={(event) => {
-                          const value = event.target.value
+                          const phone = event.target.value
                             .replace(/\D/g, "")
                             .slice(0, 10);
 
                           setForm((previous) => ({
                             ...previous,
-                            phone: value,
+                            phone,
                           }));
                         }}
                         autoComplete="tel-national"
@@ -444,7 +474,7 @@ export default function Login() {
                 </div>
 
                 {/* ==================================
-                    HOME ADDRESS
+                    FULL HOME ADDRESS
                 ================================== */}
 
                 <label className="fxa-field">
@@ -484,7 +514,11 @@ export default function Login() {
                     type="text"
                     placeholder="Enter email or mobile number"
                     value={identifier}
-                    onChange={(event) => setIdentifier(event.target.value)}
+                    onChange={(event) => {
+                      setIdentifier(event.target.value);
+
+                      setError("");
+                    }}
                     autoComplete="username"
                     required
                   />
@@ -534,6 +568,28 @@ export default function Login() {
             </label>
 
             {/* ==================================
+                FORGOT PASSWORD LINKS
+            ================================== */}
+
+            {mode === "login" && (
+              <div className="fxa-recovery-links">
+                <Link to="/forgot-password">Forgot Password?</Link>
+
+                <Link to="/resend-verification">Resend Verification Email</Link>
+              </div>
+            )}
+
+            {/* ==================================
+                SUCCESS MESSAGE
+            ================================== */}
+
+            {notice && (
+              <p className="fxa-success" role="status">
+                {notice}
+              </p>
+            )}
+
+            {/* ==================================
                 ERROR MESSAGE
             ================================== */}
 
@@ -562,9 +618,7 @@ export default function Login() {
               )}
             </button>
 
-            {/* ==================================
-                SECURITY MESSAGE
-            ================================== */}
+            {/* SECURITY MESSAGE */}
 
             <p className="fxa-footnote">
               <CheckCircle2 size={15} />
@@ -587,7 +641,7 @@ export default function Login() {
                     background: "none",
                     border: "none",
                     color: "#00cfff",
-                    fontWeight: "700",
+                    fontWeight: 700,
                     cursor: "pointer",
                   }}
                 >
@@ -604,7 +658,7 @@ export default function Login() {
                     background: "none",
                     border: "none",
                     color: "#00cfff",
-                    fontWeight: "700",
+                    fontWeight: 700,
                     cursor: "pointer",
                   }}
                 >
@@ -614,9 +668,7 @@ export default function Login() {
             )}
           </p>
 
-          {/* ==================================
-              EXPLORE SERVICES
-          ================================== */}
+          {/* EXPLORE SERVICES */}
 
           <p className="fxa-bottom-note">
             Need mobile repair? <Link to="/services">Explore Our Services</Link>

@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+// ==========================================
+// FIXHUB AUTHENTICATION CONTEXT
+// ==========================================
+
 import { AuthContext } from "./authStore.js";
 
-// =====================================================
-// FIXHUB AUTHENTICATION API HELPER
-// =====================================================
+// ==========================================
+// FIXHUB API REQUEST HELPER
+// ==========================================
 
 async function authRequest(path, { method = "GET", body, signal } = {}) {
   let response;
-
-  // ===================================================
-  // API REQUEST
-  // ===================================================
 
   try {
     response = await fetch(`/api/auth${path}`, {
@@ -21,47 +21,38 @@ async function authRequest(path, { method = "GET", body, signal } = {}) {
 
       signal,
 
-      headers: body
-        ? {
-            "Content-Type": "application/json",
-          }
-        : undefined,
+      headers:
+        body === undefined
+          ? undefined
+          : {
+              "Content-Type": "application/json",
+            },
 
-      body: body ? JSON.stringify(body) : undefined,
+      body: body === undefined ? undefined : JSON.stringify(body),
     });
   } catch (error) {
-    // Preserve aborted request errors
-
     if (error?.name === "AbortError") {
       throw error;
     }
 
-    // FIX: preserve-caught-error
-
-    throw new Error("Cannot reach the FixHub authentication server.", {
-      cause: error,
-    });
+    throw new Error("Unable to connect to FIXHUB server. Please try again.");
   }
 
-  // ===================================================
-  // PARSE SERVER RESPONSE
-  // ===================================================
+  // ========================================
+  // READ SERVER RESPONSE
+  // ========================================
 
   let result;
 
   try {
     result = await response.json();
-  } catch (error) {
-    // FIX: preserve-caught-error
-
-    throw new Error("The authentication server returned an invalid response.", {
-      cause: error,
-    });
+  } catch {
+    throw new Error("FIXHUB server returned an invalid response.");
   }
 
-  // ===================================================
-  // HANDLE SERVER ERRORS
-  // ===================================================
+  // ========================================
+  // HANDLE API ERRORS
+  // ========================================
 
   if (!response.ok) {
     const error = new Error(
@@ -76,60 +67,64 @@ async function authRequest(path, { method = "GET", body, signal } = {}) {
   return result;
 }
 
-// =====================================================
-// FIXHUB AUTHENTICATION PROVIDER
-// =====================================================
+// ==========================================
+// FIXHUB AUTH PROVIDER
+// ==========================================
 
 export function AuthProvider({ children }) {
-  // ===================================================
-  // AUTHENTICATION STATES
-  // ===================================================
+  // ========================================
+  // CUSTOMER STATE
+  // ========================================
 
   const [user, setUser] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
-  // ===================================================
-  // RESTORE CUSTOMER LOGIN SESSION
-  //
-  // Runs when the website opens.
-  // The server validates the session cookie.
-  // ===================================================
+  // ========================================
+  // RESTORE SAVED LOGIN SESSION
+  // ========================================
+
+  // Customer remains logged in after
+  // closing and reopening the website,
+  // while their session is valid.
 
   useEffect(() => {
     const controller = new AbortController();
 
-    // Avoid synchronous setState in useEffect
+    async function restoreSession() {
+      try {
+        const result = await authRequest("/me", {
+          signal: controller.signal,
+        });
 
-    authRequest("/me", {
-      signal: controller.signal,
-    })
-      .then((result) => {
-        if (!controller.signal.aborted) {
-          setUser(result.user || null);
+        if (controller.signal.aborted) {
+          return;
         }
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) {
-          setUser(null);
+
+        setUser(result.user || null);
+      } catch (error) {
+        if (controller.signal.aborted) {
+          return;
         }
-      })
-      .finally(() => {
+
+        setUser(null);
+      } finally {
         if (!controller.signal.aborted) {
           setLoading(false);
         }
-      });
+      }
+    }
 
-    // Cancel request if component unmounts
+    restoreSession();
 
     return () => {
       controller.abort();
     };
   }, []);
 
-  // ===================================================
+  // ========================================
   // REFRESH CUSTOMER SESSION
-  // ===================================================
+  // ========================================
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -137,10 +132,12 @@ export function AuthProvider({ children }) {
     try {
       const result = await authRequest("/me");
 
-      setUser(result.user || null);
+      const customer = result.user || null;
 
-      return result.user || null;
-    } catch {
+      setUser(customer);
+
+      return customer;
+    } catch (error) {
       setUser(null);
 
       return null;
@@ -149,57 +146,116 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // ===================================================
+  // ========================================
   // CUSTOMER REGISTRATION
-  // ===================================================
+  // ========================================
+
+  // POST /api/auth/register
+  //
+  // New accounts receive an email
+  // verification link before login.
 
   const register = useCallback(async (details) => {
     const result = await authRequest("/register", {
       method: "POST",
 
-      body: details,
+      body: {
+        fullName: details.fullName,
+        email: details.email,
+        phone: details.phone,
+        address: details.address,
+        password: details.password,
+      },
     });
 
-    setUser(result.user);
+    // ======================================
+    // EMAIL VERIFICATION REQUIRED
+    // ======================================
 
-    return result.user;
+    if (result.requiresVerification) {
+      // Do not log in unverified accounts.
+
+      setUser(null);
+
+      return result;
+    }
+
+    // ======================================
+    // LEGACY CUSTOMER REGISTRATION
+    // ======================================
+
+    // Preserve compatibility with any
+    // existing backend registration flow.
+
+    if (result.user) {
+      setUser(result.user);
+    }
+
+    return result;
   }, []);
 
-  // ===================================================
+  // ========================================
   // CUSTOMER LOGIN
-  // ===================================================
+  // ========================================
+
+  // POST /api/auth/login
 
   const login = useCallback(async (credentials) => {
     const result = await authRequest("/login", {
       method: "POST",
 
-      body: credentials,
+      body: {
+        identifier: credentials.identifier,
+        password: credentials.password,
+      },
     });
+
+    // ======================================
+    // SAVE LOGGED-IN CUSTOMER
+    // ======================================
+
+    if (!result.user) {
+      throw new Error("Login succeeded but customer details are missing.");
+    }
 
     setUser(result.user);
 
     return result.user;
   }, []);
 
-  // ===================================================
+  // ========================================
   // UPDATE CUSTOMER PROFILE
-  // ===================================================
+  // ========================================
+
+  // PATCH /api/auth/me
 
   const updateProfile = useCallback(async (details) => {
     const result = await authRequest("/me", {
       method: "PATCH",
 
-      body: details,
+      body: {
+        fullName: details.fullName,
+        phone: details.phone,
+        address: details.address,
+      },
     });
 
-    setUser(result.user);
+    // ====================================
+    // UPDATE CUSTOMER DATA
+    // ====================================
+
+    if (result.user) {
+      setUser(result.user);
+    }
 
     return result.user;
   }, []);
 
-  // ===================================================
+  // ========================================
   // CUSTOMER LOGOUT
-  // ===================================================
+  // ========================================
+
+  // POST /api/auth/logout
 
   const logout = useCallback(async () => {
     try {
@@ -207,58 +263,58 @@ export function AuthProvider({ children }) {
         method: "POST",
       });
 
+      // ====================================
+      // CLEAR CUSTOMER SESSION
+      // ====================================
+
       setUser(null);
+
+      return true;
     } catch (error) {
-      // Session already expired
+      // ====================================
+      // SESSION ALREADY EXPIRED
+      // ====================================
 
       if (error.status === 401) {
         setUser(null);
 
-        return;
+        return true;
       }
 
       throw error;
     }
   }, []);
 
-  // ===================================================
-  // AUTHENTICATION STATUS
-  // ===================================================
+  // ========================================
+  // CUSTOMER AUTHENTICATION STATUS
+  // ========================================
 
   const isAuthenticated = Boolean(user);
 
-  // ===================================================
-  // AUTH CONTEXT VALUES
-  // ===================================================
+  // ========================================
+  // AUTH CONTEXT DATA
+  // ========================================
 
   const value = useMemo(
     () => ({
-      // Customer information
-
+      // CURRENT CUSTOMER
       user,
 
-      // Loading state
-
+      // LOADING STATUS
       loading,
 
-      // Authentication status
-
+      // LOGIN STATUS
       isAuthenticated,
 
-      // Authentication methods
-
+      // ACCOUNT OPERATIONS
       register,
-
       login,
-
       logout,
 
-      // Profile methods
-
+      // PROFILE OPERATIONS
       updateProfile,
 
-      // Session methods
-
+      // SESSION OPERATIONS
       refresh,
     }),
     [
@@ -273,9 +329,13 @@ export function AuthProvider({ children }) {
     ],
   );
 
-  // ===================================================
-  // AUTH PROVIDER
-  // ===================================================
+  // ========================================
+  // PROVIDE AUTHENTICATION TO FIXHUB
+  // ========================================
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
+
+// ==========================================
+// END OF FIXHUB AUTH PROVIDER
+// ==========================================

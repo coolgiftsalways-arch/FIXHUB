@@ -1,493 +1,775 @@
-import { useLayoutEffect, useRef, useState } from "react";
+
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useAuth } from "../context/AuthContext.jsx";
 import {
   ArrowRight,
-  ArrowUpRight,
-  BadgeCheck,
-  CalendarCheck,
   Check,
+  CheckCircle2,
   ChevronDown,
-  CircleHelp,
-  Clock3,
-  Gift,
-  House,
+  ClipboardList,
+  Copy,
+  Info,
+  LoaderCircle,
+  LockKeyhole,
+  MapPin,
   Mail,
+  Phone,
+  RotateCcw,
+  Send,
   ShieldCheck,
   Smartphone,
-  Sparkles,
   Wrench,
 } from "lucide-react";
-
 import "../styles/Membership.css";
 
-gsap.registerPlugin(ScrollTrigger);
+// Server returns the authoritative phone MRP and the matching price bracket.
+// Do not let the customer type their own MRP or send a calculated price to the API.
+const PRICE_TIERS = [
+  { label: "Up to ₹20,000", price: 499, max: 20000 },
+  { label: "₹20,001 – ₹50,000", price: 699, max: 50000 },
+  { label: "₹50,001 – ₹90,000", price: 999, max: 90000 },
+  { label: "₹90,001 – ₹1,30,000", price: 1299, max: 130000 },
+  { label: "Above ₹1,30,000", price: 1699, max: Infinity },
+];
 
-// REAL, NON-AI STOCK PHOTOGRAPHY FROM PEXELS.
-// The people pictured are stock-photo models, not FixHub employees.
-const photos = {
-  hero: "https://images.pexels.com/photos/37688152/pexels-photo-37688152.jpeg?auto=compress&cs=tinysrgb&w=1600",
-  workbench:
-    "https://images.pexels.com/photos/6754839/pexels-photo-6754839.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  precision:
-    "https://images.pexels.com/photos/6755056/pexels-photo-6755056.jpeg?auto=compress&cs=tinysrgb&w=1200",
+const BRAND_ORDER = [
+  "Apple",
+  "Samsung",
+  "OnePlus",
+  "OPPO",
+  "Vivo",
+  "Realme",
+  "Xiaomi",
+  "Redmi",
+  "POCO",
+  "Motorola",
+  "Nothing",
+  "iQOO",
+  "Infinix",
+  "Tecno",
+  "Itel",
+  "Other",
+];
+
+const MODEL_PRIORITY = {
+  OnePlus: [
+    "OnePlus 11R",
+    "OnePlus 12R",
+    "OnePlus 11",
+    "OnePlus 12",
+    "OnePlus 13R",
+    "OnePlus Nord 4",
+  ],
 };
 
-// These are the two membership prices you selected.
-// Validity, covered labour, parts, exclusions, and any further
-// benefits must be finalized before accepting payment.
-const plans = [
-  {
-    id: "499",
-    label: "OTHER MOBILE BRANDS",
-    name: "Everyday Care",
-    price: 499,
-    description:
-      "OPPO, vivo, OnePlus, realme, Redmi, POCO, Xiaomi, Motorola and other eligible brands.",
-    featured: false,
-    points: [
-      "First eligible service FREE*",
-      "Doorstep pickup and repair coordination",
-      "Clear diagnosis and repair quotation",
-      "Original-part options where available",
-    ],
-  },
-  {
-    id: "999",
-    label: "IPHONE & SAMSUNG",
-    name: "Premium Care",
-    price: 999,
-    description:
-      "A dedicated membership option for Apple iPhone and Samsung devices.",
-    featured: true,
-    points: [
-      "First eligible service FREE*",
-      "Doorstep pickup and repair coordination",
-      "Clear diagnosis and repair quotation",
-      "Original-part options where available",
-    ],
-  },
+const REPAIR_ISSUES = [
+  "Display / Touch",
+  "Battery",
+  "Charging Port",
+  "Camera",
+  "Speaker / Mic",
+  "Water Damage",
+  "Software / Performance",
+  "General Service",
+  "Other",
 ];
 
-const journey = [
-  {
-    no: "01",
-    icon: Smartphone,
-    title: "Choose your plan",
-    text: "Select the membership that matches your phone brand.",
-  },
-  {
-    no: "02",
-    icon: CalendarCheck,
-    title: "Request your service",
-    text: "Tell us the problem and choose a convenient appointment.",
-  },
-  {
-    no: "03",
-    icon: House,
-    title: "We come to you",
-    text: "We assess your phone at home; if needed, we collect, repair and return it.",
-  },
-];
+const money = (value) =>
+  value == null
+    ? "Price review needed"
+    : `₹${Number(value).toLocaleString("en-IN")}`;
 
-const faqs = [
-  {
-    q: "What do I get with FixHub Membership?",
-    a: "Membership is a brand-based service plan. The main highlighted offer is your first eligible mobile service free, subject to the plan's final terms. Repair eligibility and other benefits will be confirmed before joining.",
-  },
-  {
-    q: "Are replacement parts included in the free service?",
-    a: "Not automatically. Any replacement-part cost, applicable labour charges, and exclusions must be disclosed in the final membership terms and confirmed before work begins.",
-  },
-  {
-    q: "Do you use original phone parts?",
-    a: "Original manufacturer parts may be requested where available. Exact part type, availability, cost, and any warranty are confirmed before repair. FixHub does not claim to be a manufacturer-authorized service centre.",
-  },
-  {
-    q: "Will my phone be repaired at home?",
-    a: "Repairs that can be completed safely at your location may be done there. More complex work can require pickup, workshop repair, and return after your approval.",
-  },
-  {
-    q: "How long is the membership valid?",
-    a: "Membership duration and renewal terms are not finalized yet. We will show them clearly before payments are enabled.",
-  },
-];
+function matchingTier(mrp) {
+  if (!Number.isFinite(mrp) || mrp <= 0) return null;
+  return PRICE_TIERS.find((tier) => mrp <= tier.max) || null;
+}
 
-function Eyebrow({ children }) {
+function BrandMark({ brand }) {
+  const styles = {
+    Apple: "fhm-brand-logo--apple",
+    Samsung: "fhm-brand-logo--samsung",
+    OnePlus: "fhm-brand-logo--oneplus",
+    OPPO: "fhm-brand-logo--oppo",
+    Vivo: "fhm-brand-logo--vivo",
+    Realme: "fhm-brand-logo--realme",
+    Xiaomi: "fhm-brand-logo--xiaomi",
+    Redmi: "fhm-brand-logo--redmi",
+    POCO: "fhm-brand-logo--poco",
+    Motorola: "fhm-brand-logo--moto",
+  };
+  const text = {
+    Apple: "●",
+    Samsung: "SAMSUNG",
+    OnePlus: "1+",
+    OPPO: "oppo",
+    Vivo: "vivo",
+    Realme: "realme",
+    Xiaomi: "mi",
+    Redmi: "Redmi",
+    POCO: "POCO",
+    Motorola: "M",
+    Nothing: "(1)",
+    iQOO: "iQOO",
+    Infinix: "Infinix",
+    Tecno: "TECNO",
+    Itel: "itel",
+    Other: "•••",
+  };
   return (
-    <span className="fm-eyebrow">
-      <Sparkles size={14} aria-hidden="true" /> {children}
+    <span
+      aria-hidden="true"
+      className={`fhm-brand-logo ${styles[brand] || ""}`}
+    >
+      {text[brand] || brand.slice(0, 3)}
     </span>
   );
 }
 
-function RealPhoto({ src, alt, className = "", loading = "lazy" }) {
-  const [hasError, setHasError] = useState(false);
-  return hasError ? (
+// Lightweight thumbnail until exact licensed phone-model images are added to
+// the API response as model.image. This deliberately avoids fake product photos.
+function PhoneArtwork({ model, image, large = false, index = 0 }) {
+  return (
     <div
-      className={`fm-photo-fallback ${className}`}
-      aria-label={alt}
-      role="img"
+      className={`fhm-phone-art fhm-phone-art--${index % 6} ${large ? "fhm-phone-art--large" : ""}`}
     >
-      <Wrench size={46} aria-hidden="true" />
-      <span>Mobile repair</span>
+      {image ? (
+        <img src={image} alt={model} loading="lazy" />
+      ) : (
+        <>
+          <div className="fhm-device-back">
+            <div className="fhm-device-camera">
+              <i />
+              <i />
+              <i />
+            </div>
+            <span className="fhm-device-logo">✦</span>
+          </div>
+          <div className="fhm-device-front">
+            <div className="fhm-device-punch" />
+          </div>
+        </>
+      )}
     </div>
-  ) : (
-    <img
-      className={className}
-      src={src}
-      alt={alt}
-      loading={loading}
-      decoding="async"
-      onError={() => setHasError(true)}
-    />
+  );
+}
+
+function NumberedPanel({ number, title, subtitle, children, className = "" }) {
+  return (
+    <section className={`fhm-step ${className}`}>
+      <div className="fhm-step-head">
+        <span className="fhm-step-number">{number}</span>
+        <div>
+          <h2>{title}</h2>
+          <p>{subtitle}</p>
+        </div>
+      </div>
+      {children}
+    </section>
   );
 }
 
 export default function Membership() {
-  const rootRef = useRef(null);
-  const [openFaq, setOpenFaq] = useState(0);
+  const { user, loading: authLoading } = useAuth();
+  const modelListRef = useRef(null);
+  const [catalog, setCatalog] = useState([]);
+  const [catalogLoading, setCatalogLoading] = useState(true);
+  const [catalogError, setCatalogError] = useState("");
+  const [brand, setBrand] = useState("");
+  const [model, setModel] = useState("");
+  const [unlisted, setUnlisted] = useState(false);
+  const [issue, setIssue] = useState("");
+  const [notes, setNotes] = useState("");
+  const [sending, setSending] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [receipt, setReceipt] = useState(null);
+  const [copied, setCopied] = useState(false);
+  const [showPriceInfo, setShowPriceInfo] = useState(false);
 
-  useLayoutEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const ctx = gsap.context(() => {
-      gsap.from(".fm-hero__copy > *", {
-        y: 28,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "power3.out",
-      });
-      gsap.from(".fm-hero__visual", {
-        x: 50,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-      });
-      gsap.utils.toArray("[data-fm-reveal]").forEach((element) => {
-        gsap.fromTo(
-          element,
-          { y: 38, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.75,
-            ease: "power3.out",
-            scrollTrigger: { trigger: element, start: "top 93%", once: true },
-          },
-        );
-      });
-    }, rootRef);
-
-    const refresh = requestAnimationFrame(() => ScrollTrigger.refresh());
-    return () => {
-      cancelAnimationFrame(refresh);
-      ctx.revert();
-    };
+  useEffect(() => {
+    const controller = new AbortController();
+    async function load() {
+      try {
+        const response = await fetch("/api/membership-requests/catalog", {
+          signal: controller.signal,
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !Array.isArray(data.brands)) {
+          throw new Error(
+            data.message || "Phone catalogue could not be loaded.",
+          );
+        }
+        if (controller.signal.aborted) return;
+        setCatalog(data.brands);
+        setCatalogError("");
+        // Begin with no brand or model selected; customer chooses both.
+        setBrand("");
+        setModel("");
+      } catch (error) {
+        if (!controller.signal.aborted) setCatalogError(error.message);
+      } finally {
+        if (!controller.signal.aborted) setCatalogLoading(false);
+      }
+    }
+    load();
+    return () => controller.abort();
   }, []);
 
+  const sortedBrands = useMemo(
+    () =>
+      [...catalog].sort((a, b) => {
+        const rank = (item) => {
+          const index = BRAND_ORDER.indexOf(item.brand);
+          return index < 0 ? 999 : index;
+        };
+        return rank(a) - rank(b);
+      }),
+    [catalog],
+  );
+
+  const models = useMemo(() => {
+    const fromCatalog =
+      catalog.find((entry) => entry.brand === brand)?.models || [];
+    const featured = MODEL_PRIORITY[brand] || [];
+    return [...fromCatalog].sort((a, b) => {
+      const ai = featured.indexOf(a.model);
+      const bi = featured.indexOf(b.model);
+      if (ai >= 0 && bi >= 0) return ai - bi;
+      if (ai >= 0) return -1;
+      if (bi >= 0) return 1;
+      return a.model.localeCompare(b.model);
+    });
+  }, [catalog, brand]);
+
+  const selectedPhone = !unlisted
+    ? models.find((entry) => entry.model === model)
+    : null;
+  const selectedTier = matchingTier(selectedPhone?.mrp);
+  const selectedPrice = selectedPhone?.fee ?? selectedTier?.price ?? null;
+
+  function selectBrand(value) {
+    const available =
+      catalog.find((entry) => entry.brand === value)?.models || [];
+    setBrand(value);
+    setModel("");
+    setUnlisted(available.length === 0);
+    setReceipt(null);
+    setSubmitError("");
+    if (modelListRef.current) modelListRef.current.scrollLeft = 0;
+  }
+
+  function selectModel(value) {
+    if (value === "__unlisted__") {
+      setModel("");
+      setUnlisted(true);
+    } else {
+      setModel(value);
+      setUnlisted(false);
+    }
+    setReceipt(null);
+    setSubmitError("");
+  }
+
+  async function copyId() {
+    if (!receipt?.requestId) return;
+    try {
+      await navigator.clipboard.writeText(receipt.requestId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  }
+
+  async function submit(event) {
+    event.preventDefault();
+    if (sending) return;
+    setSubmitError("");
+    if (!user) return setSubmitError("Please log in before submitting.");
+    if (!brand || !model.trim())
+      return setSubmitError("Choose your phone brand and model.");
+    if (!unlisted && !selectedPhone)
+      return setSubmitError("Choose a listed phone model.");
+
+    setSending(true);
+    setReceipt(null);
+    try {
+      const response = await fetch("/api/membership-requests", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phoneBrand: brand,
+          phoneModel: model.trim(),
+          modelNotListed: unlisted,
+          repairIssue: issue || "General Service",
+          notes: notes.trim(),
+        }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.request) {
+        throw new Error(data.message || "Unable to send your request.");
+      }
+      setReceipt(data.request);
+      setNotes("");
+    } catch (error) {
+      setSubmitError(error.message || "Please try again.");
+    } finally {
+      setSending(false);
+    }
+  }
+
   return (
-    <div className="fm-page" ref={rootRef}>
-      {/* Navbar and Footer are already rendered by App.jsx. */}
-      <section className="fm-hero" aria-labelledby="fm-hero-title">
-        <div className="fm-shell fm-hero__layout">
-          <div className="fm-hero__copy">
-            <Eyebrow>FIXHUB MEMBERSHIP</Eyebrow>
-            <h1 id="fm-hero-title">
-              Better care for
+    <main className="fhm-page">
+      {/* The existing FIXHUB Navbar is already rendered by App.jsx. */}
+      <section className="fhm-hero">
+        <div className="fhm-shell fhm-hero-inner">
+          <div className="fhm-hero-copy">
+            <span className="fhm-eyebrow">MEMBERSHIP REQUEST</span>
+            <h1>
+              Get Your Mobile
               <br />
-              <span>every phone.</span>
+              <span>Membership Today</span>
             </h1>
             <p>
-              Your phone is part of your everyday life. Keep its repair journey
-              simple with doorstep support, clear quotations and a plan designed
-              for your device.
+              Select your phone, get the correct plan automatically
+              <br className="fhm-desktop-break" /> and enjoy exclusive service
+              benefits.
             </p>
-            <div className="fm-hero__badges">
-              <span>
-                <Gift size={18} /> First eligible service FREE*
-              </span>
-              <span>
-                <House size={18} /> Doorstep assistance
-              </span>
-            </div>
-            <div className="fm-hero__actions">
-              <a className="fm-btn fm-btn--primary" href="#membership-plans">
-                Explore Membership <ArrowRight size={18} />
-              </a>
-              <a
-                className="fm-btn fm-btn--outline"
-                href="#how-membership-works"
-              >
-                How It Works <ArrowUpRight size={18} />
-              </a>
-            </div>
           </div>
-          <div className="fm-hero__visual">
-            <RealPhoto
-              src={photos.hero}
-              alt="Real technician working on a smartphone at a repair workbench"
-              className="fm-hero__image"
-              loading="eager"
-            />
-            <div className="fm-hero__picture-shade" />
-            <div className="fm-hero__floating fm-hero__floating--top">
-              <ShieldCheck size={24} />
-              <span>
-                <strong>Clear quotations</strong>
-                <small>Before repair begins</small>
-              </span>
+          <div className="fhm-hero-phones" aria-hidden="true">
+            <div className="fhm-hero-phone fhm-hero-phone--left">
+              <div className="fhm-hero-camera">● ● ●</div>
             </div>
-            <div className="fm-hero__floating fm-hero__floating--bottom">
-              <Gift size={24} />
-              <span>
-                <strong>FIRST SERVICE FREE*</strong>
-                <small>With eligible membership</small>
-              </span>
+            <div className="fhm-hero-phone fhm-hero-phone--mid">
+              <div className="fhm-hero-screen" />
+            </div>
+            <div className="fhm-hero-phone fhm-hero-phone--right">
+              <div className="fhm-hero-camera">● ●</div>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="fm-benefit-ribbon">
-        <div className="fm-shell fm-benefit-ribbon__inner">
-          <span>
-            <BadgeCheck size={20} /> Device-specific plans
-          </span>
-          <span>
-            <House size={20} /> Doorstep service
-          </span>
-          <span>
-            <ShieldCheck size={20} /> Original-part options
-          </span>
-          <span>
-            <Clock3 size={20} /> Convenient booking
-          </span>
-        </div>
-      </div>
-
-      <section
-        className="fm-plans fm-section"
-        id="membership-plans"
-        aria-labelledby="fm-plans-title"
-      >
-        <div className="fm-shell">
-          <div className="fm-section-head" data-fm-reveal>
-            <div>
-              <Eyebrow>CHOOSE YOUR MEMBERSHIP</Eyebrow>
-              <h2 id="fm-plans-title">
-                The right plan. <span>The right care.</span>
-              </h2>
-              <p>
-                Two simple options, based on your phone brand. No invented
-                monthly or yearly fees.
-              </p>
-            </div>
-            <div className="fm-plan-hint">
-              <Gift size={22} /> FIRST ELIGIBLE SERVICE FREE*
-            </div>
-          </div>
-
-          <div className="fm-plans__grid">
-            {plans.map((plan) => (
-              <article
-                className={`fm-plan ${plan.featured ? "fm-plan--featured" : ""}`}
-                key={plan.id}
-                data-fm-reveal
+      <div className="fhm-shell fhm-flow">
+        <NumberedPanel
+          number="1"
+          title="Select Your Mobile Brand"
+          subtitle="Choose the brand of your phone."
+        >
+          {catalogLoading && (
+            <p className="fhm-loading">
+              <LoaderCircle size={17} className="fhm-spinner" /> Loading mobile
+              brands...
+            </p>
+          )}
+          {catalogError && (
+            <p className="fhm-error">
+              {catalogError}{" "}
+              <button type="button" onClick={() => window.location.reload()}>
+                <RotateCcw size={14} /> Retry
+              </button>
+            </p>
+          )}
+          <div
+            className="fhm-brand-list"
+            role="group"
+            aria-label="Mobile brands"
+          >
+            {sortedBrands.map((entry) => (
+              <button
+                type="button"
+                className={`fhm-brand-tile ${brand === entry.brand ? "is-selected" : ""}`}
+                key={entry.brand}
+                onClick={() => selectBrand(entry.brand)}
+                aria-pressed={brand === entry.brand}
               >
-                {plan.featured && (
-                  <div className="fm-plan__ribbon">IPHONE & SAMSUNG</div>
+                {brand === entry.brand && (
+                  <span className="fhm-selected-tick">
+                    <Check size={12} />
+                  </span>
                 )}
-                <div className="fm-plan__top">
-                  <span className="fm-plan__eyebrow">{plan.label}</span>
-                  <div className="fm-plan__symbol">
-                    <Smartphone size={25} />
-                  </div>
-                </div>
-                <h3>{plan.name}</h3>
-                <p className="fm-plan__description">{plan.description}</p>
-                <div className="fm-plan__price">
-                  <small>₹</small>
-                  {plan.price}
-                  <span> membership</span>
-                </div>
-                <div className="fm-plan__line" />
-                <div className="fm-plan__features">
-                  {plan.points.map((point) => (
-                    <div key={point}>
-                      <Check size={16} />
-                      <span>{point}</span>
-                    </div>
-                  ))}
-                </div>
-                <Link
-                  to={`/book-repair?membershipPlan=${plan.id}`}
-                  className={`fm-btn fm-plan__action ${plan.featured ? "fm-btn--primary" : "fm-btn--outline"}`}
+                <BrandMark brand={entry.brand} />
+                <span className="fhm-brand-name">
+                  {entry.brand === "OPPO"
+                    ? "Oppo"
+                    : entry.brand === "Vivo"
+                      ? "vivo"
+                      : entry.brand === "Realme"
+                        ? "realme"
+                        : entry.brand}
+                </span>
+              </button>
+            ))}
+          </div>
+          {sortedBrands.length > 10 && (
+            <span className="fhm-scroll-help">
+              Scroll sideways to see more brands →
+            </span>
+          )}
+        </NumberedPanel>
+
+        <NumberedPanel
+          number="2"
+          title="Select Your Mobile Model"
+          subtitle="Choose the exact model of your phone."
+        >
+          <div className="fhm-model-layout">
+            <div className="fhm-model-picker">
+              <label className="fhm-visually-hidden" htmlFor="fhm-model-select">
+                Mobile model
+              </label>
+              <div className="fhm-select-wrap">
+                <select
+                  id="fhm-model-select"
+                  value={unlisted ? "__unlisted__" : model}
+                  onChange={(event) => selectModel(event.target.value)}
+                  disabled={!brand}
                 >
-                  Choose ₹{plan.price} Plan <ArrowRight size={18} />
-                </Link>
-              </article>
-            ))}
-          </div>
-          <p className="fm-plan-disclaimer">
-            *Free service eligibility, plan duration, covered labour,
-            replacement-part costs, exclusions and renewal terms must be
-            confirmed before joining. Selecting a plan currently opens the
-            repair enquiry page, not a payment checkout.
-          </p>
-        </div>
-      </section>
-
-      <section className="fm-story fm-section" aria-labelledby="fm-story-title">
-        <div className="fm-shell fm-story__layout">
-          <div className="fm-story__gallery" data-fm-reveal>
-            <RealPhoto
-              src={photos.workbench}
-              alt="Actual photograph of a technician repairing a smartphone under a microscope"
-              className="fm-story__photo fm-story__photo--large"
-            />
-            <RealPhoto
-              src={photos.precision}
-              alt="Actual photograph of detailed electronics repair at a service bench"
-              className="fm-story__photo fm-story__photo--small"
-            />
-          </div>
-          <div className="fm-story__copy" data-fm-reveal>
-            <Eyebrow>WHY FIXHUB MEMBERSHIP?</Eyebrow>
-            <h2 id="fm-story-title">
-              Less hassle. <span>More peace of mind.</span>
-            </h2>
-            <p>
-              From the first enquiry to handing your phone back, we aim to make
-              each step easy to understand.
-            </p>
-            <div className="fm-story__feature-list">
-              <div>
-                <CalendarCheck />
-                <span>
-                  <strong>Book around your schedule</strong>
-                  <small>Arrange a convenient doorstep appointment.</small>
-                </span>
+                  <option value="">Choose your phone model</option>
+                  {models.map((entry) => (
+                    <option value={entry.model} key={entry.model}>
+                      {entry.model}
+                    </option>
+                  ))}
+                  <option value="__unlisted__">
+                    My phone model is not listed
+                  </option>
+                </select>
+                <ChevronDown size={20} />
               </div>
-              <div>
-                <Wrench />
-                <span>
-                  <strong>Support for everyday phone issues</strong>
-                  <small>Display, battery, charging, camera and more.</small>
-                </span>
-              </div>
-              <div>
-                <ShieldCheck />
-                <span>
-                  <strong>Know the repair before approving it</strong>
-                  <small>
-                    We explain the work and quote before proceeding.
-                  </small>
-                </span>
-              </div>
+              {unlisted && (
+                <input
+                  className="fhm-input fhm-custom-model"
+                  value={model}
+                  onChange={(event) => {
+                    setModel(event.target.value.slice(0, 90));
+                    setSubmitError("");
+                  }}
+                  placeholder="Enter your exact phone model"
+                  aria-label="Unlisted phone model name"
+                />
+              )}
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        className="fm-steps fm-section"
-        id="how-membership-works"
-        aria-labelledby="fm-steps-title"
-      >
-        <div className="fm-shell">
-          <div className="fm-section-head" data-fm-reveal>
-            <div>
-              <Eyebrow>HOW MEMBERSHIP WORKS</Eyebrow>
-              <h2 id="fm-steps-title">
-                Simple from <span>start to finish.</span>
-              </h2>
-              <p>
-                Three steps from choosing your plan to getting help with your
-                phone.
-              </p>
-            </div>
-          </div>
-          <div className="fm-steps__grid">
-            {journey.map(({ no, icon: Icon, title, text }) => (
-              <article className="fm-step" key={no} data-fm-reveal>
-                <span className="fm-step__number">{no}</span>
-                <div className="fm-step__icon">
-                  <Icon size={27} />
-                </div>
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="fm-faq fm-section" aria-labelledby="fm-faq-title">
-        <div className="fm-shell fm-faq__layout">
-          <div className="fm-faq__intro" data-fm-reveal>
-            <Eyebrow>GOOD TO KNOW</Eyebrow>
-            <h2 id="fm-faq-title">
-              Membership <span>FAQs.</span>
-            </h2>
-            <p>
-              Useful answers before you choose a plan. Exact membership terms
-              will be confirmed before payment goes live.
-            </p>
-            <Link to="/contact" className="fm-faq__contact">
-              <Mail size={18} /> Have a question? Contact us{" "}
-              <ArrowUpRight size={17} />
-            </Link>
-          </div>
-          <div className="fm-faq__list" data-fm-reveal>
-            {faqs.map((item, index) => (
-              <div
-                className={`fm-faq__item ${openFaq === index ? "fm-faq__item--open" : ""}`}
-                key={item.q}
-              >
+            <div
+              className="fhm-model-tiles"
+              ref={modelListRef}
+              aria-label="Popular phone models"
+            >
+              {models.map((entry, index) => (
                 <button
                   type="button"
-                  aria-expanded={openFaq === index}
-                  aria-controls={`fm-faq-answer-${index}`}
-                  onClick={() =>
-                    setOpenFaq((current) => (current === index ? -1 : index))
+                  className={`fhm-model-tile ${model === entry.model && !unlisted ? "is-selected" : ""}`}
+                  key={entry.model}
+                  onClick={() => selectModel(entry.model)}
+                  aria-pressed={model === entry.model && !unlisted}
+                >
+                  {model === entry.model && !unlisted && (
+                    <span className="fhm-selected-tick">
+                      <Check size={11} />
+                    </span>
+                  )}
+                  <PhoneArtwork
+                    model={entry.model}
+                    image={entry.image}
+                    index={index}
+                  />
+                  <span title={entry.model}>{entry.model}</span>
+                </button>
+              ))}
+              {!models.length && (
+                <p className="fhm-model-empty">
+                  Select a brand with listed models, or enter the model
+                  manually.
+                </p>
+              )}
+            </div>
+          </div>
+        </NumberedPanel>
+
+        <NumberedPanel
+          number="3"
+          title="Automatic Fixing Charge"
+          subtitle="We use your selected phone's stored original price to determine its service-fee bracket."
+        >
+          <div className="fhm-plan-layout">
+            <div className="fhm-recommendation">
+              <div className="fhm-recommendation-phone">
+                <PhoneArtwork
+                  model={model}
+                  image={selectedPhone?.image}
+                  large
+                  index={2}
+                />
+              </div>
+              <div className="fhm-recommendation-name">
+                <h3>
+                  {model
+                    ? `${brand} ${model.startsWith(brand) ? model.slice(brand.length).trim() : model}`
+                    : "Select your phone"}
+                </h3>
+                <p>
+                  Original MRP: <strong>{money(selectedPhone?.mrp)}</strong>{" "}
+                  {selectedPhone && (
+                    <Info
+                      size={14}
+                      title="Stored reference price; may differ by variant"
+                    />
+                  )}
+                </p>
+              </div>
+              <div className="fhm-recommendation-price">
+                <span className="fhm-recommended-badge">
+                  <CheckCircle2 size={16} />{" "}
+                  {selectedPhone ? "Automatic Service Charge" : "Price Review"}
+                </span>
+                <strong>
+                  {selectedPrice == null ? "—" : money(selectedPrice)}
+                </strong>
+                <small>
+                  {selectedTier?.label || "Our team will confirm the bracket"}
+                </small>
+              </div>
+            </div>
+            <div className="fhm-price-explainer">
+              <div className="fhm-explainer-heading">
+                <span>⚙</span>
+                <strong>How is the price calculated?</strong>
+              </div>
+              <p>
+                We use the original launch price (MRP) of your phone model to
+                select the correct price bracket.
+              </p>
+              <a href="#fhm-price-ranges">
+                View all price ranges <ArrowRight size={16} />
+              </a>
+            </div>
+          </div>
+        </NumberedPanel>
+
+        <NumberedPanel
+          number="4"
+          title="Complete Your Membership Request"
+          subtitle="Your details are filled automatically from your account. Just confirm and submit."
+        >
+          {!authLoading && !user ? (
+            <div className="fhm-need-login">
+              <ShieldCheck size={24} />
+              <div>
+                <strong>Login required</strong>
+                <p>
+                  Log in to save this request to your FIXHUB customer account.
+                </p>
+              </div>
+              <Link
+                to="/login"
+                state={{ from: "/membership" }}
+                className="fhm-primary-button"
+              >
+                Login to Continue <ArrowRight size={17} />
+              </Link>
+            </div>
+          ) : authLoading ? (
+            <p className="fhm-loading">
+              <LoaderCircle size={18} className="fhm-spinner" /> Checking your
+              FIXHUB account...
+            </p>
+          ) : (
+            <form className="fhm-request-form" onSubmit={submit}>
+              <div className="fhm-customer-fields">
+                <div className="fhm-field">
+                  <label htmlFor="fhm-name">Full Name</label>
+                  <div className="fhm-readonly">
+                    <Smartphone size={16} />
+                    <input id="fhm-name" value={user.fullName || ""} readOnly />
+                  </div>
+                </div>
+                <div className="fhm-field">
+                  <label htmlFor="fhm-address">Address</label>
+                  <div className="fhm-readonly">
+                    <MapPin size={17} />
+                    <input
+                      id="fhm-address"
+                      value={user.address || ""}
+                      readOnly
+                    />
+                  </div>
+                </div>
+                <div className="fhm-field">
+                  <label htmlFor="fhm-email">Email Address</label>
+                  <div className="fhm-readonly">
+                    <Mail size={17} />
+                    <input id="fhm-email" value={user.email || ""} readOnly />
+                  </div>
+                </div>
+                <div className="fhm-field">
+                  <label htmlFor="fhm-issue">Repair Issue (Optional)</label>
+                  <div className="fhm-select-wrap fhm-select-small">
+                    <Wrench size={16} />
+                    <select
+                      id="fhm-issue"
+                      value={issue}
+                      onChange={(event) => setIssue(event.target.value)}
+                    >
+                      <option value="">Choose an issue</option>
+                      {REPAIR_ISSUES.map((entry) => (
+                        <option key={entry} value={entry}>
+                          {entry}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown size={16} />
+                  </div>
+                </div>
+                <div className="fhm-field">
+                  <label htmlFor="fhm-phone">Phone Number</label>
+                  <div className="fhm-readonly">
+                    <Phone size={16} />
+                    <input id="fhm-phone" value={user.phone || ""} readOnly />
+                  </div>
+                </div>
+                <div className="fhm-field">
+                  <label htmlFor="fhm-notes">Additional Notes (Optional)</label>
+                  <textarea
+                    id="fhm-notes"
+                    value={notes}
+                    onChange={(event) =>
+                      setNotes(event.target.value.slice(0, 1000))
+                    }
+                    rows={2}
+                    placeholder="Any additional information..."
+                  />
+                </div>
+              </div>
+
+              <aside className="fhm-summary">
+                <h3>
+                  <ClipboardList size={23} /> Request Summary
+                </h3>
+                <dl>
+                  <div>
+                    <dt>Brand</dt>
+                    <dd>{brand || "—"}</dd>
+                  </div>
+                  <div>
+                    <dt>Model</dt>
+                    <dd>{model || "—"}</dd>
+                  </div>
+                  <div>
+                    <dt>Original MRP</dt>
+                    <dd>{money(selectedPhone?.mrp)}</dd>
+                  </div>
+                  <div>
+                    <dt>Price Range</dt>
+                    <dd>{selectedTier?.label || "Pending review"}</dd>
+                  </div>
+                  <div>
+                    <dt>Automatic Fixing Charge</dt>
+                    <dd className="fhm-summary-price">
+                      {selectedPrice == null ? "Review" : money(selectedPrice)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>Status</dt>
+                    <dd>
+                      <span className="fhm-pending-badge">Pending</span>
+                    </dd>
+                  </div>
+                </dl>
+              </aside>
+
+              <div className="fhm-form-actions">
+                {submitError && (
+                  <p className="fhm-error" role="alert">
+                    {submitError}
+                  </p>
+                )}
+                {receipt && (
+                  <div className="fhm-receipt" role="status">
+                    <CheckCircle2 size={21} />
+                    <div>
+                      <strong>Request submitted successfully!</strong>
+                      <small>
+                        Pending review · Your request ID:{" "}
+                        <code>{receipt.requestId}</code>
+                      </small>
+                    </div>
+                    <button type="button" onClick={copyId}>
+                      <Copy size={14} /> {copied ? "Copied" : "Copy ID"}
+                    </button>
+                  </div>
+                )}
+                <button
+                  className="fhm-primary-button fhm-submit"
+                  type="submit"
+                  disabled={
+                    sending ||
+                    catalogLoading ||
+                    Boolean(catalogError) ||
+                    !model.trim()
                   }
                 >
-                  <span>
-                    <CircleHelp size={18} />
-                    {item.q}
-                  </span>
-                  <ChevronDown size={19} />
+                  {sending ? (
+                    <LoaderCircle size={19} className="fhm-spinner" />
+                  ) : (
+                    <Send size={19} />
+                  )}
+                  {sending
+                    ? "Submitting Request..."
+                    : "Submit Membership Request"}
                 </button>
-                {openFaq === index && (
-                  <p id={`fm-faq-answer-${index}`}>{item.a}</p>
-                )}
+                <span className="fhm-privacy">
+                  <LockKeyhole size={13} /> Your information is secure and used
+                  for FIXHUB repair and membership enquiries.
+                </span>
+              </div>
+            </form>
+          )}
+        </NumberedPanel>
+
+        <section className="fhm-price-section" id="fhm-price-ranges">
+          <div className="fhm-range-head">
+            <div>
+              <h2>₹ &nbsp;One Fixing Charge</h2>
+              <p>
+                Based on your phone's original MRP (not current market price).
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowPriceInfo((value) => !value)}
+            >
+              <Info size={15} /> {showPriceInfo ? "Show Less" : "Learn More"}
+            </button>
+          </div>
+          <div className="fhm-range-grid">
+            {PRICE_TIERS.map((tier) => (
+              <div
+                key={tier.price}
+                className={`fhm-range-card ${selectedTier?.price === tier.price ? "is-active" : ""}`}
+              >
+                <span>{tier.label}</span>
+                <strong>{money(tier.price)}</strong>
+                <small>per service charge</small>
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="fm-cta" aria-labelledby="fm-cta-title">
-        <div className="fm-shell fm-cta__inner" data-fm-reveal>
-          <div className="fm-cta__icon">
-            <Gift size={30} />
-          </div>
-          <div>
-            <span>THE FIRST STEP TO BETTER MOBILE CARE</span>
-            <h2 id="fm-cta-title">Your phone deserves dependable care.</h2>
-            <p>
-              Choose the right membership and request a doorstep repair
-              assessment.
+          <p className="fhm-range-note">
+            <Info size={16} /> These are FIXHUB service/labour charges.
+            Replacement parts, if required, are billed separately. Final
+            quotation is confirmed before repair.
+          </p>
+          {showPriceInfo && (
+            <p className="fhm-more-info">
+              Your phone's original launch MRP determines its range. For a model
+              missing from our catalogue, we do not guess the price: FIXHUB will
+              check it before confirming any charge. A submitted request is not
+              payment or active membership, and free-service eligibility must be
+              confirmed separately.
             </p>
-          </div>
-          <a className="fm-btn fm-btn--light" href="#membership-plans">
-            View Plans <ArrowRight size={19} />
-          </a>
-        </div>
-      </section>
-    </div>
+          )}
+        </section>
+      </div>
+    </main>
   );
 }

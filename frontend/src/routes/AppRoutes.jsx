@@ -30,76 +30,78 @@ import Login from "../pages/auth/Login.jsx";
 
 import Profile from "../pages/auth/Profile.jsx";
 
+import ForgotPassword from "../pages/auth/ForgotPassword.jsx";
+
+import ResetPassword from "../pages/auth/ResetPassword.jsx";
+
+import VerifyEmail from "../pages/auth/VerifyEmail.jsx";
+
+import ResendVerification from "../pages/auth/ResendVerification.jsx";
+
 // ==========================================
-// APPLICATION ROUTES
+// FIXHUB WEBSITE ROUTES
 // ==========================================
 
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* ==================================
-          HOME
-      ================================== */}
+      {/* HOME */}
 
       <Route path="/" element={<Home />} />
 
-      {/* ==================================
-          SERVICES
-      ================================== */}
+      {/* SERVICES */}
 
       <Route path="/services" element={<Services />} />
 
-      {/* ==================================
-          BRANDS
-      ================================== */}
+      {/* BRANDS */}
 
       <Route path="/brands" element={<Brands />} />
 
-      {/* ==================================
-          MEMBERSHIP
-      ================================== */}
+      {/* MEMBERSHIP */}
 
       <Route path="/membership" element={<Membership />} />
 
-      {/* ==================================
-          BOOK REPAIR
-      ================================== */}
+      {/* BOOK REPAIR */}
 
       <Route path="/book-repair" element={<BookRepair />} />
 
-      {/* ==================================
-          TRACK REPAIR
-      ================================== */}
+      {/* TRACK REPAIR */}
 
       <Route path="/track-repair" element={<TrackRepair />} />
 
-      {/* ==================================
-          HOW IT WORKS
-      ================================== */}
+      {/* HOW IT WORKS */}
 
       <Route path="/how-it-works" element={<HowItWorks />} />
 
-      {/* ==================================
-          CONTACT
-      ================================== */}
+      {/* CONTACT */}
 
       <Route path="/contact" element={<Contact />} />
 
-      {/* ==================================
-          CUSTOMER LOGIN
-      ================================== */}
+      {/* CUSTOMER LOGIN */}
 
       <Route path="/login" element={<Login />} />
 
-      {/* ==================================
-          CUSTOMER PROFILE
-      ================================== */}
+      {/* CUSTOMER PROFILE */}
 
       <Route path="/profile" element={<Profile />} />
 
-      {/* ==================================
-          404 NOT FOUND
-      ================================== */}
+      {/* FORGOT PASSWORD */}
+
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+
+      {/* RESET PASSWORD */}
+
+      <Route path="/reset-password" element={<ResetPassword />} />
+
+      {/* VERIFY EMAIL */}
+
+      <Route path="/verify-email" element={<VerifyEmail />} />
+
+      {/* RESEND VERIFICATION */}
+
+      <Route path="/resend-verification" element={<ResendVerification />} />
+
+      {/* NOT FOUND */}
 
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -1,76 +1,93 @@
+// ==========================================
+// FIXHUB BACKEND SERVER
+// ==========================================
+
 import dns from "node:dns";
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import cors from "cors";
-import helmet from "helmet";
-import cookieParser from "cookie-parser";
 import path from "node:path";
+import fs from "node:fs";
 import { fileURLToPath } from "node:url";
-import { existsSync } from "node:fs";
 
-// ==========================================
-// IMPORT ROUTES
-// ==========================================
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import mongoose from "mongoose";
 
-// Customer Authentication
 import fixhubAuthRoutes from "./routes/fixhubAuthRoutes.js";
-
-// ==========================================
-// ENVIRONMENT CONFIGURATION
-// ==========================================
+import adminAuthRoutes from "./routes/authRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import membershipRequestRoutes from "./routes/membershipRequestRoutes.js";
+import repairBookingRoutes from "./routes/repairBookingRoutes.js";
 
 dotenv.config();
 
-const isProduction = process.env.NODE_ENV === "production";
-// ==========================================
-// FIX MONGODB ATLAS DNS CONNECTION
-// ==========================================
-
-dns.setServers(["8.8.8.8", "1.1.1.1"]);
-
-console.log("✅ MongoDB DNS configured");
-
 const app = express();
+const PORT = Number(process.env.PORT || 3000);
+const production = process.env.NODE_ENV === "production";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Frontend production build: FIXHUB/frontend/dist
-const frontendDistPath = path.resolve(
-  __dirname,
-  "../frontend/dist",
-);
-
-const PORT = Number(process.env.PORT) || 3000;
-
-const MONGO_URI = process.env.MONGO_URI;
-
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+const frontendDist = path.resolve(__dirname, "../frontend/dist");
 
 // ==========================================
-// EXPRESS SECURITY
+// MONGODB DNS CONFIGURATION
 // ==========================================
 
-app.disable("x-powered-by");
-
-app.use(helmet());
-
-
- // ==========================================
- // CORS CONFIGURATION
- // ==========================================
-
-if (!isProduction) {
-  app.use(
-    cors({
-      origin: CLIENT_URL,
-      credentials: true,
-      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization"],
-    }),
-  );
+try {
+  dns.setServers(["8.8.8.8", "1.1.1.1"]);
+  console.log("MongoDB DNS configuration applied.");
+} catch (error) {
+  console.warn("DNS configuration skipped:", error.message);
 }
 
+// ==========================================
+// CORS CONFIGURATION
+// ==========================================
+
+const allowedOrigins = new Set();
+
+function addAllowedOrigin(value) {
+  if (!value) return;
+
+  try {
+    allowedOrigins.add(new URL(value).origin);
+  } catch {
+    console.warn("Ignoring invalid CLIENT_URL configuration.");
+  }
+}
+
+addAllowedOrigin(process.env.CLIENT_URL);
+
+if (!production) {
+  addAllowedOrigin("http://localhost:5173");
+  addAllowedOrigin("http://127.0.0.1:5173");
+  addAllowedOrigin("http://localhost:5174");
+  addAllowedOrigin("http://127.0.0.1:5174");
+}
+
+console.log(
+  "Allowed frontend origins:",
+  [...allowedOrigins].join(", ") || "(none configured)",
+);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.has(origin)) {
+        return callback(null, true);
+      }
+
+      console.warn("Blocked CORS origin:", origin);
+      return callback(new Error("CORS origin not allowed."));
+    },
+
+    credentials: true,
+
+    methods: ["GET", "HEAD", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  }),
+);
 
 // ==========================================
 // EXPRESS MIDDLEWARE
@@ -78,189 +95,331 @@ if (!isProduction) {
 
 app.use(express.json({ limit: "1mb" }));
 
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: "1mb",
+  }),
+);
 
 app.use(cookieParser());
 
-
 // ==========================================
-// MONGODB CONNECTION STATUS
-// ==========================================
-
-function getDatabaseStatus() {
-  const states = {
-    0: "disconnected",
-    1: "connected",
-    2: "connecting",
-    3: "disconnecting",
-  };
-
-  return states[mongoose.connection.readyState] || "unknown";
-}
-
-// ==========================================
-// HEALTH CHECK API
+// REQUEST LOGGING
 // ==========================================
 
-app.get("/api/health", async (req, res) => {
-  const databaseStatus = getDatabaseStatus();
+app.use("/api", (req, res, next) => {
+  console.log(`[API] ${req.method} ${req.originalUrl}`);
 
-  if (databaseStatus !== "connected") {
+  res.on("finish", () => {
+    console.log(
+      `[API RESPONSE] ${req.method} ${req.originalUrl} -> ${res.statusCode}`,
+    );
+  });
+
+  next();
+});
+
+// ==========================================
+// API REQUEST ORIGIN PROTECTION
+// ==========================================
+
+app.use("/api", (req, res, next) => {
+  if (["GET", "HEAD", "OPTIONS"].includes(req.method)) {
+    return next();
+  }
+
+  const origin = req.get("origin");
+
+  if (!origin) {
+    return next();
+  }
+
+  let normalizedOrigin;
+
+  try {
+    normalizedOrigin = new URL(origin).origin;
+  } catch {
+    return res.status(403).json({
+      success: false,
+      message: "Invalid request origin.",
+    });
+  }
+
+  if (!allowedOrigins.has(normalizedOrigin)) {
+    return res.status(403).json({
+      success: false,
+      message: "Invalid request origin.",
+    });
+  }
+
+  next();
+});
+
+// ==========================================
+// ROOT ROUTE
+// ==========================================
+
+app.get("/", (_req, res) => {
+  res.json({
+    success: true,
+    name: "FIXHUB",
+    message: "FIXHUB Backend is running",
+
+    database:
+      mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+  });
+});
+
+// ==========================================
+// HEALTH CHECK
+// ==========================================
+
+app.get("/api/health", async (_req, res) => {
+  if (mongoose.connection.readyState !== 1) {
     return res.status(503).json({
       success: false,
-      backend: "running",
-      database: databaseStatus,
-      message: "MongoDB is not connected",
-      timestamp: new Date().toISOString(),
+      server: "running",
+      mongodb: "disconnected",
     });
   }
 
   try {
-    // Verify MongoDB can respond to a database command
-    await mongoose.connection.db.command({ ping: 1 });
+    await mongoose.connection.db.admin().ping();
 
     return res.status(200).json({
       success: true,
-      application: "FIXHUB",
-      backend: "running",
-      database: "connected",
-      databaseName: mongoose.connection.name,
-      message: "FIXHUB Backend and MongoDB are working",
-      timestamp: new Date().toISOString(),
+      server: "running",
+      mongodb: "connected",
+      database: mongoose.connection.name,
     });
   } catch (error) {
-    console.error("❌ MongoDB health check failed:", error.message);
+    console.error("Health check failed:", error.message);
 
     return res.status(503).json({
       success: false,
-      backend: "running",
-      database: "unavailable",
-      message: "MongoDB health check failed",
-      timestamp: new Date().toISOString(),
+      server: "running",
+      mongodb: "unavailable",
     });
   }
 });
 
 // ==========================================
-// CUSTOMER AUTHENTICATION ROUTES
+// CUSTOMER AUTHENTICATION
+// Base URL: /api/auth
 // ==========================================
 
 app.use("/api/auth", fixhubAuthRoutes);
 
 // ==========================================
-// MONGODB EVENTS
+// ADMIN AUTHENTICATION
+// Base URL: /api/admin-auth
+// ==========================================
+
+app.use("/api/admin-auth", adminAuthRoutes);
+
+// ==========================================
+// ADMIN DASHBOARD
+// Base URL: /api/admin
+// ==========================================
+
+app.use("/api/admin", adminRoutes);
+
+// ==========================================
+// MEMBERSHIP REQUESTS
+// Base URL: /api/membership-requests
+// ==========================================
+
+app.use("/api/membership-requests", membershipRequestRoutes);
+
+// ==========================================
+// REPAIR BOOKINGS
+// Base URL: /api/repair-bookings
+// ==========================================
+
+app.use("/api/repair-bookings", repairBookingRoutes);
+
+// ==========================================
+// API 404 HANDLER
+// ==========================================
+
+app.use("/api", (req, res) => {
+  console.warn(`[API 404] ${req.method} ${req.originalUrl}`);
+
+  res.status(404).json({
+    success: false,
+    message: "API route not found.",
+    method: req.method,
+    path: req.originalUrl,
+  });
+});
+
+// ==========================================
+// SERVE FRONTEND IN PRODUCTION
+// ==========================================
+
+if (production) {
+  if (fs.existsSync(path.join(frontendDist, "index.html"))) {
+    app.use(express.static(frontendDist));
+
+    app.get("*", (req, res, next) => {
+      if (req.path.startsWith("/api/")) {
+        return next();
+      }
+
+      res.sendFile(path.join(frontendDist, "index.html"), (error) => {
+        if (error) {
+          next(error);
+        }
+      });
+    });
+  } else {
+    console.warn(
+      `Frontend build not found at ${frontendDist}. ` +
+        "API server will run without serving frontend files.",
+    );
+  }
+}
+
+// ==========================================
+// GLOBAL ERROR HANDLER
+// ==========================================
+
+app.use((error, _req, res, next) => {
+  console.error("FIXHUB SERVER ERROR:", error.stack || error.message);
+
+  if (res.headersSent) {
+    return next(error);
+  }
+
+  let status = error.status || error.statusCode || 500;
+
+  if (
+    error instanceof SyntaxError &&
+    Object.prototype.hasOwnProperty.call(error, "body")
+  ) {
+    status = 400;
+  }
+
+  if (error.message === "CORS origin not allowed.") {
+    status = 403;
+  }
+
+  res.status(status).json({
+    success: false,
+
+    message: status >= 500 ? "Internal server error." : error.message,
+  });
+});
+
+// ==========================================
+// MONGODB CONNECTION EVENTS
 // ==========================================
 
 mongoose.connection.on("connected", () => {
-  console.log("✅ MongoDB Atlas Connected Successfully");
+  console.log("MongoDB connection established.");
 });
 
 mongoose.connection.on("disconnected", () => {
-  console.log("⚠️ MongoDB Atlas Disconnected");
+  console.warn("MongoDB disconnected.");
 });
 
 mongoose.connection.on("error", (error) => {
-  console.error("❌ MongoDB Connection Error:", error.message);
+  console.error("MongoDB error:", error.message);
 });
 
-// ==========================================
-// CONNECT MONGODB
-// ==========================================
-
-async function connectDatabase() {
-  if (!MONGO_URI) {
-    throw new Error("MONGO_URI is missing. Check backend/.env");
-  }
-
-  console.log("⏳ Connecting to MongoDB Atlas...");
-
-  await mongoose.connect(MONGO_URI, {
-    serverSelectionTimeoutMS: 10000,
-  });
-
-  // Verify the connection actually responds
-  await mongoose.connection.db.command({ ping: 1 });
-
-  console.log("✅ MongoDB Connection Verified");
-  console.log("📦 Database Name:", mongoose.connection.name);
-}
-
-// ==========================================
-// SERVE REACT FRONTEND IN PRODUCTION
-// ==========================================
-
-if (isProduction) {
-  if (!existsSync(path.join(frontendDistPath, "index.html"))) {
-    throw new Error(
-      "Frontend build not found. Run npm run build in frontend first.",
-    );
-  }
-
-  // Serve Vite-generated JS, CSS, images and other assets.
-  app.use(express.static(frontendDistPath));
-
-  // API requests must not fall through to React's index.html.
-  app.use("/api", (req, res) => {
-    res.status(404).json({
-      success: false,
-      message: "API endpoint not found",
-    });
-  });
-
-  // Support direct navigation and page refreshes in React Router.
-  app.get("/{*path}", (req, res) => {
-    res.sendFile(path.join(frontendDistPath, "index.html"));
-  });
-} else {
-  app.get("/", (req, res) => {
-    res.status(200).json({
-      success: true,
-      application: "FIXHUB",
-      message: "FIXHUB Backend API is running",
-    });
-  });
-}
 // ==========================================
 // START SERVER
 // ==========================================
 
 async function startServer() {
+  if (!process.env.MONGO_URI) {
+    console.error("Startup failed: MONGO_URI is missing. Check backend/.env.");
+
+    process.exitCode = 1;
+    return;
+  }
+
+  let server;
+
   try {
-    console.log("");
-    console.log("======================================");
-    console.log("       FIXHUB BACKEND STARTING");
-    console.log("======================================");
-    console.log("");
+    console.log("Connecting to MongoDB Atlas...");
 
-    await connectDatabase();
-
-    app.listen(PORT, () => {
-      console.log("");
-      console.log("======================================");
-      console.log("🚀 FIXHUB BACKEND RUNNING");
-      console.log("======================================");
-      console.log(`🌐 Port: ${PORT}`);
-      console.log(`🌐 Server: http://localhost:${PORT}`);
-      console.log(`❤️ Health: http://localhost:${PORT}/api/health`);
-      console.log(`🗄️ MongoDB: ${getDatabaseStatus()}`);
-      console.log("✅ Customer Authentication: Enabled");
-      console.log("======================================");
-      console.log("");
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 30000,
+      connectTimeoutMS: 30000,
     });
-  } catch (error) {
-    console.error("");
-    console.error("======================================");
-    console.error("❌ FIXHUB BACKEND STARTUP FAILED");
-    console.error("======================================");
-    console.error("Error:", error.message);
-    console.error("======================================");
 
-    process.exit(1);
+    await mongoose.connection.db.admin().ping();
+
+    console.log("MongoDB Atlas connected.");
+    console.log("Database:", mongoose.connection.name);
+
+    server = app.listen(PORT, () => {
+      console.log("----------------------------------");
+      console.log("FIXHUB BACKEND STARTED");
+      console.log(`Server: http://localhost:${PORT}`);
+      console.log("Customer authentication: registered");
+      console.log("Admin authentication: registered");
+      console.log("Admin dashboard API: registered");
+      console.log("Membership requests API: registered");
+      console.log("Repair bookings API: registered");
+      console.log("MongoDB: connected");
+      console.log("----------------------------------");
+    });
+
+    server.on("error", (error) => {
+      console.error("HTTP server error:", error.message);
+
+      process.exitCode = 1;
+    });
+
+    // ======================================
+    // GRACEFUL SHUTDOWN
+    // ======================================
+
+    let stopping = false;
+
+    async function shutdown(signal) {
+      if (stopping) return;
+
+      stopping = true;
+
+      console.log(`${signal} received. Shutting down FIXHUB...`);
+
+      if (server) {
+        await new Promise((resolve) => {
+          server.close(resolve);
+        });
+      }
+
+      try {
+        await mongoose.disconnect();
+      } catch (error) {
+        console.error("MongoDB shutdown error:", error.message);
+      }
+
+      process.exit(0);
+    }
+
+    process.once("SIGINT", () => shutdown("SIGINT"));
+
+    process.once("SIGTERM", () => shutdown("SIGTERM"));
+  } catch (error) {
+    console.error("FIXHUB startup failed:", error.stack || error.message);
+
+    if (server) {
+      server.close();
+    }
+
+    try {
+      await mongoose.disconnect();
+    } catch {
+      // Ignore secondary cleanup errors.
+    }
+
+    process.exitCode = 1;
   }
 }
-
-// ==========================================
-// RUN APPLICATION
-// ==========================================
 
 startServer();
