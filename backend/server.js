@@ -173,18 +173,26 @@ app.use("/api", (req, res, next) => {
 // ROOT ROUTE
 // ==========================================
 
+
 app.get("/", (_req, res) => {
-  res.json({
+  const indexPath = path.join(frontendDist, "index.html");
+
+  if (production && fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+
+  return res.json({
     success: true,
     name: "FIXHUB",
     message: "FIXHUB Backend is running",
-
+    
     database:
       mongoose.connection.readyState === 1
         ? "connected"
         : "disconnected",
   });
 });
+
 
 // ==========================================
 // HEALTH CHECK
