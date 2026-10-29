@@ -1386,3 +1386,377 @@
           max-width: 100%;
      }
 }
+
+
+/* =========================================
+   REAL PHONE PRODUCT IMAGES
+   Add this at the bottom of Membership.css
+   ========================================= */
+
+.fhm-page .fhm-phone-art {
+     position: relative;
+     display: grid;
+     place-items: center;
+     flex: none;
+     width: 76px;
+     height: 84px;
+     overflow: hidden;
+     border-radius: 8px;
+     background: #fff;
+}
+
+.fhm-page .fhm-phone-art>img {
+     display: block;
+     width: 100%;
+     height: 100%;
+     object-fit: contain;
+     object-position: center;
+     padding: 3px;
+     background: #fff;
+}
+
+.fhm-page .fhm-phone-art--large {
+     width: 112px;
+     height: 126px;
+     border-radius: 10px;
+}
+
+.fhm-page .fhm-phone-art--large>img {
+     padding: 2px;
+}
+
+.fhm-page .fhm-image-unavailable {
+     width: 100%;
+     height: 100%;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 5px;
+     color: #6c8298;
+     background: #eaf1f7;
+     text-align: center;
+}
+
+.fhm-page .fhm-image-unavailable span {
+     max-width: 68px;
+     font-size: 8px;
+     line-height: 1.25;
+}
+
+.fhm-page .fhm-model-tile {
+     flex: 0 0 96px;
+     min-width: 0;
+     overflow: hidden;
+}
+
+.fhm-page .fhm-model-tile>span:last-child {
+     min-height: 25px;
+     white-space: normal;
+     overflow-wrap: anywhere;
+     line-height: 1.3;
+}
+
+.fhm-page .fhm-recommendation-phone {
+     flex: none;
+}
+
+.fhm-page .fhm-recommendation {
+     min-width: 0;
+}
+
+.fhm-page .fhm-recommendation-name {
+     min-width: 0;
+     overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+     .fhm-page .fhm-phone-art--large {
+          width: 94px;
+          height: 110px;
+     }
+
+     .fhm-page .fhm-recommendation {
+          align-items: center;
+     }
+
+     .fhm-page .fhm-model-tile {
+          flex-basis: 91px;
+     }
+}
+
+@media (max-width: 470px) {
+     .fhm-page .fhm-phone-art--large {
+          width: 84px;
+          height: 100px;
+     }
+
+     .fhm-page .fhm-model-tile {
+          flex-basis: 86px;
+     }
+}
+
+.fhm-page .fhm-phone-art__fallback {
+     width: 100%;
+     height: 100%;
+     display: grid;
+     place-items: center;
+     color: #9ca3af;
+     background: #fff;
+}
+
+.fhm-page .fhm-phone-art img {
+     display: block;
+     width: 100%;
+     height: 100%;
+     object-fit: contain;
+     object-position: center;
+     padding: 3px;
+     background: #fff;
+}
+
+
+/* =========================================
+   FIXHUB MEMBERSHIP — RIGHT OVERFLOW FIX
+   Keep the existing design and colors
+   ========================================= */
+
+/* Prevent children from forcing the page wider */
+.fhm-page {
+     width: 100%;
+     max-width: 100%;
+     overflow-x: clip;
+}
+
+.fhm-page *,
+.fhm-page *::before,
+.fhm-page *::after {
+     box-sizing: border-box;
+}
+
+.fhm-shell {
+     width: min(1440px, calc(100% - 56px));
+     max-width: 100%;
+     margin-left: auto;
+     margin-right: auto;
+     min-width: 0;
+}
+
+.fhm-flow,
+.fhm-step,
+.fhm-price-section,
+.fhm-step-head,
+.fhm-model-layout,
+.fhm-model-picker,
+.fhm-plan-layout,
+.fhm-request-form,
+.fhm-customer-fields,
+.fhm-recommendation,
+.fhm-recommendation-name,
+.fhm-recommendation-price,
+.fhm-price-explainer,
+.fhm-summary {
+     min-width: 0;
+     max-width: 100%;
+}
+
+/* Keep grid children inside their columns */
+.fhm-model-layout>*,
+.fhm-plan-layout>*,
+.fhm-request-form>*,
+.fhm-customer-fields>* {
+     min-width: 0;
+     max-width: 100%;
+}
+
+/* Prevent long model names and text from pushing layouts */
+.fhm-page h1,
+.fhm-page h2,
+.fhm-page h3,
+.fhm-page p,
+.fhm-page label,
+.fhm-page strong,
+.fhm-page small,
+.fhm-page span,
+.fhm-page dd {
+     overflow-wrap: anywhere;
+}
+
+/* Horizontal scrolling should remain inside the lists */
+.fhm-brand-list,
+.fhm-model-tiles {
+     width: 100%;
+     max-width: 100%;
+     min-width: 0;
+     overflow-x: auto;
+     overscroll-behavior-x: contain;
+     -webkit-overflow-scrolling: touch;
+}
+
+/* Keep form controls within their parent */
+.fhm-page input,
+.fhm-page textarea,
+.fhm-page select,
+.fhm-select-wrap {
+     min-width: 0;
+     max-width: 100%;
+}
+
+.fhm-select-wrap select {
+     width: 100%;
+     min-width: 0;
+     text-overflow: ellipsis;
+}
+
+.fhm-field,
+.fhm-readonly {
+     min-width: 0;
+     max-width: 100%;
+}
+
+.fhm-readonly input {
+     min-width: 0;
+     width: 100%;
+}
+
+/* Keep summary text and prices inside the card */
+.fhm-summary dl>div {
+     min-width: 0;
+     flex-wrap: wrap;
+}
+
+.fhm-summary dt {
+     min-width: 0;
+}
+
+.fhm-summary dd {
+     min-width: 0;
+     overflow-wrap: anywhere;
+}
+
+/* Keep recommendation price from pushing the card */
+.fhm-recommendation {
+     flex-wrap: wrap;
+}
+
+.fhm-recommendation-name {
+     flex: 1 1 120px;
+}
+
+.fhm-recommendation-price {
+     min-width: 0;
+     max-width: 100%;
+}
+
+/* Keep pricing cards inside the section */
+.fhm-range-grid {
+     grid-template-columns: repeat(5, minmax(0, 1fr));
+     min-width: 0;
+}
+
+.fhm-range-card {
+     min-width: 0;
+     max-width: 100%;
+}
+
+/* Keep buttons within the available width */
+.fhm-form-actions {
+     min-width: 0;
+     max-width: 100%;
+}
+
+.fhm-primary-button,
+.fhm-submit {
+     max-width: 100%;
+     white-space: normal;
+     overflow-wrap: anywhere;
+}
+
+/* Tablet */
+@media (max-width: 1000px) {
+     .fhm-shell {
+          width: calc(100% - 36px);
+     }
+
+     .fhm-model-layout {
+          grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
+     }
+
+     .fhm-request-form {
+          grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+     }
+
+     .fhm-range-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+     }
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+     .fhm-shell {
+          width: calc(100% - 28px);
+     }
+
+     .fhm-model-layout,
+     .fhm-plan-layout,
+     .fhm-request-form {
+          grid-template-columns: minmax(0, 1fr);
+     }
+
+     .fhm-customer-fields {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+     }
+
+     .fhm-form-actions {
+          grid-column: 1 / -1;
+     }
+
+     .fhm-recommendation {
+          flex-wrap: wrap;
+     }
+
+     .fhm-recommendation-price {
+          flex: 1 1 100%;
+          text-align: left;
+     }
+
+     .fhm-range-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+     }
+}
+
+/* Small phones */
+@media (max-width: 470px) {
+     .fhm-shell {
+          width: calc(100% - 22px);
+     }
+
+     .fhm-step {
+          padding: 12px;
+     }
+
+     .fhm-customer-fields {
+          grid-template-columns: minmax(0, 1fr);
+     }
+
+     .fhm-range-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+     }
+
+     .fhm-range-card:last-child {
+          grid-column: 1 / -1;
+     }
+
+     .fhm-range-head {
+          flex-wrap: wrap;
+     }
+
+     .fhm-receipt {
+          flex-wrap: wrap;
+     }
+
+     .fhm-submit {
+          width: 100%;
+          min-width: 0;
+     }
+}

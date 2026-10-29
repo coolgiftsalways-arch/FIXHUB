@@ -15,12 +15,12 @@ import {
   Mail,
   Phone,
   RotateCcw,
-  Send,
   ShieldCheck,
   Smartphone,
   Wrench,
 } from "lucide-react";
 import "../styles/Membership.css";
+import { getPhoneImage } from "../utils/phoneImage.js";
 
 const PRICE_TIERS = [
   { label: "Up to ₹20,000", price: 499, max: 20000 },
@@ -43,19 +43,24 @@ const BRAND_ORDER = [
   "Motorola",
   "Nothing",
   "iQOO",
+  "Google",
   "Infinix",
   "Tecno",
   "Itel",
+  "Nokia",
+  "Lava",
+  "ASUS",
   "Other",
 ];
 
 const MODEL_PRIORITY = {
   OnePlus: [
-    "OnePlus 11R",
+    "OnePlus 13",
+    "OnePlus 13R",
+    "OnePlus 12",
     "OnePlus 12R",
     "OnePlus 11",
-    "OnePlus 12",
-    "OnePlus 13R",
+    "OnePlus 11R",
     "OnePlus Nord 4",
   ],
 };
@@ -83,19 +88,6 @@ function matchingTier(mrp) {
 }
 
 function BrandMark({ brand }) {
-  const styles = {
-    Apple: "fhm-brand-logo--apple",
-    Samsung: "fhm-brand-logo--samsung",
-    OnePlus: "fhm-brand-logo--oneplus",
-    OPPO: "fhm-brand-logo--oppo",
-    Vivo: "fhm-brand-logo--vivo",
-    Realme: "fhm-brand-logo--realme",
-    Xiaomi: "fhm-brand-logo--xiaomi",
-    Redmi: "fhm-brand-logo--redmi",
-    POCO: "fhm-brand-logo--poco",
-    Motorola: "fhm-brand-logo--moto",
-  };
-
   const text = {
     Apple: "●",
     Samsung: "SAMSUNG",
@@ -109,59 +101,144 @@ function BrandMark({ brand }) {
     Motorola: "M",
     Nothing: "(1)",
     iQOO: "iQOO",
+    Google: "G",
     Infinix: "Infinix",
     Tecno: "TECNO",
     Itel: "itel",
+    Nokia: "NOKIA",
+    Lava: "LAVA",
+    ASUS: "ASUS",
     Other: "•••",
   };
 
   return (
     <span
       aria-hidden="true"
-      className={`fhm-brand-logo ${styles[brand] || ""}`}
+      className={`fhm-brand-logo fhm-brand-logo--${brand
+        .toLowerCase()
+        .replace(/[^a-z]/g, "")}`}
     >
       {text[brand] || brand.slice(0, 3)}
     </span>
   );
 }
 
-function PhoneArtwork({ model, image, large = false, index = 0 }) {
+function PhoneArtwork({ brand, model, image, large = false }) {
+  const [resolvedImage, setResolvedImage] = useState(image || null);
+  const [failed, setFailed] = useState(false);
+  const [loading, setLoading] = useState(!image);
+  const [retrying, setRetrying] = useState(false);
+  const activeRef = useRef(true);
+  const attemptedFallbackRef = useRef(false);
+
+  useEffect(() => {
+    let active = true;
+
+    activeRef.current = true;
+    attemptedFallbackRef.current = false;
+
+    setResolvedImage(image || null);
+    setFailed(false);
+    setLoading(true);
+    setRetrying(false);
+
+    getPhoneImage(brand, model, image || null)
+      .then((url) => {
+        if (!active) return;
+
+        setResolvedImage(url);
+        setFailed(!url);
+      })
+      .catch((error) => {
+        console.error(
+          `Phone image loading failed for ${brand} ${model}:`,
+          error,
+        );
+
+        if (!active) return;
+
+        setResolvedImage(null);
+        setFailed(true);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+      activeRef.current = false;
+    };
+  }, [brand, model, image]);
+
+  async function handleImageError() {
+    if (attemptedFallbackRef.current) {
+      setResolvedImage(null);
+      setFailed(true);
+      setLoading(false);
+      return;
+    }
+
+    attemptedFallbackRef.current = true;
+    setRetrying(true);
+    setLoading(true);
+
+    try {
+      // Retry without the catalogue image to look for a fallback.
+      const fallback = await getPhoneImage(brand, model, null, true);
+
+      if (!activeRef.current) return;
+
+      if (fallback && fallback !== resolvedImage) {
+        setResolvedImage(fallback);
+        setFailed(false);
+      } else {
+        setResolvedImage(null);
+        setFailed(true);
+      }
+    } catch (error) {
+      console.error("Fallback phone image failed:", error);
+
+      if (!activeRef.current) return;
+
+      setResolvedImage(null);
+      setFailed(true);
+    } finally {
+      if (activeRef.current) {
+        setRetrying(false);
+        setLoading(false);
+      }
+    }
+  }
+
   return (
-    <div
-      className={`fhm-phone-art fhm-phone-art--${index % 6} ${
-        large ? "fhm-phone-art--large" : ""
-      }`}
-    >
-      {image ? (
-        <img src={image} alt={model} loading="lazy" />
+    <div className={`fhm-phone-art ${large ? "fhm-phone-art--large" : ""}`}>
+      {resolvedImage && !failed ? (
+        <img
+          src={resolvedImage}
+          alt={`${brand || ""} ${model} phone`}
+          loading="lazy"
+          decoding="async"
+          onError={handleImageError}
+        />
       ) : (
-        <>
-          <div className="fhm-device-back">
-            <div className="fhm-device-camera">
-              <i />
-              <i />
-              <i />
-            </div>
-            <span className="fhm-device-logo">✦</span>
-          </div>
-          <div className="fhm-device-front">
-            <div className="fhm-device-punch" />
-          </div>
-        </>
+        <div
+          className="fhm-image-unavailable"
+          role="img"
+          aria-label={`${brand} ${model} phone image`}
+        >
+          <Smartphone size={large ? 42 : 30} strokeWidth={1.25} />
+          <span>
+            {loading || retrying ? "Loading image..." : "Image unavailable"}
+          </span>
+        </div>
       )}
     </div>
   );
 }
 
-function NumberedPanel({
-  number,
-  title,
-  subtitle,
-  children,
-  className = "",
-}) {
+function NumberedPanel({ number, title, subtitle, children }) {
   return (
-    <section className={`fhm-step ${className}`}>
+    <section className="fhm-step">
       <div className="fhm-step-head">
         <span className="fhm-step-number">{number}</span>
         <div>
@@ -196,7 +273,7 @@ export default function Membership() {
   useEffect(() => {
     const controller = new AbortController();
 
-    async function load() {
+    async function loadCatalog() {
       try {
         const response = await fetch("/api/membership-requests/catalog", {
           signal: controller.signal,
@@ -206,28 +283,24 @@ export default function Membership() {
 
         if (!response.ok || !Array.isArray(data.brands)) {
           throw new Error(
-            data.message || "Phone catalogue could not be loaded."
+            data.message || "Phone catalogue could not be loaded.",
           );
         }
 
-        if (controller.signal.aborted) return;
-
-        setCatalog(data.brands);
-        setCatalogError("");
-        setBrand("");
-        setModel("");
+        if (!controller.signal.aborted) {
+          setCatalog(data.brands);
+          setCatalogError("");
+        }
       } catch (error) {
         if (!controller.signal.aborted) {
-          setCatalogError(error.message);
+          setCatalogError(error.message || "Unable to load phone catalogue.");
         }
       } finally {
-        if (!controller.signal.aborted) {
-          setCatalogLoading(false);
-        }
+        if (!controller.signal.aborted) setCatalogLoading(false);
       }
     }
 
-    load();
+    loadCatalog();
 
     return () => controller.abort();
   }, []);
@@ -235,25 +308,23 @@ export default function Membership() {
   const sortedBrands = useMemo(
     () =>
       [...catalog].sort((a, b) => {
-        const rank = (item) => {
-          const index = BRAND_ORDER.indexOf(item.brand);
-          return index < 0 ? 999 : index;
-        };
+        const ai = BRAND_ORDER.indexOf(a.brand);
+        const bi = BRAND_ORDER.indexOf(b.brand);
 
-        return rank(a) - rank(b);
+        return (ai < 0 ? 999 : ai) - (bi < 0 ? 999 : bi);
       }),
-    [catalog]
+    [catalog],
   );
 
   const models = useMemo(() => {
-    const fromCatalog =
+    const entries =
       catalog.find((entry) => entry.brand === brand)?.models || [];
 
-    const featured = MODEL_PRIORITY[brand] || [];
+    const priority = MODEL_PRIORITY[brand] || [];
 
-    return [...fromCatalog].sort((a, b) => {
-      const ai = featured.indexOf(a.model);
-      const bi = featured.indexOf(b.model);
+    return [...entries].sort((a, b) => {
+      const ai = priority.indexOf(a.model);
+      const bi = priority.indexOf(b.model);
 
       if (ai >= 0 && bi >= 0) return ai - bi;
       if (ai >= 0) return -1;
@@ -271,12 +342,9 @@ export default function Membership() {
   const selectedPrice = selectedPhone?.fee ?? selectedTier?.price ?? null;
 
   function selectBrand(value) {
-    const available =
-      catalog.find((entry) => entry.brand === value)?.models || [];
-
     setBrand(value);
     setModel("");
-    setUnlisted(available.length === 0);
+    setUnlisted(false);
     setReceipt(null);
     setSubmitError("");
 
@@ -299,12 +367,14 @@ export default function Membership() {
   }
 
   async function copyId() {
-    if (!receipt?.requestId) return;
+    const requestId = receipt?.requestId || receipt?._id || receipt?.id;
+
+    if (!requestId) return;
 
     try {
-      await navigator.clipboard.writeText(receipt.requestId);
+      await navigator.clipboard.writeText(String(requestId));
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      window.setTimeout(() => setCopied(false), 2000);
     } catch {
       setCopied(false);
     }
@@ -333,9 +403,7 @@ export default function Membership() {
     }
 
     if (!unlisted && selectedPrice == null) {
-      setSubmitError(
-        "The service charge is not available for this model yet."
-      );
+      setSubmitError("The service charge is not available for this model yet.");
       return;
     }
 
@@ -345,9 +413,7 @@ export default function Membership() {
       const response = await fetch("/api/membership-requests", {
         method: "POST",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           phoneBrand: brand,
           phoneModel: model.trim(),
@@ -360,25 +426,18 @@ export default function Membership() {
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok || !data.request) {
-        throw new Error(
-          data.message || "Unable to create your request."
-        );
+        throw new Error(data.message || "Unable to create your request.");
       }
 
       const savedRequest = data.request;
       setReceipt(savedRequest);
 
-      /*
-       * The membership request API is not automatically a repair-payment API.
-       * Pass its ID and context to the payment page, which must validate the
-       * request and amount on the server before creating a payment.
-       */
       const requestId =
         savedRequest.requestId || savedRequest._id || savedRequest.id;
 
       if (!requestId) {
         throw new Error(
-          "Your request was saved, but the server did not return a request ID. Contact FIXHUB before paying."
+          "Your request was saved, but no request ID was returned. Contact FIXHUB before paying.",
         );
       }
 
@@ -420,15 +479,11 @@ export default function Membership() {
           </div>
 
           <div className="fhm-hero-phones" aria-hidden="true">
-            <div className="fhm-hero-phone fhm-hero-phone--left">
-              <div className="fhm-hero-camera">● ● ●</div>
-            </div>
+            <div className="fhm-hero-phone fhm-hero-phone--left" />
             <div className="fhm-hero-phone fhm-hero-phone--mid">
               <div className="fhm-hero-screen" />
             </div>
-            <div className="fhm-hero-phone fhm-hero-phone--right">
-              <div className="fhm-hero-camera">● ●</div>
-            </div>
+            <div className="fhm-hero-phone fhm-hero-phone--right" />
           </div>
         </div>
       </section>
@@ -449,10 +504,7 @@ export default function Membership() {
           {catalogError && (
             <p className="fhm-error">
               {catalogError}{" "}
-              <button
-                type="button"
-                onClick={() => window.location.reload()}
-              >
+              <button type="button" onClick={() => window.location.reload()}>
                 <RotateCcw size={14} /> Retry
               </button>
             </p>
@@ -480,16 +532,7 @@ export default function Membership() {
                 )}
 
                 <BrandMark brand={entry.brand} />
-
-                <span className="fhm-brand-name">
-                  {entry.brand === "OPPO"
-                    ? "Oppo"
-                    : entry.brand === "Vivo"
-                      ? "vivo"
-                      : entry.brand === "Realme"
-                        ? "realme"
-                        : entry.brand}
-                </span>
+                <span className="fhm-brand-name">{entry.brand}</span>
               </button>
             ))}
           </div>
@@ -508,10 +551,7 @@ export default function Membership() {
         >
           <div className="fhm-model-layout">
             <div className="fhm-model-picker">
-              <label
-                className="fhm-visually-hidden"
-                htmlFor="fhm-model-select"
-              >
+              <label className="fhm-visually-hidden" htmlFor="fhm-model-select">
                 Mobile model
               </label>
 
@@ -520,7 +560,7 @@ export default function Membership() {
                   id="fhm-model-select"
                   value={unlisted ? "__unlisted__" : model}
                   onChange={(event) => selectModel(event.target.value)}
-                  disabled={!brand}
+                  disabled={!brand || catalogLoading}
                 >
                   <option value="">Choose your phone model</option>
 
@@ -555,15 +595,13 @@ export default function Membership() {
             <div
               className="fhm-model-tiles"
               ref={modelListRef}
-              aria-label="Popular phone models"
+              aria-label="Phone models"
             >
-              {models.map((entry, index) => (
+              {models.map((entry) => (
                 <button
                   type="button"
                   className={`fhm-model-tile ${
-                    model === entry.model && !unlisted
-                      ? "is-selected"
-                      : ""
+                    model === entry.model && !unlisted ? "is-selected" : ""
                   }`}
                   key={entry.model}
                   onClick={() => selectModel(entry.model)}
@@ -576,9 +614,9 @@ export default function Membership() {
                   )}
 
                   <PhoneArtwork
+                    brand={brand}
                     model={entry.model}
                     image={entry.image}
-                    index={index}
                   />
 
                   <span title={entry.model}>{entry.model}</span>
@@ -587,7 +625,7 @@ export default function Membership() {
 
               {!models.length && (
                 <p className="fhm-model-empty">
-                  Select a brand with listed models, or enter the model
+                  Select a brand with listed models, or enter your model
                   manually.
                 </p>
               )}
@@ -598,16 +636,16 @@ export default function Membership() {
         <NumberedPanel
           number="3"
           title="Automatic Fixing Charge"
-          subtitle="We use your selected phone's stored original price to determine its service-fee bracket."
+          subtitle="Your stored phone MRP determines the service-fee bracket."
         >
           <div className="fhm-plan-layout">
             <div className="fhm-recommendation">
               <div className="fhm-recommendation-phone">
                 <PhoneArtwork
-                  model={model}
+                  brand={brand}
+                  model={model || "Phone"}
                   image={selectedPhone?.image}
                   large
-                  index={2}
                 />
               </div>
 
@@ -623,12 +661,11 @@ export default function Membership() {
                 </h3>
 
                 <p>
-                  Original MRP:{" "}
-                  <strong>{money(selectedPhone?.mrp)}</strong>{" "}
+                  Original MRP: <strong>{money(selectedPhone?.mrp)}</strong>
                   {selectedPhone && (
                     <Info
                       size={14}
-                      title="Stored reference price; may differ by variant"
+                      title="Reference price; verify the variant"
                     />
                   )}
                 </p>
@@ -636,10 +673,8 @@ export default function Membership() {
 
               <div className="fhm-recommendation-price">
                 <span className="fhm-recommended-badge">
-                  <CheckCircle2 size={16} />{" "}
-                  {selectedPhone
-                    ? "Automatic Service Charge"
-                    : "Price Review"}
+                  <CheckCircle2 size={16} />
+                  {selectedPhone ? "Automatic Service Charge" : "Price Review"}
                 </span>
 
                 <strong>
@@ -659,8 +694,8 @@ export default function Membership() {
               </div>
 
               <p>
-                We use the original launch price (MRP) of your phone model to
-                select the correct price bracket.
+                We use the phone's stored original MRP to select its price
+                bracket.
               </p>
 
               <a href="#fhm-price-ranges">
@@ -706,11 +741,7 @@ export default function Membership() {
                   <label htmlFor="fhm-name">Full Name</label>
                   <div className="fhm-readonly">
                     <Smartphone size={16} />
-                    <input
-                      id="fhm-name"
-                      value={user.fullName || ""}
-                      readOnly
-                    />
+                    <input id="fhm-name" value={user.fullName || ""} readOnly />
                   </div>
                 </div>
 
@@ -730,11 +761,7 @@ export default function Membership() {
                   <label htmlFor="fhm-email">Email Address</label>
                   <div className="fhm-readonly">
                     <Mail size={17} />
-                    <input
-                      id="fhm-email"
-                      value={user.email || ""}
-                      readOnly
-                    />
+                    <input id="fhm-email" value={user.email || ""} readOnly />
                   </div>
                 </div>
 
@@ -765,18 +792,12 @@ export default function Membership() {
                   <label htmlFor="fhm-phone">Phone Number</label>
                   <div className="fhm-readonly">
                     <Phone size={16} />
-                    <input
-                      id="fhm-phone"
-                      value={user.phone || ""}
-                      readOnly
-                    />
+                    <input id="fhm-phone" value={user.phone || ""} readOnly />
                   </div>
                 </div>
 
                 <div className="fhm-field">
-                  <label htmlFor="fhm-notes">
-                    Additional Notes (Optional)
-                  </label>
+                  <label htmlFor="fhm-notes">Additional Notes (Optional)</label>
 
                   <textarea
                     id="fhm-notes"
@@ -846,7 +867,10 @@ export default function Membership() {
                     <div>
                       <strong>Request saved</strong>
                       <small>
-                        Request ID: <code>{receipt.requestId}</code>
+                        Request ID:{" "}
+                        <code>
+                          {receipt.requestId || receipt._id || receipt.id}
+                        </code>
                       </small>
                     </div>
 
@@ -874,14 +898,13 @@ export default function Membership() {
                     <ArrowRight size={19} />
                   )}
 
-                  {sending
-                    ? "Preparing Payment..."
-                    : "Continue to Payment"}
+                  {sending ? "Preparing Payment..." : "Continue to Payment"}
                 </button>
 
                 <span className="fhm-privacy">
-                  <LockKeyhole size={13} /> Payment is not confirmed until
-                  FIXHUB verifies the transaction.
+                  <LockKeyhole size={13} />
+                  Payment is not confirmed until FIXHUB verifies the
+                  transaction.
                 </span>
               </div>
             </form>
@@ -901,7 +924,7 @@ export default function Membership() {
               type="button"
               onClick={() => setShowPriceInfo((value) => !value)}
             >
-              <Info size={15} />{" "}
+              <Info size={15} />
               {showPriceInfo ? "Show Less" : "Learn More"}
             </button>
           </div>
@@ -922,18 +945,18 @@ export default function Membership() {
           </div>
 
           <p className="fhm-range-note">
-            <Info size={16} /> These are FIXHUB service/labour charges.
-            Replacement parts, if required, are billed separately. Final
-            quotation is confirmed before repair.
+            <Info size={16} />
+            These are FIXHUB service/labour charges. Replacement parts, if
+            required, are billed separately. Final quotation is confirmed before
+            repair.
           </p>
 
           {showPriceInfo && (
             <p className="fhm-more-info">
-              Your phone's original launch MRP determines its range. For a
-              model missing from our catalogue, we do not guess the price:
-              FIXHUB will check it before confirming any charge. A submitted
-              request is not payment or active membership, and free-service
-              eligibility must be confirmed separately.
+              Your phone's original launch MRP determines its range. For a model
+              missing from our catalogue, FIXHUB checks the price before
+              confirming a charge. A submitted request is not payment or active
+              membership.
             </p>
           )}
         </section>
