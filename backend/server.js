@@ -18,6 +18,7 @@ import adminAuthRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import membershipRequestRoutes from "./routes/membershipRequestRoutes.js";
 import repairBookingRoutes from "./routes/repairBookingRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 
 dotenv.config();
 
@@ -67,7 +68,7 @@ if (!production) {
 
 console.log(
   "Allowed frontend origins:",
-  [...allowedOrigins].join(", ") || "(none configured)",
+  [...allowedOrigins].join(", ") || "(none configured)"
 );
 
 app.use(
@@ -83,10 +84,22 @@ app.use(
 
     credentials: true,
 
-    methods: ["GET", "HEAD", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+    methods: [
+      "GET",
+      "HEAD",
+      "POST",
+      "PATCH",
+      "PUT",
+      "DELETE",
+      "OPTIONS",
+    ],
 
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-  }),
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+    ],
+  })
 );
 
 // ==========================================
@@ -99,7 +112,7 @@ app.use(
   express.urlencoded({
     extended: true,
     limit: "1mb",
-  }),
+  })
 );
 
 app.use(cookieParser());
@@ -113,7 +126,7 @@ app.use("/api", (req, res, next) => {
 
   res.on("finish", () => {
     console.log(
-      `[API RESPONSE] ${req.method} ${req.originalUrl} -> ${res.statusCode}`,
+      `[API RESPONSE] ${req.method} ${req.originalUrl} -> ${res.statusCode}`
     );
   });
 
@@ -167,7 +180,9 @@ app.get("/", (_req, res) => {
     message: "FIXHUB Backend is running",
 
     database:
-      mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+      mongoose.connection.readyState === 1
+        ? "connected"
+        : "disconnected",
   });
 });
 
@@ -240,6 +255,13 @@ app.use("/api/membership-requests", membershipRequestRoutes);
 app.use("/api/repair-bookings", repairBookingRoutes);
 
 // ==========================================
+// REPAIR PAYMENTS
+// Base URL: /api/payments
+// ==========================================
+
+app.use("/api/payments", paymentRoutes);
+
+// ==========================================
 // API 404 HANDLER
 // ==========================================
 
@@ -267,16 +289,19 @@ if (production) {
         return next();
       }
 
-      res.sendFile(path.join(frontendDist, "index.html"), (error) => {
-        if (error) {
-          next(error);
+      res.sendFile(
+        path.join(frontendDist, "index.html"),
+        (error) => {
+          if (error) {
+            next(error);
+          }
         }
-      });
+      );
     });
   } else {
     console.warn(
       `Frontend build not found at ${frontendDist}. ` +
-        "API server will run without serving frontend files.",
+        "API server will run without serving frontend files."
     );
   }
 }
@@ -286,7 +311,10 @@ if (production) {
 // ==========================================
 
 app.use((error, _req, res, next) => {
-  console.error("FIXHUB SERVER ERROR:", error.stack || error.message);
+  console.error(
+    "FIXHUB SERVER ERROR:",
+    error.stack || error.message
+  );
 
   if (res.headersSent) {
     return next(error);
@@ -307,8 +335,10 @@ app.use((error, _req, res, next) => {
 
   res.status(status).json({
     success: false,
-
-    message: status >= 500 ? "Internal server error." : error.message,
+    message:
+      status >= 500
+        ? "Internal server error."
+        : error.message,
   });
 });
 
@@ -334,7 +364,9 @@ mongoose.connection.on("error", (error) => {
 
 async function startServer() {
   if (!process.env.MONGO_URI) {
-    console.error("Startup failed: MONGO_URI is missing. Check backend/.env.");
+    console.error(
+      "Startup failed: MONGO_URI is missing. Check backend/.env."
+    );
 
     process.exitCode = 1;
     return;
@@ -364,13 +396,13 @@ async function startServer() {
       console.log("Admin dashboard API: registered");
       console.log("Membership requests API: registered");
       console.log("Repair bookings API: registered");
+      console.log("Repair payments API: registered");
       console.log("MongoDB: connected");
       console.log("----------------------------------");
     });
 
     server.on("error", (error) => {
       console.error("HTTP server error:", error.message);
-
       process.exitCode = 1;
     });
 
@@ -396,17 +428,22 @@ async function startServer() {
       try {
         await mongoose.disconnect();
       } catch (error) {
-        console.error("MongoDB shutdown error:", error.message);
+        console.error(
+          "MongoDB shutdown error:",
+          error.message
+        );
       }
 
       process.exit(0);
     }
 
     process.once("SIGINT", () => shutdown("SIGINT"));
-
     process.once("SIGTERM", () => shutdown("SIGTERM"));
   } catch (error) {
-    console.error("FIXHUB startup failed:", error.stack || error.message);
+    console.error(
+      "FIXHUB startup failed:",
+      error.stack || error.message
+    );
 
     if (server) {
       server.close();

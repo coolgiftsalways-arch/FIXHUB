@@ -3,8 +3,8 @@ import rateLimit from "express-rate-limit";
 import jwt from "jsonwebtoken";
 
 import FixHubCustomer from "../models/FixHubCustomer.js";
-
 import MembershipRequest from "../models/MembershipRequest.js";
+import Payment from "../models/Payment.js";
 
 import { requireAdmin } from "./authRoutes.js";
 
@@ -102,7 +102,7 @@ async function requireCustomer(req, res, next) {
 
     req.fixhubCustomer = customer;
 
-    next();
+    return next();
   } catch (error) {
     if (
       error.name === "JsonWebTokenError" ||
@@ -131,32 +131,39 @@ async function requireCustomer(req, res, next) {
 function serialize(item) {
   return {
     id: String(item._id),
-
     requestId: `FH-MEM-${String(item._id).toUpperCase()}`,
-
     planId: item.planId,
-
     planName: item.planName,
-
     planPrice: item.planPrice,
-
     phoneMRP: item.phoneMRP,
-
     phoneBrand: item.phoneBrand,
-
     phoneModel: item.phoneModel,
-
     repairIssue: item.repairIssue,
-
     preferredDate: item.preferredDate,
-
     notes: item.notes,
-
     status: item.status,
-
     createdAt: item.createdAt,
-
     customer: item.customer,
+  };
+}
+
+// ==========================================
+// FORMAT PAYMENT
+// ==========================================
+
+function serializePayment(payment) {
+  return {
+    paymentId: payment.paymentId,
+    purpose: payment.purpose,
+    referenceId: payment.referenceId,
+    amount: payment.amount,
+    currency: payment.currency,
+    paymentMethod: payment.paymentMethod,
+    upiReference: payment.upiReference,
+    status: payment.status,
+    createdAt: payment.createdAt,
+    updatedAt: payment.updatedAt,
+    verifiedAt: payment.verifiedAt,
   };
 }
 
@@ -166,22 +173,54 @@ function serialize(item) {
 
 const limitRequests = rateLimit({
   windowMs: 60 * 60 * 1000,
-
-  limit: 6,
-
+  limit: 20,
   standardHeaders: "draft-7",
-
   legacyHeaders: false,
-
   message: {
     success: false,
-    message: "Too many requests. Please try again later.",
+    message: "Too many membership requests. Please wait before trying again.",
   },
 });
 
 // ==========================================
-// 1. GET ALL PHONE BRANDS AND MODELS
-//
+// PAYMENT RATE LIMITER
+// ==========================================
+
+const limitPayments = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many payment requests. Please try again later.",
+  },
+});
+
+// ==========================================
+// HELPER: FIND OWN MEMBERSHIP REQUEST
+// Accepts Mongo ID or FH-MEM-<Mongo ID>
+// ==========================================
+
+async function findOwnMembershipRequest(requestId, customerId) {
+  const rawId = String(requestId || "").trim();
+
+  const mongoId = rawId.startsWith("FH-MEM-")
+    ? rawId.slice("FH-MEM-".length)
+    : rawId;
+
+  if (!/^[a-f\d]{24}$/i.test(mongoId)) {
+    return null;
+  }
+
+  return MembershipRequest.findOne({
+    _id: mongoId,
+    customer: customerId,
+  });
+}
+
+// ==========================================
+// 1. GET PHONE CATALOG
 // GET /api/membership-requests/catalog
 // ==========================================
 
@@ -193,26 +232,17 @@ router.get("/catalog", (_req, res) => {
 });
 
 // ==========================================
-// 2. SUBMIT CUSTOMER REQUEST
-//
+// 2. CREATE MEMBERSHIP REQUEST
 // POST /api/membership-requests
 // ==========================================
 
 router.post("/", requireCustomer, limitRequests, async (req, res) => {
   try {
     const phoneBrand = String(req.body?.phoneBrand || "").trim();
-
     const phoneModel = String(req.body?.phoneModel || "").trim();
-
     const repairIssue = String(req.body?.repairIssue || "").trim();
-
     const preferredDate = String(req.body?.preferredDate || "").trim();
-
     const notes = String(req.body?.notes || "").trim();
-
-    // ====================================
-    // VALIDATE DETAILS
-    // ====================================
 
     if (
       !PHONE_BRANDS.includes(phoneBrand) ||
@@ -227,10 +257,6 @@ router.post("/", requireCustomer, limitRequests, async (req, res) => {
       });
     }
 
-    // ====================================
-    // VALIDATE PREFERRED DATE
-    // ====================================
-
     if (preferredDate) {
       const dateValid =
         /^\d{4}-\d{2}-\d{2}$/.test(preferredDate) &&
@@ -244,19 +270,11 @@ router.post("/", requireCustomer, limitRequests, async (req, res) => {
       }
     }
 
-    // ====================================
-    // CHECK SELECTED PHONE
-    // ====================================
-
     const modelNotListed = req.body?.modelNotListed === true;
 
     const catalogMatch = modelNotListed
       ? null
       : findPhone(phoneBrand, phoneModel);
-
-    // ====================================
-    // INVALID MODEL
-    // ====================================
 
     if (!modelNotListed && !catalogMatch) {
       return res.status(400).json({
@@ -265,11 +283,6 @@ router.post("/", requireCustomer, limitRequests, async (req, res) => {
       });
     }
 
-    // ====================================
-    // PREVENT LISTED MODEL BEING SUBMITTED
-    // AS UNKNOWN
-    // ====================================
-
     if (modelNotListed && findPhone(phoneBrand, phoneModel)) {
       return res.status(400).json({
         success: false,
@@ -277,21 +290,13 @@ router.post("/", requireCustomer, limitRequests, async (req, res) => {
       });
     }
 
-    // ====================================
-    // CHECK RECENT DUPLICATE REQUEST
-    // ====================================
-
     const recent = await MembershipRequest.findOne({
       customer: req.fixhubCustomer._id,
-
       phoneBrand,
-
       phoneModel,
-
       status: {
         $in: ["pending", "pending_quote"],
       },
-
       createdAt: {
         $gte: new Date(Date.now() - 5 * 60 * 1000),
       },
@@ -300,60 +305,31 @@ router.post("/", requireCustomer, limitRequests, async (req, res) => {
     if (recent) {
       return res.status(409).json({
         success: false,
-
         message:
           "You already submitted this request. " +
           `Request ID: FH-MEM-${String(recent._id).toUpperCase()}`,
       });
     }
 
-    // ====================================
-    // CALCULATE PRICE ON BACKEND
-    // ====================================
-
-    // Never accept planPrice or phoneMRP
-    // directly from the customer's browser.
-
     const price = catalogMatch?.fee ?? null;
-
-    // ====================================
-    // SAVE TO MONGODB
-    // ====================================
 
     const request = await MembershipRequest.create({
       customer: req.fixhubCustomer._id,
-
       planId: price === null ? "manual" : String(price),
-
       planName: "One Fixing Charge",
-
       planPrice: price,
-
       phoneMRP: catalogMatch?.mrp ?? null,
-
       phoneBrand,
-
       phoneModel,
-
       repairIssue,
-
       preferredDate,
-
       notes,
-
       status: price === null ? "pending_quote" : "pending",
     });
 
-    // ====================================
-    // SUCCESS RESPONSE
-    // ====================================
-
     return res.status(201).json({
       success: true,
-
-      message:
-        "Request submitted successfully. Our team will confirm the charges.",
-
+      message: "Membership request submitted successfully.",
       request: serialize(request),
     });
   } catch (error) {
@@ -367,8 +343,196 @@ router.post("/", requireCustomer, limitRequests, async (req, res) => {
 });
 
 // ==========================================
-// 3. CUSTOMER REQUEST HISTORY
-//
+// 3. CREATE MEMBERSHIP PAYMENT
+// POST /api/membership-requests/payment
+// Body: { requestId: "FH-MEM-..." }
+// ==========================================
+
+router.post("/payment", requireCustomer, limitPayments, async (req, res) => {
+  try {
+    const membershipRequest = await findOwnMembershipRequest(
+      req.body?.requestId,
+      req.fixhubCustomer._id,
+    );
+
+    if (!membershipRequest) {
+      return res.status(404).json({
+        success: false,
+        message: "Membership request not found.",
+      });
+    }
+
+    const amount = Number(membershipRequest.planPrice);
+
+    if (
+      membershipRequest.planPrice == null ||
+      !Number.isFinite(amount) ||
+      amount < 1
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Your membership charge is not confirmed yet.",
+      });
+    }
+
+    if (membershipRequest.status === "rejected") {
+      return res.status(400).json({
+        success: false,
+        message: "This membership request was rejected.",
+      });
+    }
+
+    const referenceId = `FH-MEM-${String(membershipRequest._id).toUpperCase()}`;
+
+    let payment = await Payment.findOne({
+      customerId: req.fixhubCustomer._id,
+      purpose: "membership",
+      referenceId,
+    }).sort({ createdAt: -1 });
+
+    if (payment?.status === "paid") {
+      return res.status(409).json({
+        success: false,
+        message: "This membership payment has already been confirmed.",
+        payment: serializePayment(payment),
+      });
+    }
+
+    if (!payment) {
+      payment = await Payment.create({
+        customerId: req.fixhubCustomer._id,
+        purpose: "membership",
+        referenceId,
+        amount,
+        currency: "INR",
+        paymentMethod: "upi",
+        status: "pending",
+      });
+    }
+
+    return res.status(201).json({
+      success: true,
+      payment: serializePayment(payment),
+    });
+  } catch (error) {
+    console.error("Membership payment creation error:", error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to create membership payment.",
+    });
+  }
+});
+
+// ==========================================
+// 4. SUBMIT UPI REFERENCE
+// POST /api/membership-requests/payment/:paymentId/submit
+// Body: { upiReference: "transaction reference" }
+// ==========================================
+
+router.post(
+  "/payment/:paymentId/submit",
+  requireCustomer,
+  limitPayments,
+  async (req, res) => {
+    try {
+      const upiReference = String(req.body?.upiReference || "").trim();
+
+      if (
+        upiReference.length < 6 ||
+        upiReference.length > 100 ||
+        !/^[a-zA-Z0-9-]+$/.test(upiReference)
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Enter a valid UPI transaction reference.",
+        });
+      }
+
+      const payment = await Payment.findOne({
+        paymentId: req.params.paymentId,
+        customerId: req.fixhubCustomer._id,
+        purpose: "membership",
+      });
+
+      if (!payment) {
+        return res.status(404).json({
+          success: false,
+          message: "Membership payment not found.",
+        });
+      }
+
+      if (["paid", "refunded"].includes(payment.status)) {
+        return res.status(409).json({
+          success: false,
+          message: "This payment can no longer be changed.",
+        });
+      }
+
+      if (payment.status === "rejected") {
+        return res.status(409).json({
+          success: false,
+          message: "This payment was rejected. Please contact FIXHUB.",
+        });
+      }
+
+      payment.upiReference = upiReference;
+      payment.status = "submitted";
+
+      await payment.save();
+
+      return res.json({
+        success: true,
+        message: "UPI reference submitted for verification.",
+        payment: serializePayment(payment),
+      });
+    } catch (error) {
+      console.error("Membership UPI submission error:", error.message);
+
+      return res.status(500).json({
+        success: false,
+        message: "Unable to submit UPI reference.",
+      });
+    }
+  },
+);
+
+// ==========================================
+// 5. GET MEMBERSHIP PAYMENT STATUS
+// GET /api/membership-requests/payment/:paymentId
+// ==========================================
+
+router.get("/payment/:paymentId", requireCustomer, async (req, res) => {
+  try {
+    const payment = await Payment.findOne({
+      paymentId: req.params.paymentId,
+      customerId: req.fixhubCustomer._id,
+      purpose: "membership",
+    });
+
+    if (!payment) {
+      return res.status(404).json({
+        success: false,
+        message: "Membership payment not found.",
+      });
+    }
+
+    return res.json({
+      success: true,
+      payment: serializePayment(payment),
+    });
+  } catch (error) {
+    console.error("Membership payment lookup error:", error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to load membership payment.",
+    });
+  }
+});
+
+// ==========================================
+// 6. CUSTOMER REQUEST HISTORY
 // GET /api/membership-requests/my
 // ==========================================
 
@@ -377,15 +541,12 @@ router.get("/my", requireCustomer, async (req, res) => {
     const requests = await MembershipRequest.find({
       customer: req.fixhubCustomer._id,
     })
-      .sort({
-        createdAt: -1,
-      })
+      .sort({ createdAt: -1 })
       .limit(50)
       .lean();
 
     return res.json({
       success: true,
-
       requests: requests.map(serialize),
     });
   } catch (error) {
@@ -399,34 +560,27 @@ router.get("/my", requireCustomer, async (req, res) => {
 });
 
 // ==========================================
-// 4. ADMIN GET ALL REQUESTS
-//
+// 7. ADMIN GET ALL REQUESTS
 // GET /api/membership-requests/admin
 // ==========================================
 
 router.get("/admin", requireAdmin, async (req, res) => {
   try {
     const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 50));
-
     const selectedStatus = String(req.query.status || "");
 
     const filter = VALID_STATUSES.has(selectedStatus)
-      ? {
-          status: selectedStatus,
-        }
+      ? { status: selectedStatus }
       : {};
 
     const requests = await MembershipRequest.find(filter)
       .populate("customer", "fullName email phone address")
-      .sort({
-        createdAt: -1,
-      })
+      .sort({ createdAt: -1 })
       .limit(limit)
       .lean();
 
     return res.json({
       success: true,
-
       requests: requests.map(serialize),
     });
   } catch (error) {
@@ -440,8 +594,7 @@ router.get("/admin", requireAdmin, async (req, res) => {
 });
 
 // ==========================================
-// 5. ADMIN UPDATE REQUEST STATUS
-//
+// 8. ADMIN UPDATE REQUEST STATUS
 // PATCH /api/membership-requests/admin/:id
 // ==========================================
 
@@ -458,17 +611,8 @@ router.patch("/admin/:id", requireAdmin, async (req, res) => {
 
     const request = await MembershipRequest.findByIdAndUpdate(
       req.params.id,
-
-      {
-        $set: {
-          status,
-        },
-      },
-
-      {
-        new: true,
-        runValidators: true,
-      },
+      { $set: { status } },
+      { new: true, runValidators: true },
     ).populate("customer", "fullName email phone address");
 
     if (!request) {
@@ -480,7 +624,6 @@ router.patch("/admin/:id", requireAdmin, async (req, res) => {
 
     return res.json({
       success: true,
-
       request: serialize(request),
     });
   } catch (error) {
@@ -501,7 +644,7 @@ router.patch("/admin/:id", requireAdmin, async (req, res) => {
 });
 
 // ==========================================
-// EXPORT MEMBERSHIP ROUTES
+// EXPORT
 // ==========================================
 
 export default router;

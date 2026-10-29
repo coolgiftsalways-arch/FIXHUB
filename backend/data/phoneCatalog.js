@@ -4,10 +4,8 @@
 // ==========================================
 
 // IMPORTANT:
-// Phone MRPs below are indicative starting values.
-// Verify against official Indian launch prices
-// before enabling production pricing.
-//
+// MRPs are indicative values.
+// Verify prices before enabling production pricing.
 // Customers must never enter their own MRP.
 
 // ==========================================
@@ -178,12 +176,11 @@ const records = {
     ["itel P55 5G", 9999],
   ],
 
-  // Unknown models need manual quotation.
   Other: [],
 };
 
 // ==========================================
-// FIVE FIXHUB PRICE BRACKETS
+// FIXHUB REPAIR PRICING
 // ==========================================
 
 export function chargeForMRP(mrp) {
@@ -191,21 +188,10 @@ export function chargeForMRP(mrp) {
     return null;
   }
 
-  if (mrp <= 20000) {
-    return 499;
-  }
-
-  if (mrp <= 50000) {
-    return 699;
-  }
-
-  if (mrp <= 90000) {
-    return 999;
-  }
-
-  if (mrp <= 130000) {
-    return 1299;
-  }
+  if (mrp <= 20000) return 499;
+  if (mrp <= 50000) return 699;
+  if (mrp <= 90000) return 999;
+  if (mrp <= 130000) return 1299;
 
   return 1699;
 }
@@ -217,7 +203,6 @@ export function chargeForMRP(mrp) {
 export function getPhoneCatalog() {
   return Object.entries(records).map(([brand, items]) => ({
     brand,
-
     models: items.map(([model, mrp]) => ({
       model,
       mrp,
@@ -231,23 +216,31 @@ export function getPhoneCatalog() {
 // ==========================================
 
 export function findPhone(brand, model) {
-  const models = records[String(brand || "")];
+  const normalizedBrand = String(brand || "").trim();
+  const normalizedModel = String(model || "").trim();
+
+  const models = records[normalizedBrand];
 
   if (!models) {
     return null;
   }
 
-  const record = models.find(([name]) => name === model);
+  const record = models.find(
+    ([name]) =>
+      name.toLowerCase() === normalizedModel.toLowerCase()
+  );
 
   if (!record) {
     return null;
   }
 
+  const mrp = record[1];
+
   return {
-    brand,
-    model,
-    mrp: record[1],
-    fee: chargeForMRP(record[1]),
+    brand: normalizedBrand,
+    model: record[0],
+    mrp,
+    fee: chargeForMRP(mrp),
   };
 }
 

@@ -2,56 +2,39 @@ import { Router } from "express";
 import mongoose from "mongoose";
 
 import FixHubCustomer from "../models/FixHubCustomer.js";
+import Payment from "../models/Payment.js";
 import { requireAdmin } from "./authRoutes.js";
 
 const router = Router();
 
-// ==========================================
-// PROTECT ALL ADMIN ROUTES
-// ==========================================
-
+// Protect all admin routes
 router.use(requireAdmin);
 
-// ==========================================
-// CUSTOMER ID
-// ==========================================
-
+// Customer ID
 function getCustomerId(customer) {
   return `FH-${String(customer._id).toUpperCase()}`;
 }
 
-// ==========================================
-// FORMAT CUSTOMER
-// ==========================================
-
+// Format customer
 function formatCustomer(customer) {
-  const membershipTier =
-    customer.membershipTier === "gold" ? "gold" : "free";
+  const membershipTier = customer.membershipTier === "gold" ? "gold" : "free";
 
   return {
     id: String(customer._id),
     customerId: getCustomerId(customer),
-
     fullName: customer.fullName,
     email: customer.email,
     phone: customer.phone,
     address: customer.address,
-
     membershipTier,
     isGoldMember: membershipTier === "gold",
-
     goldActivatedAt: customer.goldActivatedAt || null,
-
     createdAt: customer.createdAt,
     updatedAt: customer.updatedAt,
   };
 }
 
-// ==========================================
-// PARSE CUSTOMER ID
-// Supports MongoDB IDs and FH- prefixed IDs
-// ==========================================
-
+// Parse MongoDB customer ID
 function parseCustomerId(value) {
   const raw = String(value || "")
     .trim()
@@ -64,32 +47,20 @@ function parseCustomerId(value) {
   return raw;
 }
 
-// ==========================================
-// ESCAPE SEARCH REGEX
-// ==========================================
-
+// Escape search regex
 function escapeRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-// ==========================================
-// INDIA DATE
-// Calculate today's midnight in IST
-// ==========================================
-
+// Start of today in India
 function startOfTodayIndia() {
   const offset = 330 * 60 * 1000;
   const now = Date.now();
 
-  return new Date(
-    Math.floor((now + offset) / 86400000) * 86400000 - offset
-  );
+  return new Date(Math.floor((now + offset) / 86400000) * 86400000 - offset);
 }
 
-// ==========================================
-// CUSTOMER FIELDS
-// ==========================================
-
+// Customer fields
 const CUSTOMER_FIELDS = [
   "fullName",
   "email",
@@ -101,22 +72,19 @@ const CUSTOMER_FIELDS = [
   "updatedAt",
 ].join(" ");
 
-// ==========================================
-// REUSABLE PAGINATION
-// ==========================================
-
+// Pagination
 function getPagination(query) {
   const requestedPage = Number.parseInt(query.page, 10);
   const requestedLimit = Number.parseInt(query.limit, 10);
 
   const page = Math.max(
     1,
-    Math.min(10000, Number.isFinite(requestedPage) ? requestedPage : 1)
+    Math.min(10000, Number.isFinite(requestedPage) ? requestedPage : 1),
   );
 
   const limit = Math.max(
     1,
-    Math.min(100, Number.isFinite(requestedLimit) ? requestedLimit : 20)
+    Math.min(100, Number.isFinite(requestedLimit) ? requestedLimit : 20),
   );
 
   return {
@@ -126,10 +94,7 @@ function getPagination(query) {
   };
 }
 
-// ==========================================
-// REUSABLE CUSTOMER SEARCH
-// ==========================================
-
+// Customer search
 function buildCustomerFilter(search) {
   const value = String(search || "")
     .trim()
@@ -182,38 +147,32 @@ router.get("/summary", async (req, res) => {
   try {
     const today = startOfTodayIndia();
 
-    const [
-      totalCustomers,
-      newCustomersToday,
-      goldMembers,
-      recentCustomers,
-    ] = await Promise.all([
-      FixHubCustomer.countDocuments(),
+    const [totalCustomers, newCustomersToday, goldMembers, recentCustomers] =
+      await Promise.all([
+        FixHubCustomer.countDocuments(),
 
-      FixHubCustomer.countDocuments({
-        createdAt: { $gte: today },
-      }),
+        FixHubCustomer.countDocuments({
+          createdAt: { $gte: today },
+        }),
 
-      FixHubCustomer.countDocuments({
-        membershipTier: "gold",
-      }),
+        FixHubCustomer.countDocuments({
+          membershipTier: "gold",
+        }),
 
-      FixHubCustomer.find({})
-        .select(CUSTOMER_FIELDS)
-        .sort({ createdAt: -1 })
-        .limit(5)
-        .lean(),
-    ]);
+        FixHubCustomer.find({})
+          .select(CUSTOMER_FIELDS)
+          .sort({ createdAt: -1 })
+          .limit(5)
+          .lean(),
+      ]);
 
     return res.json({
       success: true,
-
       summary: {
         totalCustomers,
         newCustomersToday,
         goldMembers,
       },
-
       recentCustomers: recentCustomers.map(formatCustomer),
     });
   } catch (error) {
@@ -229,7 +188,6 @@ router.get("/summary", async (req, res) => {
 // ==========================================
 // GET ALL CUSTOMERS
 // GET /api/admin/customers
-// Supports search and pagination
 // ==========================================
 
 router.get("/customers", async (req, res) => {
@@ -250,9 +208,7 @@ router.get("/customers", async (req, res) => {
 
     return res.json({
       success: true,
-
       customers: customers.map(formatCustomer),
-
       pagination: {
         page,
         limit,
@@ -312,13 +268,8 @@ router.get("/customers/:customerId", async (req, res) => {
 });
 
 // ==========================================
-// ACTIVATE GOLD / REMOVE GOLD
+// ACTIVATE OR REMOVE GOLD MEMBERSHIP
 // PATCH /api/admin/customers/:customerId/membership
-//
-// Request body:
-// { "tier": "gold" }
-// or
-// { "tier": "free" }
 // ==========================================
 
 router.patch("/customers/:customerId/membership", async (req, res) => {
@@ -364,12 +315,10 @@ router.patch("/customers/:customerId/membership", async (req, res) => {
 
     return res.json({
       success: true,
-
       message:
         tier === "gold"
           ? "Gold membership activated successfully."
           : "Gold membership removed successfully.",
-
       customer: formatCustomer(customer),
     });
   } catch (error) {
@@ -385,12 +334,6 @@ router.patch("/customers/:customerId/membership", async (req, res) => {
 // ==========================================
 // DELETE CUSTOMER
 // DELETE /api/admin/customers/:customerId
-//
-// Request header:
-// X-Requested-With: XMLHttpRequest
-//
-// Request body:
-// { "confirmCustomerId": "FH-MONGOIDINUPPERCASE" }
 // ==========================================
 
 router.delete("/customers/:customerId", async (req, res) => {
@@ -445,9 +388,8 @@ router.delete("/customers/:customerId", async (req, res) => {
 });
 
 // ==========================================
-// GET ALL MEMBERSHIPS
+// GET MEMBERSHIPS
 // GET /api/admin/memberships
-// Supports search and pagination
 // ==========================================
 
 router.get("/memberships", async (req, res) => {
@@ -456,10 +398,7 @@ router.get("/memberships", async (req, res) => {
     const { page, limit, skip } = getPagination(req.query);
 
     const goldFilter = {
-      $and: [
-        filter,
-        { membershipTier: "gold" },
-      ],
+      $and: [filter, { membershipTier: "gold" }],
     };
 
     const freeFilter = {
@@ -475,26 +414,16 @@ router.get("/memberships", async (req, res) => {
       ],
     };
 
-    const [
-      customers,
-      total,
-      goldMembers,
-      freeMembers,
-    ] = await Promise.all([
+    const [customers, total, goldMembers, freeMembers] = await Promise.all([
       FixHubCustomer.find(filter)
         .select(CUSTOMER_FIELDS)
-        .sort({
-          updatedAt: -1,
-          createdAt: -1,
-        })
+        .sort({ updatedAt: -1, createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .lean(),
 
       FixHubCustomer.countDocuments(filter),
-
       FixHubCustomer.countDocuments(goldFilter),
-
       FixHubCustomer.countDocuments(freeFilter),
     ]);
 
@@ -502,16 +431,13 @@ router.get("/memberships", async (req, res) => {
 
     return res.json({
       success: true,
-
       memberships: formattedCustomers,
       customers: formattedCustomers,
-
       summary: {
         totalCustomers: total,
         goldMembers,
         freeMembers,
       },
-
       pagination: {
         page,
         limit,
@@ -528,9 +454,5 @@ router.get("/memberships", async (req, res) => {
     });
   }
 });
-
-// ==========================================
-// EXPORT ADMIN ROUTER
-// ==========================================
 
 export default router;

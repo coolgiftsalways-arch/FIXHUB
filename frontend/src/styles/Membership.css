@@ -1267,3 +1267,122 @@
           animation: none;
      }
 }
+
+/* =========================================
+   UPDATED MEMBERSHIP FLOW
+   Keep original FIXHUB design and colors
+   ========================================= */
+
+/* Keep all existing colors and layout.
+   Add support for updated JSX elements. */
+
+.fhm-page .fhm-primary-button {
+     transition:
+          background 0.2s ease,
+          box-shadow 0.2s ease,
+          transform 0.2s ease;
+}
+
+.fhm-page .fhm-primary-button:hover:not(:disabled) {
+     box-shadow: 0 0 18px rgba(0, 164, 255, 0.2);
+     transform: translateY(-1px);
+}
+
+.fhm-page .fhm-primary-button:disabled {
+     cursor: not-allowed;
+     opacity: 0.6;
+}
+
+.fhm-page .fhm-input:focus,
+.fhm-page .fhm-field textarea:focus {
+     border-color: #00a4ff;
+     box-shadow: 0 0 0 2px rgba(0, 164, 255, 0.12);
+}
+
+.fhm-page .fhm-input::placeholder,
+.fhm-page .fhm-field textarea::placeholder {
+     color: #7799b8;
+}
+
+.fhm-page .fhm-model-tile:disabled,
+.fhm-page .fhm-brand-tile:disabled {
+     cursor: not-allowed;
+     opacity: 0.55;
+}
+
+.fhm-page .fhm-error {
+     line-height: 1.6;
+     overflow-wrap: anywhere;
+}
+
+.fhm-page .fhm-receipt {
+     overflow-wrap: anywhere;
+}
+
+.fhm-page .fhm-receipt button:hover,
+.fhm-page .fhm-error button:hover {
+     border-color: #00a4ff;
+     color: #ffffff;
+}
+
+.fhm-page .fhm-recommendation {
+     min-width: 0;
+}
+
+.fhm-page .fhm-recommendation-name {
+     overflow-wrap: anywhere;
+}
+
+.fhm-page .fhm-summary dd {
+     overflow-wrap: anywhere;
+}
+
+.fhm-page .fhm-select-wrap select:disabled {
+     cursor: not-allowed;
+     opacity: 0.6;
+}
+
+.fhm-page .fhm-model-empty {
+     color: var(--fhm-muted);
+     line-height: 1.6;
+}
+
+.fhm-page .fhm-loading {
+     padding: 8px 0;
+}
+
+.fhm-page .fhm-privacy {
+     line-height: 1.6;
+}
+
+@media (max-width: 760px) {
+     .fhm-page .fhm-recommendation {
+          align-items: center;
+     }
+
+     .fhm-page .fhm-recommendation-name {
+          min-width: 0;
+     }
+
+     .fhm-page .fhm-recommendation-price {
+          text-align: center;
+     }
+
+     .fhm-page .fhm-summary dl>div {
+          gap: 10px;
+     }
+}
+
+@media (max-width: 470px) {
+     .fhm-page .fhm-receipt {
+          gap: 8px;
+     }
+
+     .fhm-page .fhm-error {
+          align-items: flex-start;
+     }
+
+     .fhm-page .fhm-primary-button {
+          max-width: 100%;
+     }
+}
