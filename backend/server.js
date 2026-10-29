@@ -284,7 +284,7 @@ if (production) {
   if (fs.existsSync(path.join(frontendDist, "index.html"))) {
     app.use(express.static(frontendDist));
 
-    app.get("*", (req, res, next) => {
+    app.get("/{*splat}", (req, res, next) => {
       if (req.path.startsWith("/api/")) {
         return next();
       }
