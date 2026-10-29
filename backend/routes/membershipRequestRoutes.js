@@ -7,6 +7,7 @@ import MembershipRequest from "../models/MembershipRequest.js";
 import Payment from "../models/Payment.js";
 
 import { requireAdmin } from "./authRoutes.js";
+import { createFixHubPaymentLink } from "../utils/razorpayPayment.js";
 
 import {
   getPhoneCatalog,
@@ -19,7 +20,6 @@ import {
 // ==========================================
 
 const router = Router();
-
 const isProduction = process.env.NODE_ENV === "production";
 
 // ==========================================
@@ -37,10 +37,6 @@ const VALID_ISSUES = new Set([
   "General Service",
   "Other",
 ]);
-
-// ==========================================
-// VALID ADMIN STATUSES
-// ==========================================
 
 const VALID_STATUSES = new Set([
   "pending",
@@ -101,7 +97,6 @@ async function requireCustomer(req, res, next) {
     }
 
     req.fixhubCustomer = customer;
-
     return next();
   } catch (error) {
     if (
@@ -125,7 +120,7 @@ async function requireCustomer(req, res, next) {
 }
 
 // ==========================================
-// FORMAT REQUEST
+// SERIALIZERS
 // ==========================================
 
 function serialize(item) {
@@ -147,10 +142,6 @@ function serialize(item) {
   };
 }
 
-// ==========================================
-// FORMAT PAYMENT
-// ==========================================
-
 function serializePayment(payment) {
   return {
     paymentId: payment.paymentId,
@@ -161,6 +152,8 @@ function serializePayment(payment) {
     paymentMethod: payment.paymentMethod,
     upiReference: payment.upiReference,
     status: payment.status,
+    paymentUrl: payment.paymentUrl || null,
+    razorpayStatus: payment.razorpayStatus || null,
     createdAt: payment.createdAt,
     updatedAt: payment.updatedAt,
     verifiedAt: payment.verifiedAt,
@@ -168,7 +161,7 @@ function serializePayment(payment) {
 }
 
 // ==========================================
-// REQUEST RATE LIMITER
+// RATE LIMITERS
 // ==========================================
 
 const limitRequests = rateLimit({
@@ -182,10 +175,6 @@ const limitRequests = rateLimit({
   },
 });
 
-// ==========================================
-// PAYMENT RATE LIMITER
-// ==========================================
-
 const limitPayments = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 20,
@@ -198,8 +187,7 @@ const limitPayments = rateLimit({
 });
 
 // ==========================================
-// HELPER: FIND OWN MEMBERSHIP REQUEST
-// Accepts Mongo ID or FH-MEM-<Mongo ID>
+// FIND OWN MEMBERSHIP REQUEST
 // ==========================================
 
 async function findOwnMembershipRequest(requestId, customerId) {
@@ -243,6 +231,7 @@ router.post("/", requireCustomer, limitRequests, async (req, res) => {
     const repairIssue = String(req.body?.repairIssue || "").trim();
     const preferredDate = String(req.body?.preferredDate || "").trim();
     const notes = String(req.body?.notes || "").trim();
+    const modelNotListed = req.body?.modelNotListed === true;
 
     if (
       !PHONE_BRANDS.includes(phoneBrand) ||
@@ -270,8 +259,6 @@ router.post("/", requireCustomer, limitRequests, async (req, res) => {
       }
     }
 
-    const modelNotListed = req.body?.modelNotListed === true;
-
     const catalogMatch = modelNotListed
       ? null
       : findPhone(phoneBrand, phoneModel);
@@ -294,9 +281,7 @@ router.post("/", requireCustomer, limitRequests, async (req, res) => {
       customer: req.fixhubCustomer._id,
       phoneBrand,
       phoneModel,
-      status: {
-        $in: ["pending", "pending_quote"],
-      },
+      status: { $in: ["pending", "pending_quote"] },
       createdAt: {
         $gte: new Date(Date.now() - 5 * 60 * 1000),
       },
@@ -343,7 +328,7 @@ router.post("/", requireCustomer, limitRequests, async (req, res) => {
 });
 
 // ==========================================
-// 3. CREATE MEMBERSHIP PAYMENT
+// 3. CREATE MEMBERSHIP PAYMENT + RAZORPAY QR
 // POST /api/membership-requests/payment
 // Body: { requestId: "FH-MEM-..." }
 // ==========================================
@@ -362,16 +347,10 @@ router.post("/payment", requireCustomer, limitPayments, async (req, res) => {
       });
     }
 
-    const amount = Number(membershipRequest.planPrice);
-
-    if (
-      membershipRequest.planPrice == null ||
-      !Number.isFinite(amount) ||
-      amount < 1
-    ) {
+    if (membershipRequest.status === "pending_quote") {
       return res.status(400).json({
         success: false,
-        message: "Your membership charge is not confirmed yet.",
+        message: "Your phone model is awaiting a confirmed quote.",
       });
     }
 
@@ -379,6 +358,19 @@ router.post("/payment", requireCustomer, limitPayments, async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "This membership request was rejected.",
+      });
+    }
+
+    const amount = Number(membershipRequest.planPrice);
+
+    if (
+      membershipRequest.planPrice == null ||
+      !Number.isSafeInteger(amount) ||
+      amount < 1
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Your membership charge is not confirmed yet.",
       });
     }
 
@@ -398,6 +390,19 @@ router.post("/payment", requireCustomer, limitPayments, async (req, res) => {
       });
     }
 
+    if (payment && payment.amount !== amount) {
+      if (payment.razorpayLinkId) {
+        return res.status(409).json({
+          success: false,
+          message:
+            "The membership price changed after the payment link was created. Please contact FIXHUB support.",
+        });
+      }
+
+      payment.amount = amount;
+      await payment.save();
+    }
+
     if (!payment) {
       payment = await Payment.create({
         customerId: req.fixhubCustomer._id,
@@ -410,9 +415,21 @@ router.post("/payment", requireCustomer, limitPayments, async (req, res) => {
       });
     }
 
-    return res.status(201).json({
+    const checkout = await createFixHubPaymentLink({
+      payment,
+      customer: req.fixhubCustomer,
+      description: "FIXHUB membership fixing charge",
+    });
+
+    return res.status(200).json({
       success: true,
-      payment: serializePayment(payment),
+      payment: {
+        ...serializePayment(payment),
+        paymentUrl: checkout.paymentUrl,
+        qrCodeDataUrl: checkout.qrCodeDataUrl,
+        amount: checkout.amount,
+        status: checkout.status,
+      },
     });
   } catch (error) {
     console.error("Membership payment creation error:", error.message);
@@ -427,7 +444,6 @@ router.post("/payment", requireCustomer, limitPayments, async (req, res) => {
 // ==========================================
 // 4. SUBMIT UPI REFERENCE
 // POST /api/membership-requests/payment/:paymentId/submit
-// Body: { upiReference: "transaction reference" }
 // ==========================================
 
 router.post(
@@ -642,9 +658,5 @@ router.patch("/admin/:id", requireAdmin, async (req, res) => {
     });
   }
 });
-
-// ==========================================
-// EXPORT
-// ==========================================
 
 export default router;

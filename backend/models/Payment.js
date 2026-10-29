@@ -8,99 +8,78 @@ const paymentSchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
-
     customerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "FixHubCustomer",
       required: true,
       index: true,
     },
-
     purpose: {
       type: String,
       enum: ["repair", "membership", "other"],
       required: true,
       index: true,
     },
-
     referenceId: {
       type: String,
       trim: true,
       default: "",
       index: true,
     },
-
     amount: {
       type: Number,
       required: true,
       min: 1,
     },
-
     currency: {
       type: String,
-      default: "INR",
       enum: ["INR"],
+      default: "INR",
     },
-
     paymentMethod: {
       type: String,
       enum: ["upi", "cash", "other"],
       default: "upi",
     },
-
     upiReference: {
       type: String,
       trim: true,
       maxlength: 100,
       default: "",
     },
-
     receiptUrl: {
       type: String,
       trim: true,
       maxlength: 1000,
       default: "",
     },
-
-    // Razorpay Payment Link details
     razorpayLinkId: {
       type: String,
-      trim: true,
       default: "",
       index: true,
     },
-
     paymentUrl: {
       type: String,
-      trim: true,
-      maxlength: 2000,
       default: "",
     },
-
     qrCodeDataUrl: {
       type: String,
-      maxlength: 1000000,
       default: "",
+      select: false,
     },
-
     razorpayPaymentId: {
       type: String,
-      trim: true,
       default: "",
       index: true,
     },
-
     razorpayStatus: {
       type: String,
-      trim: true,
       default: "",
     },
-
     linkCreatedAt: {
       type: Date,
       default: null,
     },
-
     status: {
       type: String,
       enum: [
@@ -114,18 +93,15 @@ const paymentSchema = new mongoose.Schema(
       default: "pending",
       index: true,
     },
-
     verifiedAt: {
       type: Date,
       default: null,
     },
-
     adminNote: {
       type: String,
       maxlength: 1000,
       default: "",
     },
-
     idempotencyKey: {
       type: String,
       default: () => crypto.randomUUID(),
@@ -149,11 +125,7 @@ paymentSchema.set("toJSON", {
   transform(_doc, ret) {
     delete ret.__v;
     delete ret.idempotencyKey;
-
-    // QR data is fetched from the payment creation endpoint,
-    // not from general payment history or status responses.
     delete ret.qrCodeDataUrl;
-
     return ret;
   },
 });

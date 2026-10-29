@@ -1,58 +1,73 @@
 import Razorpay from "razorpay";
 import QRCode from "qrcode";
-import crypto from "node:crypto";
 
 function getRazorpay() {
   const keyId = process.env.RAZORPAY_KEY_ID?.trim();
   const keySecret = process.env.RAZORPAY_KEY_SECRET?.trim();
 
   if (!keyId || !keySecret) {
-    throw new Error("Razorpay credentials are not configured.");
+    throw new Error("Razorpay credentials are missing.");
   }
 
-  return new Razorpay({ key_id: keyId, key_secret: keySecret });
+  return new Razorpay({
+    key_id: keyId,
+    key_secret: keySecret,
+  });
 }
 
 export async function createFixHubPaymentLink({
   payment,
   customer,
-  description,
+  description = "FIXHUB membership payment",
 }) {
   if (
     !payment?._id ||
     !Number.isSafeInteger(payment.amount) ||
     payment.amount < 1
   ) {
-    throw new Error("Invalid payment record or amount.");
+    throw new Error("Invalid payment amount.");
   }
 
-  if (!customer?.fullName || !customer?.phone) {
-    throw new Error("Customer name and phone are required.");
+  if (!customer) {
+    throw new Error("Customer not found.");
+  }
+
+  // Reuse an existing payment link instead of creating duplicates.
+  if (payment.razorpayLinkId && payment.paymentUrl) {
+    let qrCodeDataUrl = payment.qrCodeDataUrl;
+
+    if (!qrCodeDataUrl) {
+      qrCodeDataUrl = await QRCode.toDataURL(payment.paymentUrl, {
+        errorCorrectionLevel: "M",
+        margin: 2,
+        width: 320,
+      });
+
+      payment.qrCodeDataUrl = qrCodeDataUrl;
+      await payment.save();
+    }
+
+    return {
+      paymentId: payment.paymentId,
+      paymentUrl: payment.paymentUrl,
+      qrCodeDataUrl,
+      amount: payment.amount,
+      status: payment.status,
+    };
   }
 
   const razorpay = getRazorpay();
-
-  // Reuse a previously created link rather than creating another one.
-  if (payment.razorpayLinkId && payment.paymentUrl) {
-    return {
-      paymentUrl: payment.paymentUrl,
-      qrCodeDataUrl: payment.qrCodeDataUrl || "",
-      razorpayLinkId: payment.razorpayLinkId,
-    };
-  }
 
   const link = await razorpay.paymentLink.create({
     amount: payment.amount * 100,
     currency: "INR",
     accept_partial: false,
     reference_id: String(payment.paymentId).slice(0, 40),
-    description: String(description || "FIXHUB service payment").slice(0, 255),
+    description: String(description).slice(0, 255),
     customer: {
-      name: String(customer.fullName).slice(0, 100),
-      email: customer.email ? String(customer.email).slice(0, 100) : undefined,
-      contact: String(customer.phone)
-        .replace(/[^\d+]/g, "")
-        .slice(0, 15),
+      name: String(customer.fullName || "FIXHUB Customer").slice(0, 100),
+      ...(customer.email ? { email: customer.email } : {}),
+      ...(customer.phone ? { contact: String(customer.phone) } : {}),
     },
     notify: {
       sms: false,
@@ -80,31 +95,10 @@ export async function createFixHubPaymentLink({
   await payment.save();
 
   return {
-    paymentUrl: payment.paymentUrl,
-    qrCodeDataUrl: payment.qrCodeDataUrl,
-    razorpayLinkId: payment.razorpayLinkId,
+    paymentId: payment.paymentId,
+    paymentUrl: link.short_url,
+    qrCodeDataUrl,
+    amount: payment.amount,
+    status: payment.status,
   };
-}
-
-export function verifyRazorpayWebhookSignature(rawBody, signature) {
-  const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
-
-  if (!secret || !Buffer.isBuffer(rawBody) || typeof signature !== "string") {
-    return false;
-  }
-
-  const expected = crypto.createHmac("sha256", secret).update(rawBody).digest();
-
-  let supplied;
-
-  try {
-    supplied = Buffer.from(signature, "hex");
-  } catch {
-    return false;
-  }
-
-  return (
-    supplied.length === expected.length &&
-    crypto.timingSafeEqual(supplied, expected)
-  );
 }

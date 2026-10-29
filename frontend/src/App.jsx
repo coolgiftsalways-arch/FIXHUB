@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useState } from "react";
 
 import {
@@ -130,9 +129,7 @@ async function adminRequest(path, options = {}) {
 
   if (!response.ok) {
     const error = new Error(result.message || "Request failed.");
-
     error.status = response.status;
-
     throw error;
   }
 
@@ -166,7 +163,6 @@ function formatDate(value) {
 function AdminLogin({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -181,15 +177,10 @@ function AdminLogin({ onLogin }) {
     try {
       const result = await adminRequest("/api/admin-auth/login", {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
         },
-
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
 
       onLogin(result.admin);
@@ -243,12 +234,7 @@ function AdminLogin({ onLogin }) {
           Admin Login
         </h1>
 
-        <p
-          style={{
-            color: "#71809a",
-            marginBottom: 30,
-          }}
-        >
+        <p style={{ color: "#71809a", marginBottom: 30 }}>
           Sign in to manage your FixHub dashboard.
         </p>
 
@@ -271,16 +257,7 @@ function AdminLogin({ onLogin }) {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             placeholder="Enter admin email"
-            style={{
-              width: "100%",
-              padding: 15,
-              border: "1px solid #d7e2f0",
-              borderRadius: 10,
-              marginBottom: 20,
-              background: "#f8fbff",
-              color: "#17243c",
-              boxSizing: "border-box",
-            }}
+            style={adminInputStyle}
           />
 
           <label
@@ -301,26 +278,11 @@ function AdminLogin({ onLogin }) {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder="Enter admin password"
-            style={{
-              width: "100%",
-              padding: 15,
-              border: "1px solid #d7e2f0",
-              borderRadius: 10,
-              marginBottom: 20,
-              background: "#f8fbff",
-              color: "#17243c",
-              boxSizing: "border-box",
-            }}
+            style={adminInputStyle}
           />
 
           {error && (
-            <p
-              role="alert"
-              style={{
-                color: "#dc3545",
-                marginBottom: 15,
-              }}
-            >
+            <p role="alert" style={{ color: "#dc3545", marginBottom: 15 }}>
               {error}
             </p>
           )}
@@ -346,6 +308,17 @@ function AdminLogin({ onLogin }) {
     </div>
   );
 }
+
+const adminInputStyle = {
+  width: "100%",
+  padding: 15,
+  border: "1px solid #d7e2f0",
+  borderRadius: 10,
+  marginBottom: 20,
+  background: "#f8fbff",
+  color: "#17243c",
+  boxSizing: "border-box",
+};
 
 // ==========================================
 // ADMIN PAGE HEADER
@@ -376,13 +349,7 @@ function AdminPageHeader({ title, description }) {
         {title}
       </h1>
 
-      <p
-        style={{
-          color: colors.muted,
-          fontSize: 14,
-          lineHeight: 1.7,
-        }}
-      >
+      <p style={{ color: colors.muted, fontSize: 14, lineHeight: 1.7 }}>
         {description}
       </p>
     </header>
@@ -415,11 +382,8 @@ function AdminCard({ children, style = {} }) {
 
 function AdminDashboard({ onSessionExpired }) {
   const [data, setData] = useState(null);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
-
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
@@ -443,9 +407,7 @@ function AdminDashboard({ onSessionExpired }) {
 
         setError(err.message);
       } finally {
-        if (active) {
-          setLoading(false);
-        }
+        if (active) setLoading(false);
       }
     }
 
@@ -482,28 +444,14 @@ function AdminDashboard({ onSessionExpired }) {
       >
         <AdminCard>
           <p style={{ color: colors.muted }}>Total Customers</p>
-
-          <h2
-            style={{
-              color: colors.blue,
-              fontSize: 42,
-              marginTop: 15,
-            }}
-          >
+          <h2 style={{ color: colors.blue, fontSize: 42, marginTop: 15 }}>
             {loading ? "..." : (data?.summary?.totalCustomers ?? 0)}
           </h2>
         </AdminCard>
 
         <AdminCard>
           <p style={{ color: colors.muted }}>New Customers Today</p>
-
-          <h2
-            style={{
-              color: colors.blue,
-              fontSize: 42,
-              marginTop: 15,
-            }}
-          >
+          <h2 style={{ color: colors.blue, fontSize: 42, marginTop: 15 }}>
             {loading ? "..." : (data?.summary?.newCustomersToday ?? 0)}
           </h2>
         </AdminCard>
@@ -520,12 +468,7 @@ function AdminDashboard({ onSessionExpired }) {
             marginBottom: 20,
           }}
         >
-          <h2
-            style={{
-              color: colors.text,
-              fontSize: 23,
-            }}
-          >
+          <h2 style={{ color: colors.text, fontSize: 23 }}>
             Recent Registrations
           </h2>
 
@@ -583,11 +526,8 @@ function AdminDashboard({ onSessionExpired }) {
                 {data.recentCustomers.map((customer) => (
                   <tr key={customer.id}>
                     <td style={cellStyle}>{customer.fullName}</td>
-
                     <td style={cellStyle}>{customer.email}</td>
-
                     <td style={cellStyle}>{customer.phone}</td>
-
                     <td style={cellStyle}>{formatDate(customer.createdAt)}</td>
                   </tr>
                 ))}
@@ -613,12 +553,11 @@ const cellStyle = {
 };
 
 // ==========================================
-// EXISTING ADMIN PLACEHOLDER PAGES
+// ADMIN PLACEHOLDER PAGES
 // ==========================================
 
 function AdminPage({ onSessionExpired }) {
   const { section } = useParams();
-
   const page = adminPages[section];
 
   if (!page) {
@@ -656,23 +595,11 @@ function AdminPage({ onSessionExpired }) {
           }}
         />
 
-        <h2
-          style={{
-            color: colors.text,
-            fontSize: 23,
-            marginBottom: 12,
-          }}
-        >
+        <h2 style={{ color: colors.text, fontSize: 23, marginBottom: 12 }}>
           {page.title}
         </h2>
 
-        <p
-          style={{
-            color: colors.muted,
-            lineHeight: 1.8,
-            fontSize: 14,
-          }}
-        >
+        <p style={{ color: colors.muted, lineHeight: 1.8, fontSize: 14 }}>
           This section is ready. We will build the complete{" "}
           {page.title.toLowerCase()} page next.
         </p>
@@ -733,10 +660,7 @@ function AdminLayout({ admin, onLogout, onSessionExpired }) {
 
 function AdminPortal() {
   const [admin, setAdmin] = useState(null);
-
   const [checking, setChecking] = useState(true);
-
-  // CHECK EXISTING ADMIN SESSION
 
   useEffect(() => {
     let active = true;
@@ -745,17 +669,11 @@ function AdminPortal() {
       try {
         const result = await adminRequest("/api/admin-auth/me");
 
-        if (active) {
-          setAdmin(result.admin);
-        }
+        if (active) setAdmin(result.admin);
       } catch {
-        if (active) {
-          setAdmin(null);
-        }
+        if (active) setAdmin(null);
       } finally {
-        if (active) {
-          setChecking(false);
-        }
+        if (active) setChecking(false);
       }
     }
 
@@ -766,20 +684,18 @@ function AdminPortal() {
     };
   }, []);
 
-  // ADMIN SESSION EXPIRED
-
   const handleSessionExpired = useCallback(() => {
     setAdmin(null);
   }, []);
 
-  // ADMIN LOGOUT
-
   const handleLogout = async () => {
-    await adminRequest("/api/admin-auth/logout", {
-      method: "POST",
-    });
-
-    setAdmin(null);
+    try {
+      await adminRequest("/api/admin-auth/logout", {
+        method: "POST",
+      });
+    } finally {
+      setAdmin(null);
+    }
   };
 
   if (checking) {
@@ -839,7 +755,6 @@ function PublicLayout() {
 
 function AppLayout() {
   const location = useLocation();
-
   const pathname = location.pathname.toLowerCase();
 
   const isAdminPage = pathname === "/admin" || pathname.startsWith("/admin/");

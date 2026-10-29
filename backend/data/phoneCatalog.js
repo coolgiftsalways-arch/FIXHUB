@@ -1,22 +1,9 @@
-// ==========================================
-// FIXHUB PHONE CATALOGUE
-// BRAND → MODEL → PHONE MRP → FIXING CHARGE
-// ==========================================
-
-// IMPORTANT:
-// MRPs are indicative values.
-// Verify prices before enabling production pricing.
-// Customers must never enter their own MRP.
-
-// ==========================================
-// PHONE DATABASE
-// ==========================================
-
-const records = {
+const PHONE_DATA = {
   Apple: [
-    ["iPhone 13", 79900],
-    ["iPhone 14", 79900],
-    ["iPhone 14 Plus", 89900],
+    ["iPhone 11", 49900],
+    ["iPhone 12", 59900],
+    ["iPhone 13", 59900],
+    ["iPhone 14", 69900],
     ["iPhone 15", 79900],
     ["iPhone 15 Plus", 89900],
     ["iPhone 15 Pro", 134900],
@@ -25,15 +12,17 @@ const records = {
     ["iPhone 16 Plus", 89900],
     ["iPhone 16 Pro", 119900],
     ["iPhone 16 Pro Max", 144900],
-    ["iPhone 16e", 59900],
+    ["iPhone 17", 79900],
+    ["iPhone 17 Pro", 134900],
+    ["iPhone 17 Pro Max", 149900],
   ],
 
   Samsung: [
-    ["Galaxy A15 5G", 19499],
+    ["Galaxy A15", 17999],
+    ["Galaxy A16", 18999],
     ["Galaxy A25 5G", 26999],
-    ["Galaxy A35 5G", 30999],
+    ["Galaxy A35 5G", 33999],
     ["Galaxy A55 5G", 39999],
-    ["Galaxy A56 5G", 41999],
     ["Galaxy S23", 74999],
     ["Galaxy S23 Ultra", 124999],
     ["Galaxy S24", 79999],
@@ -47,59 +36,16 @@ const records = {
   ],
 
   OnePlus: [
-    ["OnePlus 8", 41999],
-    ["OnePlus 8T", 42999],
-    ["OnePlus 9", 49999],
-    ["OnePlus 9R", 39999],
-    ["OnePlus 9RT", 42999],
-    ["OnePlus 10R", 38999],
-    ["OnePlus 10 Pro", 66999],
-    ["OnePlus 11R", 39999],
+    ["OnePlus 10R", 34999],
     ["OnePlus 11", 56999],
-    ["OnePlus 12R", 39999],
+    ["OnePlus 11R", 39999],
     ["OnePlus 12", 64999],
-    ["OnePlus 13R", 42999],
+    ["OnePlus 12R", 39999],
     ["OnePlus 13", 69999],
+    ["OnePlus 13R", 42999],
     ["OnePlus Nord CE 3 Lite", 19999],
-    ["OnePlus Nord CE 4", 24999],
-    ["OnePlus Nord 3", 33999],
+    ["OnePlus Nord CE4", 24999],
     ["OnePlus Nord 4", 29999],
-    ["OnePlus Nord 5", 31999],
-  ],
-
-  OPPO: [
-    ["OPPO A59 5G", 14999],
-    ["OPPO A79 5G", 19999],
-    ["OPPO F25 Pro", 23999],
-    ["OPPO F27 Pro+", 27999],
-    ["OPPO Reno 10", 32999],
-    ["OPPO Reno 11", 29999],
-    ["OPPO Reno 12", 32999],
-    ["OPPO Reno 13", 37999],
-    ["OPPO Find X8", 69999],
-  ],
-
-  Vivo: [
-    ["vivo Y28 5G", 13999],
-    ["vivo Y200", 21999],
-    ["vivo V29", 32999],
-    ["vivo V30", 33999],
-    ["vivo V30 Pro", 41999],
-    ["vivo V40", 34999],
-    ["vivo V40 Pro", 49999],
-    ["vivo X100", 63999],
-    ["vivo X200", 65999],
-  ],
-
-  Realme: [
-    ["realme C67", 13999],
-    ["realme 12 Pro", 25999],
-    ["realme 12 Pro+", 29999],
-    ["realme 13 Pro", 26999],
-    ["realme 13 Pro+", 32999],
-    ["realme GT 6", 40999],
-    ["realme GT 6T", 30999],
-    ["realme P1", 15999],
   ],
 
   Xiaomi: [
@@ -111,81 +57,157 @@ const records = {
   ],
 
   Redmi: [
-    ["Redmi 12 5G", 11999],
+    ["Redmi 12", 11999],
+    ["Redmi 13C", 8999],
     ["Redmi 13 5G", 13999],
-    ["Redmi Note 12", 17999],
-    ["Redmi Note 13", 17999],
-    ["Redmi Note 13 Pro", 25999],
-    ["Redmi Note 13 Pro+", 31999],
-    ["Redmi Note 14", 17999],
-    ["Redmi Note 14 Pro", 24999],
+    ["Redmi Note 12", 16999],
+    ["Redmi Note 13 5G", 17999],
+    ["Redmi Note 13 Pro 5G", 25999],
+    ["Redmi Note 13 Pro+ 5G", 31999],
+    ["Redmi Note 14 5G", 18999],
+    ["Redmi Note 14 Pro 5G", 24999],
+    ["Redmi Note 14 Pro+ 5G", 30999],
   ],
 
   POCO: [
     ["POCO C65", 8499],
-    ["POCO M6 Pro 5G", 10999],
-    ["POCO X6", 21999],
-    ["POCO X6 Pro", 26999],
-    ["POCO F5", 29999],
+    ["POCO M6 5G", 9999],
+    ["POCO X6 5G", 21999],
+    ["POCO X6 Pro 5G", 26999],
     ["POCO F6", 29999],
-    ["POCO F6 Pro", 39999],
+    ["POCO F7", 31999],
+  ],
+
+  Vivo: [
+    ["Vivo Y28", 13999],
+    ["Vivo Y200", 21999],
+    ["Vivo V29", 32999],
+    ["Vivo V30", 33999],
+    ["Vivo V40", 34999],
+    ["Vivo V40 Pro", 49999],
+    ["Vivo X100", 63999],
+    ["Vivo X200", 65999],
+  ],
+
+  OPPO: [
+    ["OPPO A3x", 8999],
+    ["OPPO A5 Pro", 24999],
+    ["OPPO F25 Pro", 23999],
+    ["OPPO F27 Pro+", 27999],
+    ["OPPO Reno11", 29999],
+    ["OPPO Reno12", 32999],
+    ["OPPO Reno13", 37999],
+    ["OPPO Find X8", 69999],
+  ],
+
+  Realme: [
+    ["Realme C55", 10999],
+    ["Realme C65 5G", 10999],
+    ["Realme Narzo 70 Pro", 19999],
+    ["Realme 12 Pro", 25999],
+    ["Realme 12 Pro+", 29999],
+    ["Realme 13 Pro", 26999],
+    ["Realme 13 Pro+", 32999],
+    ["Realme GT 6", 40999],
+    ["Realme GT 7 Pro", 59999],
+  ],
+
+  Google: [
+    ["Pixel 7", 59999],
+    ["Pixel 7 Pro", 84999],
+    ["Pixel 8", 75999],
+    ["Pixel 8 Pro", 106999],
+    ["Pixel 8a", 52999],
+    ["Pixel 9", 79999],
+    ["Pixel 9 Pro", 109999],
+    ["Pixel 9 Pro XL", 124999],
+    ["Pixel 9a", 49999],
+    ["Pixel 10", 79999],
   ],
 
   Motorola: [
-    ["moto g54", 15999],
-    ["moto g64", 14999],
-    ["motorola edge 40", 29999],
-    ["motorola edge 50 fusion", 22999],
-    ["motorola edge 50 pro", 31999],
-    ["motorola edge 50 ultra", 54999],
-    ["motorola razr 50", 64999],
+    ["Moto G34 5G", 11999],
+    ["Moto G45 5G", 10999],
+    ["Edge 40 Neo", 23999],
+    ["Edge 50 Fusion", 22999],
+    ["Edge 50 Pro", 31999],
+    ["Edge 50 Ultra", 59999],
+    ["Razr 50", 64999],
+    ["Razr 50 Ultra", 99999],
   ],
 
   Nothing: [
-    ["Nothing Phone (1)", 32999],
-    ["Nothing Phone (2)", 44999],
-    ["Nothing Phone (2a)", 23999],
-    ["Nothing Phone (2a) Plus", 27999],
-    ["Nothing Phone (3a)", 24999],
+    ["Phone (1)", 32999],
+    ["Phone (2)", 44999],
+    ["Phone (2a)", 23999],
+    ["Phone (2a) Plus", 27999],
+    ["Phone (3a)", 24999],
+    ["Phone (3a) Pro", 29999],
+    ["Phone (3)", 79999],
   ],
 
   iQOO: [
     ["iQOO Z9", 19999],
     ["iQOO Z9x", 12999],
-    ["iQOO Neo 7 Pro", 34999],
     ["iQOO Neo 9 Pro", 35999],
+    ["iQOO Neo 10", 31999],
     ["iQOO 12", 52999],
     ["iQOO 13", 54999],
   ],
 
   Infinix: [
-    ["Infinix Hot 40i", 9999],
+    ["Infinix Hot 40i", 8999],
+    ["Infinix Note 40", 15999],
     ["Infinix Note 40 Pro", 21999],
     ["Infinix GT 20 Pro", 24999],
+    ["Infinix Zero 40", 27999],
   ],
 
   Tecno: [
-    ["Tecno Spark 20", 10499],
+    ["Tecno Spark 20", 10999],
     ["Tecno Pova 6 Pro", 19999],
     ["Tecno Camon 30", 22999],
+    ["Tecno Camon 30 Pro", 29999],
+    ["Tecno Phantom V Flip2", 79999],
   ],
 
-  Itel: [
-    ["itel A70", 6999],
-    ["itel S24", 10999],
-    ["itel P55 5G", 9999],
+  Huawei: [
+    ["Huawei P30 Pro", 71999],
+    ["Huawei P40 Pro", 79999],
+    ["Huawei Mate 40 Pro", 89999],
   ],
 
-  Other: [],
+  Sony: [
+    ["Xperia 1 V", 129999],
+    ["Xperia 1 VI", 139999],
+    ["Xperia 5 V", 89999],
+    ["Xperia 10 VI", 39999],
+  ],
+
+  Asus: [
+    ["ROG Phone 7", 74999],
+    ["ROG Phone 8", 99999],
+    ["Zenfone 10", 69999],
+    ["Zenfone 11 Ultra", 89999],
+  ],
+
+  Nokia: [
+    ["Nokia G42 5G", 12999],
+    ["Nokia G60 5G", 19999],
+    ["Nokia X30 5G", 36999],
+  ],
+
+  Lenovo: [
+    ["Legion Phone Duel", 49999],
+    ["Legion Phone Duel 2", 69999],
+  ],
 };
 
-// ==========================================
-// FIXHUB REPAIR PRICING
-// ==========================================
+export const PHONE_BRANDS = Object.keys(PHONE_DATA);
 
 export function chargeForMRP(mrp) {
   if (!Number.isFinite(mrp) || mrp <= 0) {
-    return null;
+    throw new Error("Invalid phone MRP.");
   }
 
   if (mrp <= 20000) return 499;
@@ -196,14 +218,10 @@ export function chargeForMRP(mrp) {
   return 1699;
 }
 
-// ==========================================
-// GET ALL BRANDS AND MODELS
-// ==========================================
-
 export function getPhoneCatalog() {
-  return Object.entries(records).map(([brand, items]) => ({
+  return PHONE_BRANDS.map((brand) => ({
     brand,
-    models: items.map(([model, mrp]) => ({
+    models: PHONE_DATA[brand].map(([model, mrp]) => ({
       model,
       mrp,
       fee: chargeForMRP(mrp),
@@ -211,41 +229,23 @@ export function getPhoneCatalog() {
   }));
 }
 
-// ==========================================
-// FIND ONE PHONE
-// ==========================================
-
 export function findPhone(brand, model) {
-  const normalizedBrand = String(brand || "").trim();
-  const normalizedModel = String(model || "").trim();
+  const normalizedModel = String(model || "")
+    .trim()
+    .toLowerCase();
 
-  const models = records[normalizedBrand];
-
-  if (!models) {
-    return null;
-  }
-
-  const record = models.find(
-    ([name]) =>
-      name.toLowerCase() === normalizedModel.toLowerCase()
+  const entry = PHONE_DATA[brand]?.find(
+    ([name]) => name.toLowerCase() === normalizedModel,
   );
 
-  if (!record) {
-    return null;
-  }
+  if (!entry) return null;
 
-  const mrp = record[1];
+  const [matchedModel, mrp] = entry;
 
   return {
-    brand: normalizedBrand,
-    model: record[0],
+    brand,
+    model: matchedModel,
     mrp,
     fee: chargeForMRP(mrp),
   };
 }
-
-// ==========================================
-// EXPORT BRANDS
-// ==========================================
-
-export const PHONE_BRANDS = Object.keys(records);
