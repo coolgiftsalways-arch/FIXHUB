@@ -1,192 +1,249 @@
 import { useEffect, useState } from "react";
-
-import { Link } from "react-router-dom";
-
-import { ArrowRight, ShieldCheck, LockKeyhole } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  LockKeyhole,
+  Eye,
+  EyeOff,
+  ShieldCheck,
+  CheckCircle2,
+  ArrowRight,
+} from "lucide-react";
 
 import "../../styles/Auth.css";
 
-// ==========================================
-// READ EMAIL VERIFICATION TOKEN
-// ==========================================
-
-function readToken() {
-  return new URLSearchParams(window.location.hash.slice(1)).get("token") || "";
-}
-
-// ==========================================
-// VERIFY EMAIL
-// ==========================================
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 export default function VerifyEmail() {
-  const [token] = useState(readToken);
+  const navigate = useNavigate();
 
+  const [token, setToken] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [confirm, setConfirm] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [busy, setBusy] = useState(false);
-
+  const [error, setError] = useState("");
   const [done, setDone] = useState(false);
 
-  const [error, setError] = useState("");
+  // ==========================================
+  // READ TOKEN FROM EMAIL LINK
+  // ==========================================
 
   useEffect(() => {
-    window.history.replaceState(
-      window.history.state,
-      "",
-      window.location.pathname,
-    );
+    const hash = window.location.hash;
+
+    const params = new URLSearchParams(hash.replace(/^#/, ""));
+    const emailToken = params.get("token");
+
+    if (emailToken) {
+      setToken(emailToken);
+
+      // Remove token from the visible browser address.
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+      setError(
+        "Verification link is missing or invalid. Please request a new verification email.",
+      );
+    }
   }, []);
 
-  // ========================================
-  // VERIFY ACCOUNT
-  // ========================================
+  // ==========================================
+  // SUBMIT PASSWORD
+  // ==========================================
 
-  const handleSubmit = async (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
+    setError("");
 
     if (!token) {
-      setError("Verification link missing.");
-      return;
-    }
-
-    if (password !== confirm) {
-      setError("Passwords do not match.");
+      setError("Your verification link is invalid or expired.");
       return;
     }
 
     if (password.length < 8) {
-      setError("Use a password of at least 8 characters.");
+      setError("Password must contain at least 8 characters.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
 
     setBusy(true);
-    setError("");
 
     try {
-      const response = await fetch("/api/auth/verify-email", {
+      const response = await fetch(`${API_URL}/api/auth/verify-email`, {
         method: "POST",
-        credentials: "include",
-
         headers: {
           "Content-Type": "application/json",
         },
-
+        credentials: "include",
         body: JSON.stringify({
           token,
           newPassword: password,
         }),
       });
 
-      const result = await response.json();
+      const result = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        throw new Error(result.message || "Email verification failed.");
+        throw new Error(
+          result.message || "Email verification failed. Please try again.",
+        );
       }
 
       setDone(true);
-
       setPassword("");
-      setConfirm("");
+      setConfirmPassword("");
     } catch (err) {
-      setError(err.message || "Please try again.");
+      setError(err.message || "Something went wrong.");
     } finally {
       setBusy(false);
     }
-  };
+  }
 
-  // ========================================
-  // PAGE
-  // ========================================
+  // ==========================================
+  // SUCCESS SCREEN
+  // ==========================================
+
+  if (done) {
+    return (
+      <div className="fxa-page">
+        <section className="fxa-card fxa-verify-card">
+          <div className="fxa-success-icon">
+            <CheckCircle2 size={48} />
+          </div>
+
+          <h2>Email Verified Successfully!</h2>
+
+          <p>
+            Your FIXHUB account is now active. You can log in using your email
+            or mobile number and your new password.
+          </p>
+
+          <button
+            type="button"
+            className="fxa-submit"
+            onClick={() => navigate("/login")}
+          >
+            Continue to Login
+            <ArrowRight size={18} />
+          </button>
+        </section>
+      </div>
+    );
+  }
+
+  // ==========================================
+  // VERIFICATION FORM
+  // ==========================================
 
   return (
-    <div className="fxa-page fxa-recovery-page">
-      <section className="fxa-card fxa-recovery-card">
+    <div className="fxa-page">
+      <section className="fxa-card fxa-verify-card">
         <span className="fxa-eyebrow">
           <ShieldCheck size={17} />
-          FIXHUB EMAIL VERIFICATION
+          FIXHUB ACCOUNT SECURITY
         </span>
 
         <div className="fxa-card-head">
-          <h2>{done ? "Email Verified!" : "Verify Your Email"}</h2>
+          <h2>Create Your Password</h2>
 
-          <p>Activate your FIXHUB account by choosing your final password.</p>
+          <p>
+            Your email verification is the final step. Create a secure password
+            to activate your FIXHUB account.
+          </p>
         </div>
 
-        {done ? (
-          <>
-            <p className="fxa-success" role="status">
-              Email verified successfully. You can now login to your account.
+        <form className="fxa-form" onSubmit={handleSubmit}>
+          <label className="fxa-field">
+            <span>New Password *</span>
+
+            <div className="fxa-input">
+              <LockKeyhole size={18} />
+
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Create a password"
+                autoComplete="new-password"
+                minLength={8}
+                maxLength={128}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+
+              <button
+                type="button"
+                className="fxa-password-toggle"
+                onClick={() => setShowPassword((value) => !value)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </label>
+
+          <label className="fxa-field">
+            <span>Confirm Password *</span>
+
+            <div className="fxa-input">
+              <LockKeyhole size={18} />
+
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Confirm your password"
+                autoComplete="new-password"
+                minLength={8}
+                maxLength={128}
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                required
+              />
+
+              <button
+                type="button"
+                className="fxa-password-toggle"
+                onClick={() => setShowConfirmPassword((value) => !value)}
+                aria-label={
+                  showConfirmPassword
+                    ? "Hide confirm password"
+                    : "Show confirm password"
+                }
+              >
+                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </label>
+
+          <p className="fxa-security-note">
+            Your password must contain at least 8 characters.
+          </p>
+
+          {error && (
+            <p className="fxa-error" role="alert">
+              {error}
             </p>
+          )}
 
-            <Link to="/login" className="fxa-submit">
-              Continue to Login
-              <ArrowRight size={18} />
-            </Link>
-          </>
-        ) : (
-          <form className="fxa-form" onSubmit={handleSubmit}>
-            {!token && (
-              <p className="fxa-error">Verification link missing or invalid.</p>
-            )}
+          <button
+            type="submit"
+            className="fxa-submit"
+            disabled={busy || !token}
+          >
+            {busy ? "Activating Account..." : "Verify Email & Activate"}
 
-            <label className="fxa-field">
-              <span>Choose Account Password *</span>
-
-              <div className="fxa-input">
-                <LockKeyhole size={18} />
-
-                <input
-                  type="password"
-                  minLength={8}
-                  maxLength={72}
-                  autoComplete="new-password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  required
-                />
-              </div>
-            </label>
-
-            <label className="fxa-field">
-              <span>Confirm Password *</span>
-
-              <div className="fxa-input">
-                <LockKeyhole size={18} />
-
-                <input
-                  type="password"
-                  minLength={8}
-                  maxLength={72}
-                  autoComplete="new-password"
-                  value={confirm}
-                  onChange={(event) => setConfirm(event.target.value)}
-                  required
-                />
-              </div>
-            </label>
-
-            {error && (
-              <p className="fxa-error" role="alert">
-                {error}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              className="fxa-submit"
-              disabled={!token || busy}
-            >
-              {busy ? "Activating..." : "Verify & Activate Account"}
-
-              <ArrowRight size={18} />
-            </button>
-          </form>
-        )}
+            <ArrowRight size={18} />
+          </button>
+        </form>
 
         <p className="fxa-bottom-note">
-          <Link to="/resend-verification">Get a New Verification Link</Link>
+          <Link to="/resend-verification">
+            Request a new verification email
+          </Link>
         </p>
       </section>
     </div>

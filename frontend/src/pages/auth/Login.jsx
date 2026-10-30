@@ -1,99 +1,56 @@
-import { useState } from "react";
-
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
-
+import { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  LockKeyhole,
   ArrowRight,
-  CheckCircle2,
+  ShieldCheck,
   Eye,
   EyeOff,
-  House,
-  LockKeyhole,
-  Mail,
-  MapPin,
-  Phone,
-  ShieldCheck,
-  Smartphone,
-  UserRound,
-  LoaderCircle,
+  CheckCircle2,
 } from "lucide-react";
 
-// ==========================================
-// FIXHUB AUTHENTICATION CONTEXT
-// ==========================================
-
 import { useAuth } from "../../context/AuthContext.jsx";
-
-// ==========================================
-// FIXHUB AUTHENTICATION CSS
-// ==========================================
-
 import "../../styles/Auth.css";
 
-// ==========================================
-// INITIAL REGISTRATION FORM
-// ==========================================
-
-const initialForm = {
-  fullName: "",
-  email: "",
-  phone: "",
-  address: "",
-  password: "",
-};
-
-// ==========================================
-// FIXHUB LOGIN / CREATE ACCOUNT
-// ==========================================
-
 export default function Login() {
-  // ========================================
-  // AUTHENTICATION
-  // ========================================
-
-  const { user, loading, login, register } = useAuth();
-
-  // ========================================
-  // STATES
-  // ========================================
-
-  const [mode, setMode] = useState("login");
-
-  const [form, setForm] = useState(initialForm);
-
-  const [identifier, setIdentifier] = useState("");
-
-  const [showPassword, setShowPassword] = useState(false);
-
-  const [submitting, setSubmitting] = useState(false);
-
-  const [error, setError] = useState("");
-
-  const [notice, setNotice] = useState("");
-
+  const { login, register } = useAuth();
   const navigate = useNavigate();
 
-  const location = useLocation();
+  const redirectTimer = useRef(null);
 
-  // ========================================
-  // REDIRECT AFTER LOGIN
-  // ========================================
+  const [mode, setMode] = useState("login");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const requestedPath = location.state?.from;
+  const [form, setForm] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    address: "",
+    identifier: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  const destination =
-    typeof requestedPath === "string" &&
-    requestedPath.startsWith("/") &&
-    !requestedPath.startsWith("//") &&
-    requestedPath !== "/login"
-      ? requestedPath
-      : "/profile";
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  // ========================================
-  // UPDATE FORM
-  // ========================================
+  const isRegister = mode === "register";
 
-  const handleChange = (event) => {
+  useEffect(() => {
+    return () => {
+      if (redirectTimer.current) {
+        clearTimeout(redirectTimer.current);
+      }
+    };
+  }, []);
+
+  function handleChange(event) {
     const { name, value } = event.target;
 
     setForm((previous) => ({
@@ -101,580 +58,454 @@ export default function Login() {
       [name]: value,
     }));
 
+    if (error) setError("");
+  }
+
+  function switchMode(nextMode) {
+    if (redirectTimer.current) {
+      clearTimeout(redirectTimer.current);
+      redirectTimer.current = null;
+    }
+
+    setMode(nextMode);
     setError("");
-  };
-
-  // ========================================
-  // SWITCH LOGIN / REGISTER
-  // ========================================
-
-  const changeMode = (newMode) => {
-    setMode(newMode);
-
-    setError("");
-    setNotice("");
-
+    setSuccess("");
     setShowPassword(false);
+    setShowConfirmPassword(false);
 
-    setForm((previous) => ({
-      ...previous,
+    setForm({
+      fullName: "",
+      email: "",
+      phone: "",
+      address: "",
+      identifier: "",
       password: "",
-    }));
-  };
+      confirmPassword: "",
+    });
+  }
 
-  // ========================================
-  // HANDLE LOGIN / REGISTRATION
-  // ========================================
+  function validateRegistration() {
+    if (form.fullName.trim().length < 2) {
+      return "Please enter your full name.";
+    }
 
-  const handleSubmit = async (event) => {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      return "Please enter a valid email address.";
+    }
+
+    const phone = form.phone.replace(/\s+/g, "").trim();
+
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      return "Please enter a valid 10-digit Indian mobile number.";
+    }
+
+    if (form.address.trim().length < 10) {
+      return "Please enter your complete home address.";
+    }
+
+    if (form.password.length < 8) {
+      return "Password must contain at least 8 characters.";
+    }
+
+    if (new TextEncoder().encode(form.password).length > 72) {
+      return "Password must not exceed 72 bytes.";
+    }
+
+    if (form.password !== form.confirmPassword) {
+      return "Your passwords do not match.";
+    }
+
+    return "";
+  }
+
+  async function handleSubmit(event) {
     event.preventDefault();
-
-    if (submitting) return;
-
-    setSubmitting(true);
-
     setError("");
-    setNotice("");
+    setSuccess("");
+
+    if (isRegister) {
+      const validationError = validateRegistration();
+
+      if (validationError) {
+        setError(validationError);
+        return;
+      }
+    } else {
+      if (!form.identifier.trim() || !form.password) {
+        setError("Enter your email/mobile number and password.");
+        return;
+      }
+    }
+
+    setBusy(true);
 
     try {
-      // ====================================
-      // CREATE NEW CUSTOMER ACCOUNT
-      // ====================================
-
-      if (mode === "register") {
-        const fullName = form.fullName.trim();
-
-        const email = form.email.trim().toLowerCase();
-
-        const phone = form.phone.trim();
-
-        const address = form.address.trim();
-
-        const password = form.password;
-
-        // VALIDATE NAME
-
-        if (fullName.length < 2) {
-          throw new Error("Please enter your full name.");
-        }
-
-        // VALIDATE EMAIL
-
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          throw new Error("Please enter a valid email address.");
-        }
-
-        // VALIDATE PHONE
-
-        if (!/^[6-9]\d{9}$/.test(phone)) {
-          throw new Error("Enter a valid 10-digit mobile number.");
-        }
-
-        // VALIDATE ADDRESS
-
-        if (address.length < 10) {
-          throw new Error("Please enter your complete home address.");
-        }
-
-        // VALIDATE PASSWORD
-
-        if (password.length < 8) {
-          throw new Error("Password must contain at least 8 characters.");
-        }
-
-        // ====================================
-        // REGISTER CUSTOMER
-        // ====================================
-
+      if (isRegister) {
         const result = await register({
-          fullName,
-          email,
-          phone,
-          address,
-          password,
+          fullName: form.fullName.trim(),
+          email: form.email.trim().toLowerCase(),
+          phone: form.phone.replace(/\s+/g, "").trim(),
+          address: form.address.trim(),
+          password: form.password,
+          confirmPassword: form.confirmPassword,
         });
 
-        // ====================================
-        // EMAIL VERIFICATION REQUIRED
-        // ====================================
-
-        if (result?.requiresVerification) {
-          setMode("login");
-
-          setIdentifier(email);
-
-          setForm((previous) => ({
-            ...previous,
-            password: "",
-          }));
-
-          setNotice(
-            "Account created! Please check your email inbox and spam folder. Click the verification link to activate your FIXHUB account.",
-          );
-
-          return;
+        if (!result?.user) {
+          throw new Error(result?.message || "Unable to create your account.");
         }
+
+        setSuccess(
+          "Account created successfully! Redirecting to FIXHUB Home...",
+        );
+
+        setForm({
+          fullName: "",
+          email: "",
+          phone: "",
+          address: "",
+          identifier: "",
+          password: "",
+          confirmPassword: "",
+        });
+
+        redirectTimer.current = setTimeout(() => {
+          navigate("/", { replace: true });
+        }, 3000);
       } else {
-        // ====================================
-        // CUSTOMER LOGIN
-        // ====================================
-
-        if (!identifier.trim()) {
-          throw new Error("Please enter your email or mobile number.");
-        }
-
-        if (!form.password) {
-          throw new Error("Please enter your password.");
-        }
-
-        await login({
-          identifier: identifier.trim(),
+        const result = await login({
+          identifier: form.identifier.trim(),
           password: form.password,
         });
+
+        if (!result) {
+          throw new Error("Login failed. Please try again.");
+        }
+
+        navigate("/", { replace: true });
       }
-
-      // ====================================
-      // REDIRECT TO PROFILE
-      // ====================================
-
-      navigate(destination, {
-        replace: true,
-      });
     } catch (err) {
       setError(err.message || "Something went wrong. Please try again.");
     } finally {
-      setSubmitting(false);
+      setBusy(false);
     }
-  };
-
-  // ========================================
-  // CHECK CUSTOMER SESSION
-  // ========================================
-
-  if (loading) {
-    return (
-      <div className="fxa-page fxa-loading">
-        <LoaderCircle size={25} className="fxa-loader" />
-
-        <span>Checking your FIXHUB account...</span>
-      </div>
-    );
   }
-
-  // ========================================
-  // ALREADY LOGGED IN
-  // ========================================
-
-  if (user) {
-    return <Navigate to={destination} replace />;
-  }
-
-  // ========================================
-  // LOGIN / REGISTER PAGE
-  // ========================================
 
   return (
-    <div className="fxa-page">
-      <div className="fxa-shell">
-        {/* ==================================
-            LEFT BRAND PANEL
-        ================================== */}
+    <main className="fxa-page">
+      <section className="fxa-card">
+        <div className="fxa-glow" />
 
-        <aside className="fxa-side">
-          {/* BRAND BADGE */}
+        <span className="fxa-eyebrow">
+          <ShieldCheck size={17} />
+          FIXHUB CUSTOMER ACCOUNT
+        </span>
 
-          <span className="fxa-eyebrow">
-            <ShieldCheck size={16} />
-            FIXHUB CUSTOMER ACCESS
-          </span>
-
-          {/* HEADING */}
-
-          <h1>
-            Your Phone.
-            <br />
-            <span>Your Care.</span>
-            <br />
-            One Account.
-          </h1>
-
-          {/* DESCRIPTION */}
+        <div className="fxa-card-head">
+          <h2>{isRegister ? "Create Your Account" : "Welcome Back"}</h2>
 
           <p>
-            Welcome to FixHub. Book professional mobile repairs, manage your
-            account, save your home address and enjoy convenient doorstep mobile
-            care.
+            {isRegister
+              ? "Your trusted doorstep mobile repair service starts here."
+              : "Login to manage your FIXHUB customer account."}
           </p>
+        </div>
 
-          {/* BENEFITS */}
+        <div className="fxa-auth-switch">
+          <button
+            type="button"
+            className={!isRegister ? "active" : ""}
+            onClick={() => switchMode("login")}
+            disabled={busy || Boolean(success)}
+          >
+            Login
+          </button>
 
-          <div className="fxa-benefits">
-            <div>
-              <Smartphone size={23} />
+          <button
+            type="button"
+            className={isRegister ? "active" : ""}
+            onClick={() => switchMode("register")}
+            disabled={busy || Boolean(success)}
+          >
+            Create Account
+          </button>
+        </div>
 
-              <span>Easy Mobile Repair Booking</span>
-            </div>
-
-            <div>
-              <House size={23} />
-
-              <span>Save Your Home Address</span>
-            </div>
-
-            <div>
-              <ShieldCheck size={23} />
-
-              <span>Secure Customer Account</span>
-            </div>
-          </div>
-
-          {/* SESSION MESSAGE */}
-
-          <span className="fxa-side-note">
-            Your login stays active when you close and reopen the website, while
-            your session remains valid.
-          </span>
-        </aside>
-
-        {/* ==================================
-            RIGHT AUTHENTICATION CARD
-        ================================== */}
-
-        <section className="fxa-card">
-          {/* LOGIN / REGISTER TABS */}
-
-          <div className="fxa-tabs">
-            <button
-              type="button"
-              className={mode === "login" ? "active" : ""}
-              onClick={() => changeMode("login")}
-              disabled={submitting}
-            >
-              Login
-            </button>
-
-            <button
-              type="button"
-              className={mode === "register" ? "active" : ""}
-              onClick={() => changeMode("register")}
-              disabled={submitting}
-            >
-              Create Account
-            </button>
-          </div>
-
-          {/* ==================================
-              CARD HEADER
-          ================================== */}
-
-          <div className="fxa-card-head">
-            <span className="fxa-eyebrow">
-              {mode === "login" ? "WELCOME BACK" : "JOIN FIXHUB"}
-            </span>
-
-            <h2>
-              {mode === "login" ? "Login to FixHub" : "Create Your Account"}
-            </h2>
-
-            <p>
-              {mode === "login"
-                ? "Enter your email or mobile number and password to continue."
-                : "Create your FixHub account for faster mobile repair bookings."}
-            </p>
-          </div>
-
-          {/* ==================================
-              AUTHENTICATION FORM
-          ================================== */}
-
-          <form className="fxa-form" onSubmit={handleSubmit}>
-            {/* ==================================
-                REGISTRATION FIELDS
-            ================================== */}
-
-            {mode === "register" && (
-              <>
-                {/* FULL NAME */}
-
-                <label className="fxa-field">
-                  <span>Full Name *</span>
-
-                  <div className="fxa-input">
-                    <UserRound size={18} />
-
-                    <input
-                      type="text"
-                      name="fullName"
-                      placeholder="Enter your full name"
-                      value={form.fullName}
-                      onChange={handleChange}
-                      autoComplete="name"
-                      minLength={2}
-                      maxLength={100}
-                      required
-                    />
-                  </div>
-                </label>
-
-                {/* EMAIL AND MOBILE */}
-
-                <div className="fxa-two-col">
-                  {/* EMAIL */}
-
-                  <label className="fxa-field">
-                    <span>Email Address *</span>
-
-                    <div className="fxa-input">
-                      <Mail size={18} />
-
-                      <input
-                        type="email"
-                        name="email"
-                        placeholder="Enter your email"
-                        value={form.email}
-                        onChange={handleChange}
-                        autoComplete="email"
-                        maxLength={254}
-                        required
-                      />
-                    </div>
-                  </label>
-
-                  {/* MOBILE */}
-
-                  <label className="fxa-field">
-                    <span>Mobile Number *</span>
-
-                    <div className="fxa-input">
-                      <Phone size={18} />
-
-                      <input
-                        type="tel"
-                        name="phone"
-                        placeholder="10-digit mobile number"
-                        value={form.phone}
-                        onChange={(event) => {
-                          const phone = event.target.value
-                            .replace(/\D/g, "")
-                            .slice(0, 10);
-
-                          setForm((previous) => ({
-                            ...previous,
-                            phone,
-                          }));
-                        }}
-                        autoComplete="tel-national"
-                        inputMode="numeric"
-                        pattern="[6-9][0-9]{9}"
-                        maxLength={10}
-                        required
-                      />
-                    </div>
-                  </label>
-                </div>
-
-                {/* ==================================
-                    FULL HOME ADDRESS
-                ================================== */}
-
-                <label className="fxa-field">
-                  <span>Full Home Address *</span>
-
-                  <div className="fxa-input fxa-textarea">
-                    <MapPin size={18} />
-
-                    <textarea
-                      name="address"
-                      placeholder="Flat number, building, street, area, city and pincode"
-                      value={form.address}
-                      onChange={handleChange}
-                      autoComplete="street-address"
-                      rows={3}
-                      minLength={10}
-                      maxLength={300}
-                      required
-                    />
-                  </div>
-                </label>
-              </>
-            )}
-
-            {/* ==================================
-                LOGIN EMAIL / MOBILE
-            ================================== */}
-
-            {mode === "login" && (
+        <form className="fxa-form" onSubmit={handleSubmit}>
+          {isRegister ? (
+            <>
               <label className="fxa-field">
-                <span>Email or Mobile Number *</span>
-
+                <span>
+                  Full Name <b>*</b>
+                </span>
                 <div className="fxa-input">
-                  <Mail size={18} />
-
+                  <User size={18} />
                   <input
                     type="text"
-                    placeholder="Enter email or mobile number"
-                    value={identifier}
-                    onChange={(event) => {
-                      setIdentifier(event.target.value);
-
-                      setError("");
-                    }}
-                    autoComplete="username"
+                    name="fullName"
+                    placeholder="Enter your full name"
+                    autoComplete="name"
+                    minLength={2}
+                    maxLength={100}
+                    value={form.fullName}
+                    onChange={handleChange}
                     required
+                    disabled={busy || Boolean(success)}
                   />
                 </div>
               </label>
-            )}
 
-            {/* ==================================
-                PASSWORD
-            ================================== */}
+              <label className="fxa-field">
+                <span>
+                  Email Address <b>*</b>
+                </span>
+                <div className="fxa-input">
+                  <Mail size={18} />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email address"
+                    autoComplete="email"
+                    maxLength={254}
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                    disabled={busy || Boolean(success)}
+                  />
+                </div>
+              </label>
 
-            <label className="fxa-field">
-              <span>Password *</span>
+              <label className="fxa-field">
+                <span>
+                  Mobile Number <b>*</b>
+                </span>
+                <div className="fxa-input">
+                  <Phone size={18} />
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="10-digit mobile number"
+                    autoComplete="tel-national"
+                    inputMode="numeric"
+                    maxLength={10}
+                    value={form.phone}
+                    onChange={handleChange}
+                    required
+                    disabled={busy || Boolean(success)}
+                  />
+                </div>
+              </label>
 
-              <div className="fxa-input">
-                <LockKeyhole size={18} />
+              <label className="fxa-field">
+                <span>
+                  Complete Home Address <b>*</b>
+                </span>
+                <div className="fxa-input fxa-textarea">
+                  <MapPin size={18} />
+                  <textarea
+                    name="address"
+                    placeholder="House number, street, area, city, state and PIN code"
+                    autoComplete="street-address"
+                    minLength={10}
+                    maxLength={300}
+                    rows={3}
+                    value={form.address}
+                    onChange={handleChange}
+                    required
+                    disabled={busy || Boolean(success)}
+                  />
+                </div>
+              </label>
 
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder={
-                    mode === "register"
-                      ? "Create a strong password"
-                      : "Enter your password"
-                  }
-                  value={form.password}
-                  onChange={handleChange}
-                  autoComplete={
-                    mode === "register" ? "new-password" : "current-password"
-                  }
-                  minLength={mode === "register" ? 8 : undefined}
-                  maxLength={72}
-                  required
-                />
-
-                {/* SHOW / HIDE PASSWORD */}
-
-                <button
-                  type="button"
-                  className="fxa-eye"
-                  onClick={() => setShowPassword((previous) => !previous)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+              <div className="fxa-form-divider">
+                <span>SECURE YOUR ACCOUNT</span>
               </div>
-            </label>
 
-            {/* ==================================
-                FORGOT PASSWORD LINKS
-            ================================== */}
+              <label className="fxa-field">
+                <span>
+                  Create Password <b>*</b>
+                </span>
+                <div className="fxa-input">
+                  <LockKeyhole size={18} />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Create a password"
+                    autoComplete="new-password"
+                    minLength={8}
+                    value={form.password}
+                    onChange={handleChange}
+                    required
+                    disabled={busy || Boolean(success)}
+                  />
+                  <button
+                    type="button"
+                    className="fxa-password-toggle"
+                    onClick={() => setShowPassword((value) => !value)}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                <small className="fxa-hint">Use at least 8 characters.</small>
+              </label>
 
-            {mode === "login" && (
-              <div className="fxa-recovery-links">
+              <label className="fxa-field">
+                <span>
+                  Confirm Password <b>*</b>
+                </span>
+                <div className="fxa-input">
+                  <LockKeyhole size={18} />
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    placeholder="Enter your password again"
+                    autoComplete="new-password"
+                    minLength={8}
+                    value={form.confirmPassword}
+                    onChange={handleChange}
+                    required
+                    disabled={busy || Boolean(success)}
+                  />
+                  <button
+                    type="button"
+                    className="fxa-password-toggle"
+                    onClick={() => setShowConfirmPassword((value) => !value)}
+                    aria-label={
+                      showConfirmPassword
+                        ? "Hide confirm password"
+                        : "Show confirm password"
+                    }
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
+                  </button>
+                </div>
+              </label>
+
+              <div className="fxa-security-note">
+                <ShieldCheck size={19} />
+                <p>
+                  Your account will be created immediately. You can use your
+                  email later if you need to reset your password.
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <label className="fxa-field">
+                <span>
+                  Email or Mobile Number <b>*</b>
+                </span>
+                <div className="fxa-input">
+                  <User size={18} />
+                  <input
+                    type="text"
+                    name="identifier"
+                    placeholder="Enter email or mobile number"
+                    autoComplete="username"
+                    value={form.identifier}
+                    onChange={handleChange}
+                    required
+                    disabled={busy}
+                  />
+                </div>
+              </label>
+
+              <label className="fxa-field">
+                <span>
+                  Password <b>*</b>
+                </span>
+                <div className="fxa-input">
+                  <LockKeyhole size={18} />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Enter your password"
+                    autoComplete="current-password"
+                    value={form.password}
+                    onChange={handleChange}
+                    required
+                    disabled={busy}
+                  />
+                  <button
+                    type="button"
+                    className="fxa-password-toggle"
+                    onClick={() => setShowPassword((value) => !value)}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </label>
+
+              <div className="fxa-forgot">
                 <Link to="/forgot-password">Forgot Password?</Link>
-
-                <Link to="/resend-verification">Resend Verification Email</Link>
               </div>
-            )}
+            </>
+          )}
 
-            {/* ==================================
-                SUCCESS MESSAGE
-            ================================== */}
-
-            {notice && (
-              <p className="fxa-success" role="status">
-                {notice}
-              </p>
-            )}
-
-            {/* ==================================
-                ERROR MESSAGE
-            ================================== */}
-
-            {error && (
-              <p className="fxa-error" role="alert">
-                {error}
-              </p>
-            )}
-
-            {/* ==================================
-                SUBMIT BUTTON
-            ================================== */}
-
-            <button type="submit" className="fxa-submit" disabled={submitting}>
-              {submitting ? (
-                <>
-                  <LoaderCircle size={18} className="fxa-loader" />
-                  Please Wait...
-                </>
-              ) : (
-                <>
-                  {mode === "login" ? "Login to FixHub" : "Create Account"}
-
-                  <ArrowRight size={18} />
-                </>
-              )}
-            </button>
-
-            {/* SECURITY MESSAGE */}
-
-            <p className="fxa-footnote">
-              <CheckCircle2 size={15} />
-              Secure account access with persistent login.
+          {error && (
+            <p className="fxa-error" role="alert">
+              {error}
             </p>
-          </form>
+          )}
 
-          {/* ==================================
-              BOTTOM LINKS
-          ================================== */}
+          {success && (
+            <p className="fxa-success" role="status">
+              <CheckCircle2 size={18} />
+              {success}
+            </p>
+          )}
 
-          <p className="fxa-bottom-note">
-            {mode === "login" ? (
-              <>
-                Don't have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => changeMode("register")}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "#00cfff",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                  }}
-                >
-                  Create Account
-                </button>
-              </>
-            ) : (
-              <>
-                Already have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => changeMode("login")}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "#00cfff",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                  }}
-                >
-                  Login
-                </button>
-              </>
-            )}
-          </p>
+          <button
+            type="submit"
+            className="fxa-submit"
+            disabled={busy || Boolean(success)}
+          >
+            {busy
+              ? "Please wait..."
+              : success
+                ? "Account Created"
+                : isRegister
+                  ? "Create My Account"
+                  : "Login to FIXHUB"}
+            <ArrowRight size={18} />
+          </button>
+        </form>
 
-          {/* EXPLORE SERVICES */}
-
-          <p className="fxa-bottom-note">
-            Need mobile repair? <Link to="/services">Explore Our Services</Link>
-          </p>
-        </section>
-      </div>
-    </div>
+        <p className="fxa-bottom-note">
+          {isRegister ? (
+            <>
+              Already have an account?{" "}
+              <button
+                type="button"
+                onClick={() => switchMode("login")}
+                disabled={busy || Boolean(success)}
+              >
+                Login
+              </button>
+            </>
+          ) : (
+            <>
+              Don't have an account?{" "}
+              <button
+                type="button"
+                onClick={() => switchMode("register")}
+                disabled={busy}
+              >
+                Create Account
+              </button>
+            </>
+          )}
+        </p>
+      </section>
+    </main>
   );
 }

@@ -964,3 +964,43 @@
           scroll-behavior: auto !important;
      }
 }
+
+/* ==========================================
+   SEARCHABLE PHONE BRAND + MODEL FIELD
+========================================== */
+
+.svc-phone-select {
+     position: relative;
+     min-width: 0;
+}
+
+.svc-phone-search {
+     width: 100%;
+     min-width: 0;
+     height: 100%;
+     border: 0;
+     outline: 0;
+     background: transparent;
+     color: inherit;
+     font: inherit;
+     padding: 0 34px 0 14px;
+}
+
+.svc-phone-search::placeholder {
+     color: inherit;
+     opacity: 0.65;
+}
+
+.svc-phone-clear {
+     position: absolute;
+     right: 10px;
+     top: 50%;
+     transform: translateY(-50%);
+     display: grid;
+     place-items: center;
+     border: 0;
+     background: transparent;
+     color: inherit;
+     cursor: pointer;
+     padding: 4px;
+}

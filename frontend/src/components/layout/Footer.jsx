@@ -22,54 +22,39 @@ import {
 import "../../styles/Footer.css";
 
 /* ==========================================================
-   FIXHUB — FOOTER
+   FIXHUB BUSINESS DETAILS
 ========================================================== */
 
-// Replace the demo contact information and empty social links
-// with your official business details before publishing.
-
 const business = {
-  location: "Mumbai, Maharashtra",
-  serviceArea: "Doorstep mobile repair in supported areas",
+  location:
+    "ITPL Main Rd, Pattandur Agrahara, Whitefield, Bengaluru, Karnataka 560066",
 
-  phone: "+91 98765 43210",
-  phoneHref: "",
+  serviceArea: "Professional mobile repair at your doorstep.",
 
-  email: "support@fixhub.in",
-  emailHref: "",
+  phone: "+91 70392 35169",
+  phoneHref: "tel:+917039235169",
+
+  email: "support@fixhubsolutions.in",
+  emailHref:
+    "https://mail.google.com/mail/?view=cm&fs=1&to=support%40fixhubsolutions.in",
 
   hours: "Mon – Sun, 9:00 AM – 9:00 PM",
 };
+
+const mapUrl =
+  "https://www.google.com/maps/search/?api=1&query=ITPL+Main+Rd%2C+Pattandur+Agrahara%2C+Whitefield%2C+Bengaluru%2C+Karnataka+560066";
 
 /* ==========================================================
    QUICK LINKS
 ========================================================== */
 
 const quickLinks = [
-  {
-    name: "Home",
-    path: "/",
-  },
-  {
-    name: "Services",
-    path: "/services",
-  },
-  {
-    name: "Brands",
-    path: "/brands",
-  },
-  {
-    name: "Membership",
-    path: "/membership",
-  },
-  {
-    name: "About Us",
-    path: "/about",
-  },
-  {
-    name: "Contact Us",
-    path: "/contact",
-  },
+  { name: "Home", path: "/" },
+  { name: "Services", path: "/services" },
+  { name: "Brands", path: "/brands" },
+  { name: "Membership", path: "/membership" },
+  { name: "About Us", path: "/about" },
+  { name: "Contact Us", path: "/contact" },
 ];
 
 /* ==========================================================
@@ -77,30 +62,12 @@ const quickLinks = [
 ========================================================== */
 
 const services = [
-  {
-    name: "Display Replacement",
-    path: "/services",
-  },
-  {
-    name: "Battery Replacement",
-    path: "/services",
-  },
-  {
-    name: "Camera Repair",
-    path: "/services",
-  },
-  {
-    name: "Charging Port Repair",
-    path: "/services",
-  },
-  {
-    name: "Software Issues",
-    path: "/services",
-  },
-  {
-    name: "Water Damage Repair",
-    path: "/services",
-  },
+  { name: "Display Replacement", path: "/services" },
+  { name: "Battery Replacement", path: "/services" },
+  { name: "Camera Repair", path: "/services" },
+  { name: "Charging Port Repair", path: "/services" },
+  { name: "Software Issues", path: "/services" },
+  { name: "Water Damage Repair", path: "/services" },
 ];
 
 /* ==========================================================
@@ -117,7 +84,7 @@ const socialLinks = [
   {
     name: "WhatsApp",
     icon: FaWhatsapp,
-    url: "",
+    url: "https://wa.me/917039235169",
     className: "whatsapp",
   },
   {
@@ -158,7 +125,9 @@ function FooterLogo() {
           Fix<span>Hub</span>
         </span>
 
-        <span className="fh-footer__logo-subtitle">MOBILE CARE EXPERTS</span>
+        <span className="fh-footer__logo-subtitle">
+          MOBILE CARE EXPERTS
+        </span>
       </div>
     </Link>
   );
@@ -172,7 +141,6 @@ function FooterHeading({ children }) {
   return (
     <div className="fh-footer__heading">
       <h3>{children}</h3>
-
       <span className="fh-footer__heading-line" />
     </div>
   );
@@ -189,7 +157,6 @@ function FooterLinks({ items }) {
         <li key={item.name}>
           <Link to={item.path}>
             <span>{item.name}</span>
-
             <ChevronRight size={17} strokeWidth={1.7} />
           </Link>
         </li>
@@ -199,12 +166,13 @@ function FooterLinks({ items }) {
 }
 
 /* ==========================================================
-   CONTACT INFO
+   CONTACT INFORMATION
 ========================================================== */
 
 function ContactInfo() {
   return (
     <div className="fh-footer__contact-list">
+
       {/* LOCATION */}
 
       <div className="fh-footer__contact-item">
@@ -213,7 +181,16 @@ function ContactInfo() {
         </div>
 
         <div className="fh-footer__contact-text">
-          <h4>{business.location}</h4>
+          <h4>
+            <a
+              href={mapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open FIXHUB location in Google Maps"
+            >
+              {business.location}
+            </a>
+          </h4>
 
           <p>{business.serviceArea}</p>
         </div>
@@ -228,11 +205,9 @@ function ContactInfo() {
 
         <div className="fh-footer__contact-text">
           <h4>
-            {business.phoneHref ? (
-              <a href={business.phoneHref}>{business.phone}</a>
-            ) : (
-              business.phone
-            )}
+            <a href={business.phoneHref}>
+              {business.phone}
+            </a>
           </h4>
 
           <p>{business.hours}</p>
@@ -248,16 +223,19 @@ function ContactInfo() {
 
         <div className="fh-footer__contact-text">
           <h4>
-            {business.emailHref ? (
-              <a href={business.emailHref}>{business.email}</a>
-            ) : (
-              business.email
-            )}
+            <a
+              href={business.emailHref}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {business.email}
+            </a>
           </h4>
 
           <p>Contact our support team</p>
         </div>
       </div>
+
     </div>
   );
 }
@@ -308,7 +286,7 @@ function Newsletter() {
 
       setSuccess(false);
       setMessage(
-        "Subscription is unavailable right now. Please try again later.",
+        "Subscription is unavailable right now. Please try again later."
       );
     } finally {
       setLoading(false);
@@ -327,7 +305,10 @@ function Newsletter() {
         Subscribe to get updates, offers and mobile care tips.
       </p>
 
-      <form onSubmit={handleSubscribe} className="fh-footer__newsletter-form">
+      <form
+        onSubmit={handleSubscribe}
+        className="fh-footer__newsletter-form"
+      >
         {/* EMAIL INPUT */}
 
         <div className="fh-footer__input-box">
@@ -355,7 +336,10 @@ function Newsletter() {
         >
           {loading ? (
             <>
-              <LoaderCircle size={19} className="fh-footer__spinner" />
+              <LoaderCircle
+                size={19}
+                className="fh-footer__spinner"
+              />
               Subscribing...
             </>
           ) : (
@@ -376,7 +360,6 @@ function Newsletter() {
             role="status"
           >
             {success && <CheckCircle2 size={16} />}
-
             {message}
           </p>
         )}
@@ -435,76 +418,65 @@ function FooterSocials() {
 export default function Footer() {
   return (
     <footer className="fh-footer">
-      {/* ==================================================
-          MAIN FOOTER CONTENT
-      ================================================== */}
+
+      {/* MAIN FOOTER CONTENT */}
 
       <div className="fh-footer__container">
         <div className="fh-footer__grid">
-          {/* ==============================================
-              COLUMN 1 — BRAND
-          ============================================== */}
+
+          {/* COLUMN 1 — BRAND */}
 
           <div className="fh-footer__brand-column">
             <FooterLogo />
 
             <p className="fh-footer__about">
-              Professional mobile repair at your doorstep. Fast, reliable and
-              hassle-free service for all your devices.
+              Professional mobile repair at your doorstep. Fast, reliable
+              and hassle-free service for all your devices.
             </p>
           </div>
 
-          {/* ==============================================
-              COLUMN 2 — QUICK LINKS
-          ============================================== */}
+          {/* COLUMN 2 — QUICK LINKS */}
 
           <div className="fh-footer__column">
             <FooterHeading>Quick Links</FooterHeading>
-
             <FooterLinks items={quickLinks} />
           </div>
 
-          {/* ==============================================
-              COLUMN 3 — SERVICES
-          ============================================== */}
+          {/* COLUMN 3 — SERVICES */}
 
           <div className="fh-footer__column">
             <FooterHeading>Our Services</FooterHeading>
-
             <FooterLinks items={services} />
           </div>
 
-          {/* ==============================================
-              COLUMN 4 — CONTACT
-          ============================================== */}
+          {/* COLUMN 4 — CONTACT */}
 
           <div className="fh-footer__column">
             <FooterHeading>Contact Information</FooterHeading>
-
             <ContactInfo />
           </div>
 
-          {/* ==============================================
-              COLUMN 5 — NEWSLETTER
-          ============================================== */}
+          {/* COLUMN 5 — NEWSLETTER */}
 
           <Newsletter />
+
         </div>
       </div>
 
-      {/* ==================================================
-          BOTTOM FOOTER
-      ================================================== */}
+      {/* BOTTOM FOOTER */}
 
       <div className="fh-footer__bottom">
         <div className="fh-footer__bottom-container">
+
           <p className="fh-footer__copyright">
             © {new Date().getFullYear()} FixHub. All rights reserved.
           </p>
 
           <FooterSocials />
+
         </div>
       </div>
+
     </footer>
   );
 }

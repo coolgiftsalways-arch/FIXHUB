@@ -1,0 +1,196 @@
+/* =========================================
+   FIXHUB FLOATING CONTACT
+========================================= */
+
+.floating-contact {
+     position: fixed;
+     right: 24px;
+     bottom: 25px;
+     z-index: 9999;
+
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     gap: 13px;
+}
+
+/* =========================================
+   MAIN BUTTON
+========================================= */
+
+.contact-main-button {
+     width: 58px;
+     height: 58px;
+
+     display: flex;
+     align-items: center;
+     justify-content: center;
+
+     border: none;
+     border-radius: 50%;
+
+     background: linear-gradient(135deg, #0878ff, #0046d5);
+     color: #ffffff;
+
+     cursor: pointer;
+
+     box-shadow: 0 7px 22px rgba(0, 92, 220, 0.32);
+
+     transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+}
+
+.contact-main-button:hover {
+     transform: scale(1.08);
+     box-shadow: 0 10px 28px rgba(0, 92, 220, 0.42);
+}
+
+.main-icon {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+
+     transition: transform 0.3s ease;
+}
+
+.floating-contact.active .main-icon {
+     transform: rotate(90deg);
+}
+
+/* =========================================
+   WHATSAPP & CUSTOMER CARE BUTTONS
+========================================= */
+
+.contact-action {
+     position: absolute;
+     bottom: 71px;
+
+     width: 50px;
+     height: 50px;
+
+     display: flex;
+     align-items: center;
+     justify-content: center;
+
+     border-radius: 50%;
+     color: #ffffff;
+     text-decoration: none;
+
+     opacity: 0;
+     visibility: hidden;
+     pointer-events: none;
+
+     transform: translateY(18px) scale(0.6);
+
+     transition:
+          opacity 0.3s ease,
+          transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+          visibility 0.3s ease,
+          background 0.3s ease;
+
+     box-shadow: 0 5px 18px rgba(0, 0, 0, 0.18);
+}
+
+/* Customer Care */
+
+.support-action {
+     background: linear-gradient(135deg, #1687ff, #0054d9);
+}
+
+/* WhatsApp */
+
+.whatsapp-action {
+     bottom: 134px;
+     background: #20bd65;
+}
+
+/* Show actions */
+
+.floating-contact.active .contact-action {
+     opacity: 1;
+     visibility: visible;
+     pointer-events: auto;
+     transform: translateY(0) scale(1);
+}
+
+.floating-contact.active .support-action {
+     transition-delay: 0.05s;
+}
+
+.floating-contact.active .whatsapp-action {
+     transition-delay: 0.12s;
+}
+
+/* =========================================
+   TOOLTIP
+========================================= */
+
+.contact-tooltip {
+     position: absolute;
+     right: 62px;
+
+     padding: 8px 13px;
+
+     border-radius: 7px;
+
+     background: #101d35;
+     color: #ffffff;
+
+     font-size: 12px;
+     font-weight: 600;
+     white-space: nowrap;
+
+     opacity: 0;
+     visibility: hidden;
+
+     transform: translateX(8px);
+
+     transition: all 0.25s ease;
+}
+
+.contact-action:hover .contact-tooltip {
+     opacity: 1;
+     visibility: visible;
+     transform: translateX(0);
+}
+
+/* =========================================
+   MOBILE RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+     .floating-contact {
+          right: 16px;
+          bottom: calc(18px + env(safe-area-inset-bottom));
+          gap: 11px;
+     }
+
+     .contact-main-button {
+          width: 54px;
+          height: 54px;
+     }
+
+     .contact-action {
+          width: 47px;
+          height: 47px;
+          bottom: 65px;
+     }
+
+     .whatsapp-action {
+          bottom: 122px;
+     }
+
+     .contact-tooltip {
+          display: none;
+     }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+     .floating-contact *,
+     .floating-contact *::before,
+     .floating-contact *::after {
+          transition-duration: 0.01ms !important;
+     }
+}

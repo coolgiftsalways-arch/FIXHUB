@@ -1,5 +1,7 @@
+/* =====================================================
+   FIXHUB MEMBERSHIP PAGE
+===================================================== */
 
-/* FIXHUB membership — screenshot-matched standalone page. Existing Navbar / Footer remain unchanged. */
 .fhm-page {
      --fhm-bg: #02101f;
      --fhm-panel: #031426;
@@ -7,13 +9,14 @@
      --fhm-text: #f6f9ff;
      --fhm-muted: #b5cee9;
      --fhm-blue: #00a4ff;
-     
-     background: linear-gradient(180deg, #021020 0%, #020d1b 100%);
-     color: var(--fhm-text);
+
      width: 100%;
+     max-width: 100%;
      min-height: 100vh;
+     overflow-x: clip;
+     background: linear-gradient(180deg, #021020, #020d1b);
+     color: var(--fhm-text);
      font-family: Inter, "DM Sans", system-ui, sans-serif;
-     overflow: hidden;
 }
 
 .fhm-page *,
@@ -46,15 +49,24 @@
 
 .fhm-shell {
      width: min(1440px, calc(100% - 56px));
+     max-width: 100%;
+     min-width: 0;
      margin: 0 auto;
 }
+
+/* =====================================================
+   HERO
+===================================================== */
 
 .fhm-hero {
      height: 230px;
      position: relative;
      isolation: isolate;
-     border-bottom: 1px solid rgba(15, 83, 140, .13);
-     background: radial-gradient(ellipse at 77% 52%, #0b3455 0, #031425 48%, #020e1c 85%);
+     border-bottom: 1px solid rgba(15, 83, 140, 0.13);
+     background: radial-gradient(ellipse at 77% 52%,
+               #0b3455 0,
+               #031425 48%,
+               #020e1c 85%);
 }
 
 .fhm-hero::after {
@@ -63,7 +75,9 @@
      inset: 0;
      pointer-events: none;
      z-index: 0;
-     background: linear-gradient(90deg, rgba(1, 11, 25, .85), transparent 87%);
+     background: linear-gradient(90deg,
+               rgba(1, 11, 25, 0.85),
+               transparent 87%);
 }
 
 .fhm-hero-inner {
@@ -112,70 +126,41 @@
      bottom: 0;
      z-index: 1;
      overflow: hidden;
-     opacity: .96;
+     opacity: 0.96;
 }
 
-.fhm-hero-phone {
+.fhm-hero-slideshow {
+     position: relative;
+     width: 100%;
+     height: 100%;
+}
+
+.fhm-hero-slide {
      position: absolute;
-     width: 155px;
-     height: 275px;
-     border-radius: 25px;
-     bottom: -62px;
-     background: linear-gradient(130deg, #202e3e, #070d17 55%, #496688);
-     box-shadow: inset 1px 1px 2px #6998cf, 20px 17px 35px rgba(0, 0, 0, .7);
-     border: 3px solid #365276;
+     inset: 0;
+     width: 100%;
+     height: 100%;
+     object-fit: contain;
+     opacity: 0;
+     animation: fhmHeroSlide 32s infinite;
 }
 
-.fhm-hero-phone--left {
-     left: 5%;
-     transform: rotate(-20deg);
+@keyframes fhmHeroSlide {
+
+     0%,
+     12% {
+          opacity: 1;
+     }
+
+     16%,
+     100% {
+          opacity: 0;
+     }
 }
 
-.fhm-hero-phone--mid {
-     left: 35%;
-     bottom: -68px;
-     transform: rotate(-5deg);
-     background: linear-gradient(130deg, #050a13, #123f70 50%, #05101a);
-}
-
-.fhm-hero-phone--right {
-     right: 4%;
-     transform: rotate(25deg);
-     background: linear-gradient(160deg, #8db3d3, #0c1829 50%, #3b6d92);
-}
-
-.fhm-hero-camera {
-     margin: 16px;
-     width: 66px;
-     height: 75px;
-     display: grid;
-     place-items: center;
-     border-radius: 20px;
-     color: #8bbfe5;
-     text-shadow: 0 0 9px #0a4c8f;
-     font-size: 25px;
-     background: radial-gradient(circle at 22% 23%, #102239 5px, transparent 8px), radial-gradient(circle at 72% 23%, #172e51 5px, transparent 8px), radial-gradient(circle at 45% 67%, #1e395a 7px, transparent 10px), #071528;
-     border: 2px solid #365f84;
-     letter-spacing: 1px;
-}
-
-.fhm-hero-screen {
-     position: absolute;
-     inset: 8px;
-     border-radius: 20px;
-     background: radial-gradient(circle at 60% 45%, #0d4f85, transparent 37%), linear-gradient(35deg, #010511, #102642, #06111d);
-}
-
-.fhm-hero-screen::before {
-     content: "";
-     position: absolute;
-     top: 10px;
-     left: 50%;
-     width: 8px;
-     height: 8px;
-     border-radius: 50%;
-     background: #020b17;
-}
+/* =====================================================
+   MAIN FLOW AND PANELS
+===================================================== */
 
 .fhm-flow {
      position: relative;
@@ -184,25 +169,31 @@
      gap: 13px;
      margin-top: -14px;
      padding-bottom: 36px;
+     min-width: 0;
 }
 
 .fhm-step,
 .fhm-price-section {
      border: 1px solid var(--fhm-border);
      border-radius: 14px;
-     background: linear-gradient(117deg, rgba(3, 19, 36, .98), rgba(2, 17, 32, .98));
-     box-shadow: 0 6px 25px rgba(0, 0, 0, .09);
+     background: linear-gradient(117deg,
+               rgba(3, 19, 36, 0.98),
+               rgba(2, 17, 32, 0.98));
+     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.09);
+     min-width: 0;
+     max-width: 100%;
 }
 
 .fhm-step {
-     padding: 13px 17px 16px;
+     padding: 15px 17px 17px;
 }
 
 .fhm-step-head {
      display: flex;
      align-items: center;
      gap: 12px;
-     margin: 0 0 12px;
+     margin: 0 0 14px;
+     min-width: 0;
 }
 
 .fhm-step-number {
@@ -222,31 +213,38 @@
      font-size: 18px;
      line-height: 1.35;
      font-weight: 820;
-     letter-spacing: -.2px;
 }
 
 .fhm-step-head p {
      font-size: 13px;
      color: var(--fhm-muted);
-     margin-top: 2px;
+     margin-top: 3px;
      line-height: 1.4;
 }
 
+/* =====================================================
+   BRAND GRID
+===================================================== */
+
 .fhm-brand-list {
-     display: flex;
-     gap: 8px;
-     overflow-x: auto;
-     padding: 0 1px 3px;
-     scrollbar-color: #184d74 transparent;
-     scrollbar-width: thin;
+     display: grid;
+     grid-template-columns: repeat(10, minmax(0, 1fr));
+     gap: 12px;
+     width: 100%;
+     max-width: 100%;
+     min-width: 0;
+     padding: 4px 0;
+}
+
+.fhm-brand-list--selected {
+     grid-template-columns: minmax(110px, 150px);
 }
 
 .fhm-brand-tile {
      position: relative;
-     height: 91px;
-     flex: 1 0 76px;
-     min-width: 76px;
-     max-width: 118px;
+     width: 100%;
+     min-width: 0;
+     height: 90px;
      padding: 10px 6px 8px;
      display: flex;
      flex-direction: column;
@@ -257,7 +255,7 @@
      border: 1px solid #1c3c5b;
      border-radius: 9px;
      color: #fff;
-     transition: border-color .15s, background .15s;
+     transition: 0.2s ease;
 }
 
 .fhm-brand-tile:hover,
@@ -266,14 +264,18 @@
      background: #061d37;
 }
 
+.fhm-brand-tile:hover {
+     transform: translateY(-2px);
+}
+
 .fhm-brand-tile.is-selected {
      box-shadow: inset 0 0 0 1px #00a6ff;
 }
 
 .fhm-selected-tick {
      position: absolute;
-     right: 4px;
-     top: 3px;
+     right: 5px;
+     top: 5px;
      width: 19px;
      height: 19px;
      display: grid;
@@ -281,7 +283,14 @@
      border-radius: 50%;
      background: #059aff;
      color: white;
-     z-index: 2;
+     z-index: 3;
+}
+
+.fhm-brand-mark {
+     width: 100%;
+     height: 35px;
+     display: grid;
+     place-items: center;
 }
 
 .fhm-brand-logo {
@@ -298,14 +307,11 @@
 .fhm-brand-logo--apple {
      font-size: 38px;
      color: white;
-     border-radius: 50%;
 }
 
 .fhm-brand-logo--samsung {
-     font-size: 12px;
+     font-size: 19px;
      font-style: italic;
-     letter-spacing: -1.5px;
-     transform: skewX(-7deg);
 }
 
 .fhm-brand-logo--oneplus {
@@ -316,7 +322,6 @@
 .fhm-brand-logo--oppo {
      color: #01d58a;
      font-size: 21px;
-     font-weight: 700;
 }
 
 .fhm-brand-logo--vivo {
@@ -345,7 +350,7 @@
      font-size: 21px;
 }
 
-.fhm-brand-logo--moto {
+.fhm-brand-logo--motorola {
      width: 34px;
      height: 34px;
      border-radius: 50%;
@@ -357,239 +362,175 @@
 .fhm-brand-name {
      font-size: 11px;
      color: #f5f9ff;
-}
-
-.fhm-scroll-help {
-     display: block;
-     text-align: right;
-     margin-top: 2px;
-     font-size: 9px;
-     color: #6285a4;
-}
-
-.fhm-model-layout {
-     display: grid;
-     grid-template-columns: minmax(220px, .42fr) minmax(0, .58fr);
-     gap: 18px;
-     align-items: center;
-}
-
-.fhm-model-picker {
-     min-width: 0;
-}
-
-.fhm-select-wrap {
-     position: relative;
-     display: flex;
-     align-items: center;
-     border: 1px solid #345477;
-     background: #061a30;
-     border-radius: 10px;
-     color: #b1dcff;
-}
-
-.fhm-select-wrap:focus-within {
-     border-color: #069dff;
-}
-
-.fhm-select-wrap select {
-     appearance: none;
-     width: 100%;
-     padding: 14px 43px 14px 16px;
-     min-width: 0;
-     background: transparent;
-     border: 0;
-     outline: 0;
-     color: #e8f4ff;
-     font-size: 15px;
-     cursor: pointer;
-}
-
-.fhm-select-wrap select option {
-     background: #0b2138;
-     color: white;
-}
-
-.fhm-select-wrap>svg:last-child {
-     position: absolute;
-     right: 12px;
-     pointer-events: none;
-}
-
-.fhm-model-tiles {
-     display: flex;
-     gap: 8px;
-     overflow-x: auto;
-     padding: 1px 0 4px;
-     scrollbar-color: #184d74 transparent;
-     scrollbar-width: thin;
-}
-
-.fhm-model-tile {
-     position: relative;
-     flex: 0 0 88px;
-     padding: 5px 5px 8px;
-     border-radius: 10px;
-     border: 1px solid #203b59;
-     background: #041529;
-     display: flex;
-     flex-direction: column;
-     gap: 4px;
-     align-items: center;
-     color: #f3f8ff;
-}
-
-.fhm-model-tile.is-selected {
-     border-color: #00a3ff;
-     box-shadow: inset 0 0 0 1px #00a3ff;
-}
-
-.fhm-model-tile>span:last-child {
-     width: 100%;
      text-align: center;
-     overflow: hidden;
-     text-overflow: ellipsis;
-     white-space: nowrap;
-     font-size: 10px;
 }
 
-.fhm-phone-art {
-     height: 74px;
-     width: 67px;
-     position: relative;
+/* =====================================================
+   MODEL IMAGE CARD GRID
+===================================================== */
+
+.fhm-model-grid {
      display: grid;
-     place-items: center;
-     overflow: hidden;
-}
-
-.fhm-phone-art>img {
-     height: 100%;
+     grid-template-columns: repeat(5, minmax(0, 1fr));
+     gap: 15px;
      width: 100%;
-     object-fit: contain;
+     min-width: 0;
 }
 
-.fhm-device-back,
-.fhm-device-front {
-     position: absolute;
-     width: 38px;
-     height: 65px;
-     border-radius: 5px;
-     border: 1px solid #6d7e92;
-     box-shadow: 3px 4px 10px #0008;
-}
-
-.fhm-device-back {
-     left: 7px;
-     top: 4px;
-     background: linear-gradient(135deg, #9ba4b2, #161d2c 50%, #445166);
-}
-
-.fhm-device-front {
-     left: 25px;
-     top: 7px;
-     background: radial-gradient(circle at 50% 65%, #215ba4, #182454 38%, #020910 75%);
-     border: 2px solid #070e19;
-}
-
-.fhm-device-camera {
-     width: 16px;
-     height: 19px;
-     position: absolute;
-     left: 3px;
-     top: 4px;
-     border-radius: 4px;
-     background: #0b1521;
+.fhm-model-card {
+     position: relative;
      display: flex;
      flex-direction: column;
-     gap: 1px;
+     align-items: center;
+     justify-content: flex-start;
+     width: 100%;
+     min-width: 0;
+     min-height: 205px;
+     padding: 10px;
+     overflow: hidden;
+     border: 1px solid #1c3c5b;
+     border-radius: 11px;
+     background: linear-gradient(145deg, #061a30, #041222);
+     color: #f6f9ff;
+     text-align: center;
+     transition:
+          border-color 0.2s ease,
+          background 0.2s ease,
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+}
+
+.fhm-model-card:hover {
+     transform: translateY(-3px);
+     border-color: #079ff0;
+     background: #08213a;
+}
+
+.fhm-model-card.is-selected {
+     border-color: #00a6ff;
+     background: linear-gradient(145deg, #082b49, #061b31);
+     box-shadow:
+          inset 0 0 0 1px #008fe0,
+          0 5px 18px rgba(0, 148, 255, 0.12);
+}
+
+.fhm-model-card-image {
+     position: relative;
+     display: flex;
      align-items: center;
      justify-content: center;
+     width: 100%;
+     height: 145px;
+     min-height: 145px;
+     overflow: hidden;
+     border-radius: 8px;
+     background: radial-gradient(ellipse at center,
+               #102e4b 0%,
+               #071a2d 70%,
+               #061526 100%);
 }
 
-.fhm-device-camera i {
+.fhm-model-image {
      display: block;
-     width: 4px;
-     height: 4px;
-     background: radial-gradient(circle, #2e5e96, #020911);
-     border: 1px solid #446185;
-     border-radius: 50%;
+     width: 100%;
+     height: 100%;
+     object-fit: contain;
+     padding: 7px;
+     transition: transform 0.25s ease;
 }
 
-.fhm-device-logo {
+.fhm-model-card:hover .fhm-model-image {
+     transform: scale(1.05);
+}
+
+.fhm-model-image-placeholder {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 8px;
+     width: 100%;
+     height: 100%;
+     color: #7fa8ca;
+}
+
+.fhm-model-image-placeholder span {
+     font-size: 10px;
+     color: #8eafca;
+}
+
+.fhm-model-card-name {
+     display: block;
+     width: 100%;
+     padding: 11px 3px 3px;
+     color: #f2f7ff;
+     font-size: 13px;
+     line-height: 1.4;
+     font-weight: 700;
+     overflow-wrap: anywhere;
+}
+
+.fhm-model-selected {
      position: absolute;
-     bottom: 10px;
-     left: 12px;
-     color: #b4c1cc;
-     font-size: 8px;
-}
-
-.fhm-device-punch {
-     position: absolute;
-     top: 3px;
-     left: 50%;
-     width: 3px;
-     height: 3px;
-     background: #050c17;
+     top: 15px;
+     right: 15px;
+     z-index: 3;
+     display: grid;
+     place-items: center;
+     width: 24px;
+     height: 24px;
      border-radius: 50%;
+     background: #009df5;
+     color: white;
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.fhm-phone-art--1 .fhm-device-back {
-     background: linear-gradient(135deg, #8dd5fc, #116eaa, #0c2b50);
+.fhm-unlisted-card {
+     border-style: dashed;
+     border-color: #3b6688;
 }
 
-.fhm-phone-art--2 .fhm-device-back {
-     background: linear-gradient(135deg, #86a8a0, #385c51, #1a3231);
+.fhm-unlisted-image {
+     flex-direction: column;
+     gap: 9px;
+     color: #8fcaff;
 }
 
-.fhm-phone-art--3 .fhm-device-back {
-     background: linear-gradient(135deg, #4f637d, #091421, #728ca6);
-}
-
-.fhm-phone-art--4 .fhm-device-back {
-     background: linear-gradient(135deg, #cbc7cf, #817c9d, #373047);
-}
-
-.fhm-phone-art--5 .fhm-device-back {
-     background: linear-gradient(135deg, #88d0d1, #32949d, #18363e);
-}
-
-.fhm-phone-art--large {
-     width: 112px;
-     height: 116px;
-     flex: none;
-}
-
-.fhm-phone-art--large .fhm-device-back,
-.fhm-phone-art--large .fhm-device-front {
-     transform: scale(1.5);
-     transform-origin: top left;
-     top: 7px;
-}
-
-.fhm-phone-art--large .fhm-device-back {
-     left: 15px;
-}
-
-.fhm-phone-art--large .fhm-device-front {
-     left: 48px;
+.fhm-unlisted-image span {
+     font-size: 11px;
+     color: #b7d5ef;
 }
 
 .fhm-model-empty {
      font-size: 12px;
      color: var(--fhm-muted);
-     padding: 10px;
+     padding: 10px 0;
+     line-height: 1.6;
 }
 
-.fhm-custom-model {
-     display: block;
+.fhm-manual-model {
+     display: flex;
+     flex-direction: column;
+     gap: 8px;
      width: 100%;
-     margin-top: 9px;
+     max-width: 520px;
+     margin-top: 16px;
 }
+
+.fhm-manual-model label {
+     font-size: 12px;
+     color: #d2e5fb;
+}
+
+/* =====================================================
+   PRICE RECOMMENDATION
+===================================================== */
 
 .fhm-plan-layout {
      display: grid;
      grid-template-columns: 1.7fr 1fr;
      gap: 14px;
+     min-width: 0;
 }
 
 .fhm-recommendation,
@@ -598,6 +539,7 @@
      border-radius: 10px;
      background: linear-gradient(130deg, #061c35, #02101f);
      min-height: 120px;
+     min-width: 0;
 }
 
 .fhm-recommendation {
@@ -606,15 +548,31 @@
      gap: 10px;
      padding: 10px 15px;
      border-color: #00a6ff;
+     flex-wrap: wrap;
 }
 
 .fhm-recommendation-phone {
      flex: none;
 }
 
+.fhm-phone-art {
+     display: grid;
+     place-items: center;
+     border: 1px solid #2d719d;
+     border-radius: 15px;
+     color: #5dbbff;
+     background: #0b2944;
+}
+
+.fhm-phone-art--large {
+     width: 80px;
+     height: 100px;
+}
+
 .fhm-recommendation-name {
      min-width: 0;
-     flex: 1;
+     flex: 1 1 120px;
+     overflow-wrap: anywhere;
 }
 
 .fhm-recommendation-name h3 {
@@ -638,7 +596,8 @@
 
 .fhm-recommendation-price {
      flex: none;
-     min-width: 190px;
+     min-width: 0;
+     max-width: 100%;
      text-align: center;
 }
 
@@ -702,18 +661,24 @@
      gap: 7px;
 }
 
+/* =====================================================
+   CUSTOMER FORM
+===================================================== */
+
 .fhm-request-form {
      display: grid;
-     grid-template-columns: 1.85fr .9fr;
+     grid-template-columns: minmax(0, 1.85fr) minmax(0, 0.9fr);
      column-gap: 16px;
      row-gap: 10px;
+     min-width: 0;
 }
 
 .fhm-customer-fields {
      display: grid;
-     grid-template-columns: 1fr 1fr;
+     grid-template-columns: repeat(2, minmax(0, 1fr));
      gap: 12px 18px;
      align-content: start;
+     min-width: 0;
 }
 
 .fhm-field {
@@ -732,6 +697,8 @@
 .fhm-field>textarea,
 .fhm-input {
      width: 100%;
+     min-width: 0;
+     max-width: 100%;
      display: flex;
      align-items: center;
      background: #0c233c;
@@ -780,6 +747,47 @@
      height: 39px;
 }
 
+.fhm-select-wrap {
+     position: relative;
+     display: flex;
+     align-items: center;
+     border: 1px solid #345477;
+     background: #061a30;
+     border-radius: 10px;
+     color: #b1dcff;
+     min-width: 0;
+     max-width: 100%;
+}
+
+.fhm-select-wrap:focus-within {
+     border-color: #069dff;
+}
+
+.fhm-select-wrap select {
+     appearance: none;
+     width: 100%;
+     min-width: 0;
+     padding: 14px 43px 14px 16px;
+     background: transparent;
+     border: 0;
+     outline: 0;
+     color: #e8f4ff;
+     font-size: 14px;
+     cursor: pointer;
+}
+
+.fhm-select-wrap select option {
+     background: #0b2138;
+     color: white;
+}
+
+.fhm-select-chevron {
+     position: absolute;
+     right: 10px;
+     pointer-events: none;
+     color: #b1dcff;
+}
+
 .fhm-field>.fhm-select-wrap>svg:first-child {
      margin-left: 10px;
      color: #afd4f5;
@@ -792,9 +800,20 @@
      font-size: 12px;
 }
 
-.fhm-field>.fhm-select-wrap>svg:last-child {
-     right: 8px;
+.fhm-input:focus,
+.fhm-field textarea:focus {
+     border-color: #00a4ff;
+     box-shadow: 0 0 0 2px rgba(0, 164, 255, 0.12);
 }
+
+.fhm-input::placeholder,
+.fhm-field textarea::placeholder {
+     color: #7799b8;
+}
+
+/* =====================================================
+   SUMMARY
+===================================================== */
 
 .fhm-summary {
      border: 1px solid #194365;
@@ -802,6 +821,7 @@
      overflow: hidden;
      background: #031529;
      align-self: start;
+     min-width: 0;
 }
 
 .fhm-summary h3 {
@@ -830,6 +850,7 @@
      padding: 6px 16px;
      min-height: 30px;
      font-size: 11px;
+     min-width: 0;
 }
 
 .fhm-summary dl>div:last-child {
@@ -838,13 +859,16 @@
 
 .fhm-summary dt {
      color: #dfedff;
+     min-width: 0;
 }
 
 .fhm-summary dd {
      margin: 0;
      text-align: right;
      max-width: 60%;
+     min-width: 0;
      color: #e8f4ff;
+     overflow-wrap: anywhere;
 }
 
 .fhm-summary-price {
@@ -863,12 +887,18 @@
      text-align: center;
 }
 
+/* =====================================================
+   BUTTONS AND MESSAGES
+===================================================== */
+
 .fhm-form-actions {
-     grid-column: 1/-1;
+     grid-column: 1 / -1;
      display: flex;
      flex-direction: column;
      align-items: center;
      gap: 8px;
+     min-width: 0;
+     max-width: 100%;
 }
 
 .fhm-primary-button {
@@ -885,15 +915,19 @@
      font-size: 14px;
      font-weight: 750;
      text-align: center;
+     max-width: 100%;
+     transition: 0.2s ease;
 }
 
-.fhm-primary-button:hover {
+.fhm-primary-button:hover:not(:disabled) {
      filter: brightness(1.1);
+     box-shadow: 0 0 18px rgba(0, 164, 255, 0.2);
+     transform: translateY(-1px);
 }
 
 .fhm-primary-button:disabled {
      cursor: not-allowed;
-     opacity: .6;
+     opacity: 0.6;
 }
 
 .fhm-submit {
@@ -908,6 +942,7 @@
      color: #a8c9e8;
      text-align: center;
      font-size: 10px;
+     line-height: 1.6;
 }
 
 .fhm-need-login {
@@ -917,6 +952,7 @@
      padding: 15px;
      border: 1px solid #234967;
      border-radius: 10px;
+     min-width: 0;
 }
 
 .fhm-need-login>svg {
@@ -926,6 +962,7 @@
 
 .fhm-need-login>div {
      flex: 1;
+     min-width: 0;
 }
 
 .fhm-need-login strong {
@@ -948,6 +985,7 @@
      border: 1px solid #00bd72;
      background: #073c34;
      font-size: 12px;
+     overflow-wrap: anywhere;
 }
 
 .fhm-receipt>svg {
@@ -957,6 +995,7 @@
 
 .fhm-receipt>div {
      flex: 1;
+     min-width: 0;
 }
 
 .fhm-receipt small {
@@ -978,6 +1017,12 @@
      padding: 6px 10px;
 }
 
+.fhm-receipt button:hover,
+.fhm-error button:hover {
+     border-color: #00a4ff;
+     color: #fff;
+}
+
 .fhm-receipt code {
      color: white;
 }
@@ -992,6 +1037,8 @@
      display: flex;
      align-items: center;
      gap: 10px;
+     line-height: 1.6;
+     overflow-wrap: anywhere;
 }
 
 .fhm-loading {
@@ -1000,7 +1047,35 @@
      align-items: center;
      gap: 8px;
      font-size: 12px;
+     padding: 8px 0;
 }
+
+.fhm-change-brand {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     gap: 7px;
+     margin-top: 12px;
+     padding: 9px 14px;
+     border: 1px solid #17669b;
+     border-radius: 8px;
+     background: #061d35;
+     color: #bfe5ff;
+     font-size: 12px;
+     font-weight: 650;
+     cursor: pointer;
+     transition: 0.2s ease;
+}
+
+.fhm-change-brand:hover {
+     background: #083052;
+     border-color: #00a4ff;
+     color: #fff;
+}
+
+/* =====================================================
+   SPINNER
+===================================================== */
 
 @keyframes fhm-spin {
      to {
@@ -1011,6 +1086,10 @@
 .fhm-spinner {
      animation: fhm-spin 1s linear infinite;
 }
+
+/* =====================================================
+   PRICE RANGE
+===================================================== */
 
 .fhm-price-section {
      padding: 13px 14px 15px;
@@ -1026,8 +1105,6 @@
 
 .fhm-range-head h2 {
      font-size: 17px;
-     display: flex;
-     align-items: center;
 }
 
 .fhm-range-head p {
@@ -1053,6 +1130,7 @@
      display: grid;
      grid-template-columns: repeat(5, minmax(0, 1fr));
      gap: 10px;
+     min-width: 0;
 }
 
 .fhm-range-card {
@@ -1065,6 +1143,7 @@
      align-items: center;
      flex-direction: column;
      gap: 5px;
+     min-width: 0;
 }
 
 .fhm-range-card.is-active {
@@ -1096,6 +1175,7 @@
      color: #aecae5;
      font-size: 11px;
      margin-top: 13px !important;
+     line-height: 1.5;
 }
 
 .fhm-range-note svg {
@@ -1111,6 +1191,10 @@
      padding-top: 12px;
 }
 
+/* =====================================================
+   ACCESSIBILITY AND OVERFLOW
+===================================================== */
+
 .fhm-visually-hidden {
      position: absolute;
      width: 1px;
@@ -1123,9 +1207,59 @@
      border: 0;
 }
 
-@media (max-width:1000px) {
-     .fhm-model-layout {
-          grid-template-columns: .38fr .62fr;
+.fhm-flow,
+.fhm-step,
+.fhm-price-section,
+.fhm-step-head,
+.fhm-model-layout,
+.fhm-model-picker,
+.fhm-model-grid,
+.fhm-plan-layout,
+.fhm-request-form,
+.fhm-customer-fields,
+.fhm-recommendation,
+.fhm-recommendation-name,
+.fhm-recommendation-price,
+.fhm-price-explainer,
+.fhm-summary {
+     min-width: 0;
+     max-width: 100%;
+}
+
+.fhm-page input,
+.fhm-page textarea,
+.fhm-page select {
+     min-width: 0;
+     max-width: 100%;
+}
+
+.fhm-select-wrap select:disabled,
+.fhm-brand-tile:disabled {
+     cursor: not-allowed;
+     opacity: 0.6;
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1100px) {
+     .fhm-model-grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+     }
+}
+
+@media (max-width: 1000px) {
+     .fhm-shell {
+          width: calc(100% - 36px);
+     }
+
+     .fhm-brand-list {
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+     }
+
+     .fhm-brand-list--selected {
+          grid-template-columns: minmax(110px, 150px);
      }
 
      .fhm-recommendation-price {
@@ -1138,7 +1272,11 @@
      }
 
      .fhm-request-form {
-          grid-template-columns: 1.35fr 1fr;
+          grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+     }
+
+     .fhm-range-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
      }
 
      .fhm-hero-copy {
@@ -1146,7 +1284,11 @@
      }
 }
 
-@media (max-width:760px) {
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 760px) {
      .fhm-shell {
           width: calc(100% - 28px);
      }
@@ -1162,21 +1304,54 @@
      .fhm-hero-phones {
           width: 65%;
           right: -100px;
-          opacity: .45;
+          opacity: 0.45;
      }
 
      .fhm-step {
           padding: 13px;
      }
 
-     .fhm-model-layout,
-     .fhm-plan-layout,
-     .fhm-request-form {
-          grid-template-columns: 1fr;
+     .fhm-brand-list {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 9px;
      }
 
-     .fhm-model-tiles {
-          margin-top: 7px;
+     .fhm-brand-list--selected {
+          grid-template-columns: minmax(110px, 150px);
+     }
+
+     .fhm-brand-tile {
+          height: 84px;
+     }
+
+     .fhm-model-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 10px;
+     }
+
+     .fhm-model-card {
+          min-height: 175px;
+          padding: 8px;
+     }
+
+     .fhm-model-card-image {
+          height: 120px;
+          min-height: 120px;
+     }
+
+     .fhm-model-card-name {
+          font-size: 11px;
+          padding-top: 9px;
+     }
+
+     .fhm-model-selected {
+          top: 11px;
+          right: 11px;
+     }
+
+     .fhm-plan-layout,
+     .fhm-request-form {
+          grid-template-columns: minmax(0, 1fr);
      }
 
      .fhm-summary {
@@ -1184,19 +1359,47 @@
      }
 
      .fhm-form-actions {
-          grid-column: 1;
+          grid-column: 1 / -1;
+     }
+
+     .fhm-recommendation {
+          flex-wrap: wrap;
+          align-items: center;
+     }
+
+     .fhm-recommendation-name {
+          min-width: 0;
+     }
+
+     .fhm-recommendation-price {
+          flex: 1 1 100%;
+          min-width: 0;
+          text-align: center;
+     }
+
+     .fhm-phone-art--large {
+          width: 94px;
+          height: 110px;
      }
 
      .fhm-range-grid {
           grid-template-columns: repeat(3, minmax(0, 1fr));
      }
 
-     .fhm-recommendation {
-          flex-wrap: wrap;
+     .fhm-summary dl>div {
+          gap: 10px;
      }
 }
 
-@media (max-width:470px) {
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 470px) {
+     .fhm-shell {
+          width: calc(100% - 22px);
+     }
+
      .fhm-hero {
           height: 225px;
      }
@@ -1223,16 +1426,63 @@
           font-size: 20px;
      }
 
+     .fhm-brand-list {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 8px;
+     }
+
+     .fhm-brand-list--selected {
+          grid-template-columns: minmax(110px, 150px);
+     }
+
      .fhm-brand-tile {
-          flex-basis: 80px;
+          height: 78px;
+          padding: 8px 4px;
+     }
+
+     .fhm-brand-logo {
+          height: 30px;
+          font-size: 19px;
+     }
+
+     .fhm-brand-logo--apple {
+          font-size: 34px;
+     }
+
+     .fhm-brand-name {
+          font-size: 10px;
+     }
+
+     .fhm-model-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 9px;
+     }
+
+     .fhm-model-card {
+          min-height: 165px;
+          padding: 7px;
+     }
+
+     .fhm-model-card-image {
+          height: 115px;
+          min-height: 115px;
+     }
+
+     .fhm-model-card-name {
+          font-size: 11px;
      }
 
      .fhm-customer-fields {
-          grid-template-columns: 1fr;
+          grid-template-columns: minmax(0, 1fr);
      }
 
      .fhm-recommendation-price {
-          flex: 1 0 100%;
+          flex: 1 1 100%;
+     }
+
+     .fhm-phone-art--large {
+          width: 84px;
+          height: 100px;
      }
 
      .fhm-range-grid {
@@ -1240,12 +1490,16 @@
      }
 
      .fhm-range-card:last-child {
-          grid-column: span 2;
+          grid-column: 1 / -1;
      }
 
      .fhm-submit {
           min-width: 0;
           width: 100%;
+     }
+
+     .fhm-range-head {
+          flex-wrap: wrap;
      }
 
      .fhm-range-note {
@@ -1255,6 +1509,15 @@
 
      .fhm-receipt {
           flex-wrap: wrap;
+          gap: 8px;
+     }
+
+     .fhm-error {
+          align-items: flex-start;
+     }
+
+     .fhm-primary-button {
+          max-width: 100%;
      }
 
      .fhm-desktop-break {
@@ -1262,536 +1525,15 @@
      }
 }
 
-@media (prefers-reduced-motion:reduce) {
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
      .fhm-spinner {
           animation: none;
      }
-}
 
-/* =========================================
-   UPDATED MEMBERSHIP FLOW
-   Keep original FIXHUB design and colors
-   ========================================= */
-
-/* Keep all existing colors and layout.
-   Add support for updated JSX elements. */
-
-.fhm-page .fhm-primary-button {
-     transition:
-          background 0.2s ease,
-          box-shadow 0.2s ease,
-          transform 0.2s ease;
-}
-
-.fhm-page .fhm-primary-button:hover:not(:disabled) {
-     box-shadow: 0 0 18px rgba(0, 164, 255, 0.2);
-     transform: translateY(-1px);
-}
-
-.fhm-page .fhm-primary-button:disabled {
-     cursor: not-allowed;
-     opacity: 0.6;
-}
-
-.fhm-page .fhm-input:focus,
-.fhm-page .fhm-field textarea:focus {
-     border-color: #00a4ff;
-     box-shadow: 0 0 0 2px rgba(0, 164, 255, 0.12);
-}
-
-.fhm-page .fhm-input::placeholder,
-.fhm-page .fhm-field textarea::placeholder {
-     color: #7799b8;
-}
-
-.fhm-page .fhm-model-tile:disabled,
-.fhm-page .fhm-brand-tile:disabled {
-     cursor: not-allowed;
-     opacity: 0.55;
-}
-
-.fhm-page .fhm-error {
-     line-height: 1.6;
-     overflow-wrap: anywhere;
-}
-
-.fhm-page .fhm-receipt {
-     overflow-wrap: anywhere;
-}
-
-.fhm-page .fhm-receipt button:hover,
-.fhm-page .fhm-error button:hover {
-     border-color: #00a4ff;
-     color: #ffffff;
-}
-
-.fhm-page .fhm-recommendation {
-     min-width: 0;
-}
-
-.fhm-page .fhm-recommendation-name {
-     overflow-wrap: anywhere;
-}
-
-.fhm-page .fhm-summary dd {
-     overflow-wrap: anywhere;
-}
-
-.fhm-page .fhm-select-wrap select:disabled {
-     cursor: not-allowed;
-     opacity: 0.6;
-}
-
-.fhm-page .fhm-model-empty {
-     color: var(--fhm-muted);
-     line-height: 1.6;
-}
-
-.fhm-page .fhm-loading {
-     padding: 8px 0;
-}
-
-.fhm-page .fhm-privacy {
-     line-height: 1.6;
-}
-
-@media (max-width: 760px) {
-     .fhm-page .fhm-recommendation {
-          align-items: center;
-     }
-
-     .fhm-page .fhm-recommendation-name {
-          min-width: 0;
-     }
-
-     .fhm-page .fhm-recommendation-price {
-          text-align: center;
-     }
-
-     .fhm-page .fhm-summary dl>div {
-          gap: 10px;
-     }
-}
-
-@media (max-width: 470px) {
-     .fhm-page .fhm-receipt {
-          gap: 8px;
-     }
-
-     .fhm-page .fhm-error {
-          align-items: flex-start;
-     }
-
-     .fhm-page .fhm-primary-button {
-          max-width: 100%;
-     }
-}
-
-
-/* =========================================
-   REAL PHONE PRODUCT IMAGES
-   Add this at the bottom of Membership.css
-   ========================================= */
-
-.fhm-page .fhm-phone-art {
-     position: relative;
-     display: grid;
-     place-items: center;
-     flex: none;
-     width: 76px;
-     height: 84px;
-     overflow: hidden;
-     border-radius: 8px;
-     background: #fff;
-}
-
-.fhm-page .fhm-phone-art>img {
-     display: block;
-     width: 100%;
-     height: 100%;
-     object-fit: contain;
-     object-position: center;
-     padding: 3px;
-     background: #fff;
-}
-
-.fhm-page .fhm-phone-art--large {
-     width: 112px;
-     height: 126px;
-     border-radius: 10px;
-}
-
-.fhm-page .fhm-phone-art--large>img {
-     padding: 2px;
-}
-
-.fhm-page .fhm-image-unavailable {
-     width: 100%;
-     height: 100%;
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     justify-content: center;
-     gap: 5px;
-     color: #6c8298;
-     background: #eaf1f7;
-     text-align: center;
-}
-
-.fhm-page .fhm-image-unavailable span {
-     max-width: 68px;
-     font-size: 8px;
-     line-height: 1.25;
-}
-
-.fhm-page .fhm-model-tile {
-     flex: 0 0 96px;
-     min-width: 0;
-     overflow: hidden;
-}
-
-.fhm-page .fhm-model-tile>span:last-child {
-     min-height: 25px;
-     white-space: normal;
-     overflow-wrap: anywhere;
-     line-height: 1.3;
-}
-
-.fhm-page .fhm-recommendation-phone {
-     flex: none;
-}
-
-.fhm-page .fhm-recommendation {
-     min-width: 0;
-}
-
-.fhm-page .fhm-recommendation-name {
-     min-width: 0;
-     overflow-wrap: anywhere;
-}
-
-@media (max-width: 760px) {
-     .fhm-page .fhm-phone-art--large {
-          width: 94px;
-          height: 110px;
-     }
-
-     .fhm-page .fhm-recommendation {
-          align-items: center;
-     }
-
-     .fhm-page .fhm-model-tile {
-          flex-basis: 91px;
-     }
-}
-
-@media (max-width: 470px) {
-     .fhm-page .fhm-phone-art--large {
-          width: 84px;
-          height: 100px;
-     }
-
-     .fhm-page .fhm-model-tile {
-          flex-basis: 86px;
-     }
-}
-
-.fhm-page .fhm-phone-art__fallback {
-     width: 100%;
-     height: 100%;
-     display: grid;
-     place-items: center;
-     color: #9ca3af;
-     background: #fff;
-}
-
-.fhm-page .fhm-phone-art img {
-     display: block;
-     width: 100%;
-     height: 100%;
-     object-fit: contain;
-     object-position: center;
-     padding: 3px;
-     background: #fff;
-}
-
-
-/* =========================================
-   FIXHUB MEMBERSHIP — RIGHT OVERFLOW FIX
-   Keep the existing design and colors
-   ========================================= */
-
-/* Prevent children from forcing the page wider */
-.fhm-page {
-     width: 100%;
-     max-width: 100%;
-     overflow-x: clip;
-}
-
-.fhm-page *,
-.fhm-page *::before,
-.fhm-page *::after {
-     box-sizing: border-box;
-}
-
-.fhm-shell {
-     width: min(1440px, calc(100% - 56px));
-     max-width: 100%;
-     margin-left: auto;
-     margin-right: auto;
-     min-width: 0;
-}
-
-.fhm-flow,
-.fhm-step,
-.fhm-price-section,
-.fhm-step-head,
-.fhm-model-layout,
-.fhm-model-picker,
-.fhm-plan-layout,
-.fhm-request-form,
-.fhm-customer-fields,
-.fhm-recommendation,
-.fhm-recommendation-name,
-.fhm-recommendation-price,
-.fhm-price-explainer,
-.fhm-summary {
-     min-width: 0;
-     max-width: 100%;
-}
-
-/* Keep grid children inside their columns */
-.fhm-model-layout>*,
-.fhm-plan-layout>*,
-.fhm-request-form>*,
-.fhm-customer-fields>* {
-     min-width: 0;
-     max-width: 100%;
-}
-
-/* Prevent long model names and text from pushing layouts */
-.fhm-page h1,
-.fhm-page h2,
-.fhm-page h3,
-.fhm-page p,
-.fhm-page label,
-.fhm-page strong,
-.fhm-page small,
-.fhm-page span,
-.fhm-page dd {
-     overflow-wrap: anywhere;
-}
-
-/* Horizontal scrolling should remain inside the lists */
-.fhm-brand-list,
-.fhm-model-tiles {
-     width: 100%;
-     max-width: 100%;
-     min-width: 0;
-     overflow-x: auto;
-     overscroll-behavior-x: contain;
-     -webkit-overflow-scrolling: touch;
-}
-
-/* Keep form controls within their parent */
-.fhm-page input,
-.fhm-page textarea,
-.fhm-page select,
-.fhm-select-wrap {
-     min-width: 0;
-     max-width: 100%;
-}
-
-.fhm-select-wrap select {
-     width: 100%;
-     min-width: 0;
-     text-overflow: ellipsis;
-}
-
-.fhm-field,
-.fhm-readonly {
-     min-width: 0;
-     max-width: 100%;
-}
-
-.fhm-readonly input {
-     min-width: 0;
-     width: 100%;
-}
-
-/* Keep summary text and prices inside the card */
-.fhm-summary dl>div {
-     min-width: 0;
-     flex-wrap: wrap;
-}
-
-.fhm-summary dt {
-     min-width: 0;
-}
-
-.fhm-summary dd {
-     min-width: 0;
-     overflow-wrap: anywhere;
-}
-
-/* Keep recommendation price from pushing the card */
-.fhm-recommendation {
-     flex-wrap: wrap;
-}
-
-.fhm-recommendation-name {
-     flex: 1 1 120px;
-}
-
-.fhm-recommendation-price {
-     min-width: 0;
-     max-width: 100%;
-}
-
-/* Keep pricing cards inside the section */
-.fhm-range-grid {
-     grid-template-columns: repeat(5, minmax(0, 1fr));
-     min-width: 0;
-}
-
-.fhm-range-card {
-     min-width: 0;
-     max-width: 100%;
-}
-
-/* Keep buttons within the available width */
-.fhm-form-actions {
-     min-width: 0;
-     max-width: 100%;
-}
-
-.fhm-primary-button,
-.fhm-submit {
-     max-width: 100%;
-     white-space: normal;
-     overflow-wrap: anywhere;
-}
-
-/* Tablet */
-@media (max-width: 1000px) {
-     .fhm-shell {
-          width: calc(100% - 36px);
-     }
-
-     .fhm-model-layout {
-          grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
-     }
-
-     .fhm-request-form {
-          grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-     }
-
-     .fhm-range-grid {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-     }
-}
-
-/* Mobile */
-@media (max-width: 760px) {
-     .fhm-shell {
-          width: calc(100% - 28px);
-     }
-
-     .fhm-model-layout,
-     .fhm-plan-layout,
-     .fhm-request-form {
-          grid-template-columns: minmax(0, 1fr);
-     }
-
-     .fhm-customer-fields {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-     }
-
-     .fhm-form-actions {
-          grid-column: 1 / -1;
-     }
-
-     .fhm-recommendation {
-          flex-wrap: wrap;
-     }
-
-     .fhm-recommendation-price {
-          flex: 1 1 100%;
-          text-align: left;
-     }
-
-     .fhm-range-grid {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-     }
-}
-
-/* Small phones */
-@media (max-width: 470px) {
-     .fhm-shell {
-          width: calc(100% - 22px);
-     }
-
-     .fhm-step {
-          padding: 12px;
-     }
-
-     .fhm-customer-fields {
-          grid-template-columns: minmax(0, 1fr);
-     }
-
-     .fhm-range-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-     }
-
-     .fhm-range-card:last-child {
-          grid-column: 1 / -1;
-     }
-
-     .fhm-range-head {
-          flex-wrap: wrap;
-     }
-
-     .fhm-receipt {
-          flex-wrap: wrap;
-     }
-
-     .fhm-submit {
-          width: 100%;
-          min-width: 0;
-     }
-}
-
-
-.fhm-hero-slideshow {
-     position: relative;
-     width: 100%;
-     height: 100%;
-}
-
-.fhm-hero-slide {
-     position: absolute;
-     inset: 0;
-     width: 100%;
-     height: 100%;
-     object-fit: contain;
-     opacity: 0;
-     animation: fhmHeroSlide 32s infinite;
-}
-
-@keyframes fhmHeroSlide {
-
-     0%,
-     12% {
-          opacity: 1;
-     }
-
-     16%,
-     100% {
-          opacity: 0;
-     }
-}
-
-@media (prefers-reduced-motion: reduce) {
      .fhm-hero-slide {
           animation: none;
      }
@@ -1799,5 +1541,870 @@
      .fhm-hero-slide:first-child {
           opacity: 1;
      }
+
+     .fhm-brand-tile,
+     .fhm-model-card,
+     .fhm-model-image,
+     .fhm-primary-button {
+          transition: none;
+     }
 }
 
+/* =====================================================
+   MODEL SEARCH BAR
+===================================================== */
+
+.fhm-model-search {
+     width: 100%;
+     max-width: 520px;
+     height: 48px;
+     display: flex;
+     align-items: center;
+     gap: 11px;
+     padding: 0 14px;
+     margin-bottom: 18px;
+     border: 1px solid #345477;
+     border-radius: 10px;
+     background: #061a30;
+     color: #9fcff5;
+     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fhm-model-search:focus-within {
+     border-color: #00a4ff;
+     box-shadow: 0 0 0 2px rgba(0, 164, 255, 0.12);
+}
+
+.fhm-model-search>svg {
+     flex: none;
+}
+
+.fhm-model-search input {
+     width: 100%;
+     min-width: 0;
+     height: 100%;
+     padding: 0;
+     border: 0;
+     outline: 0;
+     background: transparent;
+     color: #fff;
+     font-size: 14px;
+}
+
+.fhm-model-search input::placeholder {
+     color: #7898b6;
+}
+
+.fhm-model-search input::-webkit-search-cancel-button {
+     display: none;
+}
+
+.fhm-model-search button {
+     flex: none;
+     display: grid;
+     place-items: center;
+     padding: 5px;
+     border: 0;
+     background: transparent;
+     color: #b8d9f5;
+     cursor: pointer;
+}
+
+/* =====================================================
+   MODEL GRID
+===================================================== */
+
+.fhm-model-grid {
+     display: grid;
+     grid-template-columns: repeat(5, minmax(0, 1fr));
+     gap: 15px;
+     width: 100%;
+     min-width: 0;
+}
+
+.fhm-model-card {
+     position: relative;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: flex-start;
+     width: 100%;
+     min-width: 0;
+     min-height: 205px;
+     padding: 10px;
+     overflow: hidden;
+     border: 1px solid #1c3c5b;
+     border-radius: 11px;
+     background: linear-gradient(145deg, #061a30, #041222);
+     color: #f6f9ff;
+     text-align: center;
+     cursor: pointer;
+     transition:
+          border-color 0.2s ease,
+          background 0.2s ease,
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+}
+
+.fhm-model-card:hover {
+     transform: translateY(-3px);
+     border-color: #079ff0;
+     background: #08213a;
+}
+
+.fhm-model-card.is-selected {
+     border-color: #00a6ff;
+     background: linear-gradient(145deg, #082b49, #061b31);
+     box-shadow:
+          inset 0 0 0 1px #008fe0,
+          0 5px 18px rgba(0, 148, 255, 0.12);
+}
+
+.fhm-model-card-image {
+     position: relative;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     width: 100%;
+     height: 145px;
+     min-height: 145px;
+     overflow: hidden;
+     border-radius: 8px;
+     background: radial-gradient(ellipse at center,
+               #102e4b 0%,
+               #071a2d 70%,
+               #061526 100%);
+}
+
+.fhm-model-card-image .fhm-model-image {
+     display: block;
+     width: 100%;
+     height: 100%;
+     object-fit: contain;
+     padding: 7px;
+     transition: transform 0.25s ease;
+}
+
+.fhm-model-card:hover .fhm-model-image {
+     transform: scale(1.05);
+}
+
+.fhm-model-image-placeholder {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 8px;
+     width: 100%;
+     height: 100%;
+     color: #7fa8ca;
+}
+
+.fhm-model-image-placeholder span {
+     font-size: 10px;
+     color: #8eafca;
+}
+
+.fhm-model-card-name {
+     display: block;
+     width: 100%;
+     padding: 11px 3px 3px;
+     color: #f2f7ff;
+     font-size: 13px;
+     line-height: 1.4;
+     font-weight: 700;
+     overflow-wrap: anywhere;
+}
+
+.fhm-model-selected {
+     position: absolute;
+     top: 15px;
+     right: 15px;
+     z-index: 3;
+     display: grid;
+     place-items: center;
+     width: 24px;
+     height: 24px;
+     border-radius: 50%;
+     background: #009df5;
+     color: white;
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.fhm-unlisted-card {
+     border-style: dashed;
+     border-color: #3b6688;
+}
+
+.fhm-unlisted-image {
+     flex-direction: column;
+     gap: 9px;
+     color: #8fcaff;
+}
+
+.fhm-unlisted-image span {
+     font-size: 11px;
+     color: #b7d5ef;
+}
+
+.fhm-no-models {
+     grid-column: 1 / -1;
+     padding: 16px;
+     border: 1px dashed #345477;
+     border-radius: 9px;
+     color: #b5cee9;
+     font-size: 13px;
+     line-height: 1.6;
+}
+
+/* =====================================================
+   SELECTED MODEL ONLY
+===================================================== */
+
+.fhm-selected-model {
+     display: flex;
+     align-items: center;
+     flex-wrap: wrap;
+     gap: 15px;
+     width: 100%;
+}
+
+.fhm-selected-model-card {
+     position: relative;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     width: 190px;
+     min-height: 205px;
+     padding: 10px;
+     overflow: hidden;
+     border: 1px solid #00a6ff;
+     border-radius: 12px;
+     background: linear-gradient(145deg, #082b49, #061b31);
+     box-shadow: inset 0 0 0 1px rgba(0, 166, 255, 0.2);
+}
+
+.fhm-selected-model-card .fhm-model-card-image {
+     height: 145px;
+     min-height: 145px;
+}
+
+.fhm-selected-model-card .fhm-model-card-name {
+     padding-top: 10px;
+}
+
+.fhm-selected-label {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     margin-top: 7px;
+     color: #76e6b2;
+     font-size: 11px;
+     font-weight: 700;
+}
+
+.fhm-change-model {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     gap: 8px;
+     min-height: 40px;
+     padding: 9px 15px;
+     border: 1px solid #17669b;
+     border-radius: 8px;
+     background: #061d35;
+     color: #bfe5ff;
+     font-size: 12px;
+     font-weight: 650;
+     cursor: pointer;
+     transition: 0.2s ease;
+}
+
+.fhm-change-model:hover {
+     border-color: #00a4ff;
+     background: #083052;
+     color: white;
+}
+
+/* =====================================================
+   MANUAL MODEL INPUT
+===================================================== */
+
+.fhm-manual-model {
+     display: flex;
+     flex-direction: column;
+     align-items: flex-start;
+     gap: 9px;
+     width: 100%;
+     max-width: 520px;
+     margin-top: 16px;
+}
+
+.fhm-manual-model label {
+     color: #d2e5fb;
+     font-size: 12px;
+}
+
+/* =====================================================
+   RESPONSIVE MODEL GRID
+===================================================== */
+
+@media (max-width: 1100px) {
+     .fhm-model-grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+     }
+}
+
+@media (max-width: 760px) {
+     .fhm-model-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 10px;
+     }
+
+     .fhm-model-card {
+          min-height: 175px;
+          padding: 8px;
+     }
+
+     .fhm-model-card-image {
+          height: 120px;
+          min-height: 120px;
+     }
+
+     .fhm-model-card-name {
+          font-size: 11px;
+          padding-top: 9px;
+     }
+
+     .fhm-selected-model-card {
+          width: 165px;
+     }
+
+     .fhm-model-search {
+          max-width: 100%;
+     }
+}
+
+@media (max-width: 470px) {
+     .fhm-model-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 9px;
+     }
+
+     .fhm-model-card {
+          min-height: 165px;
+          padding: 7px;
+     }
+
+     .fhm-model-card-image {
+          height: 115px;
+          min-height: 115px;
+     }
+
+     .fhm-model-card-name {
+          font-size: 11px;
+     }
+
+     .fhm-selected-model-card {
+          width: 155px;
+     }
+
+     .fhm-change-model {
+          min-height: 38px;
+     }
+}
+
+
+/* ==========================================
+   LOCAL PHONE MODEL IMAGE CARDS
+========================================== */
+
+.fhm-model-grid {
+     display: grid;
+     grid-template-columns: repeat(4, minmax(0, 1fr));
+     gap: 18px;
+}
+
+.fhm-model-card {
+     position: relative;
+     min-width: 0;
+     overflow: hidden;
+     padding: 14px;
+     border: 1px solid #e5e7eb;
+     border-radius: 16px;
+     background: #fff;
+     color: #171717;
+     cursor: pointer;
+     text-align: center;
+     transition:
+          border-color 0.25s ease,
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+}
+
+.fhm-model-card:hover {
+     transform: translateY(-4px);
+     border-color: #16a34a;
+     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+}
+
+.fhm-model-card.is-selected {
+     border: 2px solid #16a34a;
+     background: #f0fdf4;
+}
+
+.fhm-model-card-image {
+     display: flex;
+     width: 100%;
+     height: 175px;
+     align-items: center;
+     justify-content: center;
+     overflow: hidden;
+     margin-bottom: 12px;
+     border-radius: 12px;
+     background: #f8fafc;
+}
+
+.fhm-model-image {
+     display: block;
+     width: 100%;
+     height: 100%;
+     object-fit: contain;
+     padding: 8px;
+     transition: transform 0.3s ease;
+}
+
+.fhm-model-card:hover .fhm-model-image {
+     transform: scale(1.06);
+}
+
+.fhm-model-image-placeholder {
+     display: flex;
+     width: 100%;
+     height: 100%;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 8px;
+     color: #9ca3af;
+     font-size: 12px;
+}
+
+.fhm-model-card-name {
+     display: block;
+     font-size: 14px;
+     font-weight: 650;
+     line-height: 1.5;
+     overflow-wrap: anywhere;
+}
+
+.fhm-selected-model {
+     display: flex;
+     flex-direction: column;
+     align-items: flex-start;
+     gap: 18px;
+}
+
+.fhm-selected-model-card {
+     position: relative;
+     width: min(100%, 260px);
+     padding: 16px;
+     border: 2px solid #16a34a;
+     border-radius: 18px;
+     background: #f0fdf4;
+     text-align: center;
+}
+
+.fhm-selected-model-card .fhm-model-card-image {
+     height: 190px;
+     background: #fff;
+}
+
+.fhm-model-selected {
+     position: absolute;
+     top: 12px;
+     right: 12px;
+     z-index: 2;
+     display: grid;
+     width: 25px;
+     height: 25px;
+     place-items: center;
+     border-radius: 50%;
+     background: #16a34a;
+     color: #fff;
+}
+
+.fhm-selected-label {
+     display: block;
+     margin-top: 7px;
+     color: #15803d;
+     font-size: 12px;
+     font-weight: 600;
+}
+
+.fhm-recommendation-phone {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     overflow: hidden;
+}
+
+.fhm-recommendation-image {
+     width: 110px;
+     height: 125px;
+     object-fit: contain;
+}
+
+.fhm-unlisted-image {
+     flex-direction: column;
+     gap: 8px;
+     color: #9ca3af;
+}
+
+.fhm-unlisted-image span {
+     font-size: 12px;
+}
+
+.fhm-no-models {
+     grid-column: 1 / -1;
+     padding: 20px;
+     color: #6b7280;
+     text-align: center;
+}
+
+@media (max-width: 900px) {
+     .fhm-model-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 14px;
+     }
+}
+
+@media (max-width: 600px) {
+     .fhm-model-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 10px;
+     }
+
+     .fhm-model-card {
+          padding: 9px;
+          border-radius: 13px;
+     }
+
+     .fhm-model-card-image {
+          height: 135px;
+          margin-bottom: 9px;
+     }
+
+     .fhm-model-card-name {
+          font-size: 12px;
+     }
+
+     .fhm-selected-model-card {
+          width: 100%;
+          max-width: 230px;
+     }
+
+     .fhm-selected-model-card .fhm-model-card-image {
+          height: 175px;
+     }
+}
+
+/* ==========================================
+   LOCAL PHONE MODEL IMAGES
+========================================== */
+
+.fhm-model-card-image {
+     width: 100%;
+     height: 170px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     overflow: hidden;
+}
+
+.fhm-model-image {
+     display: block;
+     width: 100%;
+     height: 100%;
+     object-fit: contain;
+}
+
+.fhm-model-image-placeholder {
+     width: 100%;
+     height: 100%;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 8px;
+     color: #888;
+}
+
+.fhm-recommendation-image {
+     width: 100%;
+     height: 100%;
+     object-fit: contain;
+}
+
+/* ==========================================
+   FIXHUB LOCAL PHONE MODEL IMAGES
+   Keeps the original dark theme
+========================================== */
+
+.fhm-model-grid {
+     display: grid;
+     grid-template-columns: repeat(5, minmax(0, 1fr));
+     gap: 15px;
+     width: 100%;
+     min-width: 0;
+}
+
+.fhm-model-card {
+     position: relative;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     min-width: 0;
+     min-height: 205px;
+     padding: 10px;
+     overflow: hidden;
+     border: 1px solid #1c3c5b;
+     border-radius: 11px;
+     background: linear-gradient(145deg, #061a30, #041222);
+     color: #f6f9ff;
+     text-align: center;
+     cursor: pointer;
+     transition: 0.25s ease;
+}
+
+.fhm-model-card:hover {
+     transform: translateY(-3px);
+     border-color: #079ff0;
+     background: #08213a;
+}
+
+.fhm-model-card.is-selected {
+     border-color: #00a6ff;
+     background: linear-gradient(145deg, #082b49, #061b31);
+     box-shadow: inset 0 0 0 1px #008fe0;
+}
+
+.fhm-model-card-image {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     width: 100%;
+     height: 145px;
+     min-height: 145px;
+     overflow: hidden;
+     border-radius: 8px;
+     background: radial-gradient(ellipse at center,
+               #102e4b 0%,
+               #071a2d 70%,
+               #061526 100%);
+}
+
+.fhm-model-image {
+     display: block;
+     width: 100%;
+     height: 100%;
+     padding: 7px;
+     object-fit: contain;
+     transition: transform 0.25s ease;
+}
+
+.fhm-model-card:hover .fhm-model-image {
+     transform: scale(1.05);
+}
+
+.fhm-model-image-placeholder {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 8px;
+     width: 100%;
+     height: 100%;
+     color: #7fa8ca;
+}
+
+.fhm-model-image-placeholder span {
+     font-size: 10px;
+     color: #8eafca;
+}
+
+.fhm-model-card-name {
+     display: block;
+     width: 100%;
+     padding: 11px 3px 3px;
+     color: #f2f7ff;
+     font-size: 13px;
+     line-height: 1.4;
+     font-weight: 700;
+     overflow-wrap: anywhere;
+}
+
+.fhm-selected-model-card {
+     width: 190px;
+     min-height: 205px;
+     padding: 10px;
+     border: 1px solid #00a6ff;
+     border-radius: 12px;
+     background: linear-gradient(145deg, #082b49, #061b31);
+}
+
+.fhm-selected-model-card .fhm-model-card-image {
+     height: 145px;
+}
+
+.fhm-recommendation-image {
+     display: block;
+     width: 80px;
+     height: 100px;
+     object-fit: contain;
+}
+
+@media (max-width: 1100px) {
+     .fhm-model-grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+     }
+}
+
+@media (max-width: 760px) {
+     .fhm-model-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 10px;
+     }
+
+     .fhm-model-card {
+          min-height: 175px;
+          padding: 8px;
+     }
+
+     .fhm-model-card-image {
+          height: 120px;
+          min-height: 120px;
+     }
+
+     .fhm-model-card-name {
+          font-size: 11px;
+     }
+}
+
+@media (max-width: 470px) {
+     .fhm-model-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 9px;
+     }
+
+     .fhm-model-card {
+          min-height: 165px;
+          padding: 7px;
+     }
+
+     .fhm-model-card-image {
+          height: 115px;
+          min-height: 115px;
+     }
+}
+
+
+/* ==========================================
+   LOGIN CARD — MOBILE RESPONSIVE
+========================================== */
+
+.fhm-need-login {
+     display: flex;
+     align-items: center;
+     gap: 14px;
+     width: 100%;
+     min-width: 0;
+     padding: 16px 18px;
+     border: 1px solid #234967;
+     border-radius: 12px;
+     background: linear-gradient(135deg, #061d34, #031426);
+}
+
+.fhm-need-login>svg {
+     flex: 0 0 auto;
+     width: 25px;
+     height: 25px;
+     color: #07b9ff;
+}
+
+.fhm-need-login>div {
+     flex: 1;
+     min-width: 0;
+}
+
+.fhm-need-login strong {
+     display: block;
+     color: #f6f9ff;
+     font-size: 14px;
+     font-weight: 750;
+}
+
+.fhm-need-login p {
+     margin-top: 5px;
+     color: #b5cee9;
+     font-size: 12px;
+     line-height: 1.5;
+}
+
+.fhm-need-login .fhm-primary-button {
+     flex: 0 0 auto;
+     white-space: nowrap;
+}
+
+/* Mobile layout */
+
+@media (max-width: 600px) {
+     .fhm-need-login {
+          display: grid;
+          grid-template-columns: 36px minmax(0, 1fr);
+          gap: 10px 11px;
+          padding: 14px;
+          border-radius: 11px;
+     }
+
+     .fhm-need-login>svg {
+          width: 23px;
+          height: 23px;
+          align-self: center;
+     }
+
+     .fhm-need-login>div {
+          min-width: 0;
+     }
+
+     .fhm-need-login strong {
+          font-size: 13px;
+     }
+
+     .fhm-need-login p {
+          font-size: 11px;
+          line-height: 1.5;
+     }
+
+     .fhm-need-login .fhm-primary-button {
+          grid-column: 1 / -1;
+          width: 100%;
+          min-height: 43px;
+          padding: 10px 14px;
+          font-size: 13px;
+          border-radius: 8px;
+     }
+
+     .fhm-step-head {
+          gap: 10px;
+     }
+
+     .fhm-step-head h2 {
+          font-size: 16px;
+     }
+
+     .fhm-step-head p {
+          font-size: 11px;
+          line-height: 1.45;
+     }
+}

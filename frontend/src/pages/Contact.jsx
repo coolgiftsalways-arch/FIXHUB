@@ -1,3 +1,4 @@
+
 import { useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -33,24 +34,14 @@ gsap.registerPlugin(ScrollTrigger);
 
 /* ==========================================================
    FIXHUB CONTACT INFORMATION
-
-   ADD YOUR REAL BUSINESS DETAILS HERE.
 ========================================================== */
 
 const CONTACT = {
-  // Example: "919876543210"
-  whatsapp: "",
-
-  // Example: "+919876543210"
-  phone: "",
-
-  // Example: "support@yourdomain.com"
-  email: "",
-
+  whatsapp: "917039235169",
+  phone: "+917039235169",
+  email: "support@fixhubsolutions.in",
   location: "Mumbai, Maharashtra",
-
   serviceArea: "Doorstep service in supported locations",
-
   hours: "Contact us to confirm support hours",
 };
 
@@ -65,9 +56,7 @@ const contactMethods = [
     subtitle: "Message our support team",
     icon: MessageCircle,
     className: "whatsapp",
-    href: CONTACT.whatsapp
-      ? `https://wa.me/${CONTACT.whatsapp.replace(/\D/g, "")}`
-      : null,
+    href: `https://wa.me/${CONTACT.whatsapp}`,
   },
   {
     id: "phone",
@@ -75,7 +64,7 @@ const contactMethods = [
     subtitle: "Speak to our team",
     icon: Phone,
     className: "phone",
-    href: CONTACT.phone ? `tel:${CONTACT.phone.replace(/[^\d+]/g, "")}` : null,
+    href: `tel:${CONTACT.phone}`,
   },
   {
     id: "email",
@@ -83,7 +72,7 @@ const contactMethods = [
     subtitle: "Send us your questions",
     icon: Mail,
     className: "email",
-    href: CONTACT.email ? `mailto:${CONTACT.email}` : null,
+    href: `mailto:${CONTACT.email}`,
   },
 ];
 
@@ -137,7 +126,7 @@ const faqs = [
   {
     question: "How can I contact FixHub support?",
     answer:
-      "You can contact our team through WhatsApp, phone or email using the contact options on this page once the official support details are configured.",
+      "You can reach FIXHUB through WhatsApp at +91 70392 35169 or email support@fixhubsolutions.in. You can also use the contact form on this page.",
   },
 ];
 
@@ -163,23 +152,13 @@ function ContactMethodCard({ method }) {
     </>
   );
 
-  if (!method.href) {
-    return (
-      <div
-        className="fxc-method-card fxc-method-card--disabled"
-        title="Support contact details are being configured"
-      >
-        {content}
-      </div>
-    );
-  }
-
   return (
     <a
       href={method.href}
       className="fxc-method-card"
       target={method.id === "whatsapp" ? "_blank" : undefined}
       rel={method.id === "whatsapp" ? "noopener noreferrer" : undefined}
+      aria-label={`${method.title}: ${method.subtitle}`}
     >
       {content}
     </a>
@@ -200,7 +179,7 @@ function ContactHero() {
           <div className="fxc-hero-visual">
             <img
               src={contactSupport}
-              alt="FixHub customer support representative assisting a customer"
+              alt="FIXHUB customer support representative assisting a customer"
               className="fxc-hero-image"
               fetchPriority="high"
             />
@@ -213,22 +192,16 @@ function ContactHero() {
           {/* HERO CONTENT */}
 
           <div className="fxc-hero-content">
-            {/* BADGE */}
-
             <div className="fxc-badge">
               <span className="fxc-badge-dot" />
               CONTACT US
             </div>
-
-            {/* HEADING */}
 
             <h1 className="fxc-hero-title">
               Need Help?
               <br />
               <span>We're Here</span> for You.
             </h1>
-
-            {/* DESCRIPTION */}
 
             <p className="fxc-hero-description">
               Have a question, need a repair update or want to know more about
@@ -326,11 +299,9 @@ function ContactForm() {
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
         },
-
         body: JSON.stringify(form),
       });
 
@@ -343,7 +314,7 @@ function ContactForm() {
       if (!response.ok || result?.success !== true) {
         throw new Error(
           result?.message ||
-            "The contact form is not connected yet. Please use our direct contact options.",
+            "Unable to send your message through the form. Please contact us directly using WhatsApp or email.",
         );
       }
 
@@ -386,10 +357,10 @@ function ContactForm() {
           <span>Conversation.</span>
         </h2>
 
-        <p>Tell us what you need help with and we'll review your enquiry.</p>
+        <p>
+          Tell us what you need help with and we'll review your enquiry.
+        </p>
       </div>
-
-      {/* FORM */}
 
       <form className="fxc-form" onSubmit={handleSubmit}>
         {/* NAME */}
@@ -462,17 +433,11 @@ function ContactForm() {
                 required
               >
                 <option value="">Select a topic</option>
-
                 <option value="Mobile Repair">Mobile Repair</option>
-
                 <option value="Booking Assistance">Booking Assistance</option>
-
                 <option value="Membership">Membership</option>
-
                 <option value="Repair Status">Repair Status</option>
-
                 <option value="Payment Question">Payment Question</option>
-
                 <option value="Other Enquiry">Other Enquiry</option>
               </select>
 
@@ -500,7 +465,11 @@ function ContactForm() {
 
         {/* SUBMIT BUTTON */}
 
-        <button type="submit" className="fxc-submit-button" disabled={loading}>
+        <button
+          type="submit"
+          className="fxc-submit-button"
+          disabled={loading}
+        >
           {loading ? (
             <>
               <LoaderCircle size={19} className="fxc-spinner" />
@@ -519,10 +488,9 @@ function ContactForm() {
         {status.message && (
           <div
             className={`fxc-form-status fxc-form-status--${status.type}`}
-            role="status"
+            role={status.type === "error" ? "alert" : "status"}
           >
             {status.type === "success" && <CheckCircle2 size={18} />}
-
             {status.message}
           </div>
         )}
@@ -555,7 +523,7 @@ function ContactInformation() {
 
       <p className="fxc-info-description">
         Need assistance with a mobile repair, membership or booking? Reach our
-        support team using the available contact options.
+        support team using the contact options below.
       </p>
 
       {/* CONTACT DETAILS */}
@@ -580,7 +548,10 @@ function ContactInformation() {
 
           <div>
             <h3>Phone Support</h3>
-            <p>{CONTACT.phone || "Phone number coming soon"}</p>
+
+            <a href={`tel:${CONTACT.phone}`}>
+              {CONTACT.phone}
+            </a>
           </div>
         </div>
 
@@ -591,7 +562,10 @@ function ContactInformation() {
 
           <div>
             <h3>Email Support</h3>
-            <p>{CONTACT.email || "Support email coming soon"}</p>
+
+            <a href={`mailto:${CONTACT.email}`}>
+              {CONTACT.email}
+            </a>
           </div>
         </div>
 
@@ -607,23 +581,28 @@ function ContactInformation() {
         </div>
       </div>
 
-      {/* DECORATIVE CARD */}
+      {/* WHATSAPP SUPPORT */}
 
-      <div className="fxc-info-promo">
+      <a
+        href={`https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(
+          "Hello FIXHUB Support, I need assistance with your mobile repair services.",
+        )}`}
+        className="fxc-info-promo"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Message FIXHUB support on WhatsApp"
+      >
         <div className="fxc-info-promo-icon">
-          <Smartphone size={27} />
+          <MessageCircle size={27} />
         </div>
 
         <div>
-          <h3>Need a Mobile Repair?</h3>
-
-          <p>Book a convenient doorstep repair appointment.</p>
+          <h3>Need Help Right Now?</h3>
+          <p>Message FIXHUB on WhatsApp.</p>
         </div>
 
-        <Link to="/book-repair">
-          <ArrowUpRight size={20} />
-        </Link>
-      </div>
+        <ArrowUpRight size={20} />
+      </a>
     </div>
   );
 }
@@ -638,7 +617,6 @@ function ContactContent() {
       <div className="fxc-container">
         <div className="fxc-content-grid">
           <ContactInformation />
-
           <ContactForm />
         </div>
       </div>
@@ -667,12 +645,10 @@ function ContactFAQ() {
           </h2>
 
           <p>
-            Find answers to common questions about FixHub repair services and
+            Find answers to common questions about FIXHUB repair services and
             support.
           </p>
         </div>
-
-        {/* QUESTIONS */}
 
         <div className="fxc-faq-list">
           {faqs.map((faq, index) => (
@@ -686,7 +662,9 @@ function ContactFAQ() {
                   {String(index + 1).padStart(2, "0")}
                 </span>
 
-                <span className="fxc-faq-question">{faq.question}</span>
+                <span className="fxc-faq-question">
+                  {faq.question}
+                </span>
 
                 <span className="fxc-faq-toggle">
                   <ChevronDown size={19} />
@@ -775,7 +753,6 @@ export default function Contact() {
           opacity: 0,
           duration: 0.7,
         })
-
         .from(
           ".fxc-hero-title",
           {
@@ -785,7 +762,6 @@ export default function Contact() {
           },
           "-=0.4",
         )
-
         .from(
           ".fxc-hero-description",
           {
@@ -795,7 +771,6 @@ export default function Contact() {
           },
           "-=0.4",
         )
-
         .from(
           ".fxc-method-card",
           {
@@ -806,7 +781,6 @@ export default function Contact() {
           },
           "-=0.3",
         )
-
         .from(
           ".fxc-benefit",
           {
@@ -842,7 +816,6 @@ export default function Contact() {
             opacity: 1,
             duration: 0.85,
             ease: "power3.out",
-
             scrollTrigger: {
               trigger: element,
               start: "top 92%",
@@ -865,16 +838,9 @@ export default function Contact() {
 
   return (
     <div className="fxc-page" ref={rootRef}>
-      {/* CONTACT HERO */}
       <ContactHero />
-
-      {/* CONTACT FORM & INFORMATION */}
       <ContactContent />
-
-      {/* FREQUENTLY ASKED QUESTIONS */}
       <ContactFAQ />
-
-      {/* BOOK REPAIR CTA */}
       <ContactCTA />
     </div>
   );

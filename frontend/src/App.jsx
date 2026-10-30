@@ -1,3 +1,4 @@
+
 import { useCallback, useEffect, useState } from "react";
 
 import {
@@ -15,6 +16,8 @@ import {
 
 import Navbar from "./components/layout/Navbar.jsx";
 import Footer from "./components/layout/Footer.jsx";
+import FloatingContact from "./components/FloatingContact.jsx";
+import FirstServicePopup from "./components/FirstServicePopup.jsx";
 
 import AppRoutes from "./routes/AppRoutes.jsx";
 
@@ -745,6 +748,12 @@ function PublicLayout() {
       </main>
 
       <Footer />
+
+      {/* FIXHUB FLOATING CONTACT */}
+      <FloatingContact />
+
+      {/* FIXHUB FIRST SERVICE PROMOTIONAL POPUP */}
+      <FirstServicePopup />
     </>
   );
 }
@@ -757,7 +766,8 @@ function AppLayout() {
   const location = useLocation();
   const pathname = location.pathname.toLowerCase();
 
-  const isAdminPage = pathname === "/admin" || pathname.startsWith("/admin/");
+  const isAdminPage =
+    pathname === "/admin" || pathname.startsWith("/admin/");
 
   if (isAdminPage) {
     return <AdminPortal />;

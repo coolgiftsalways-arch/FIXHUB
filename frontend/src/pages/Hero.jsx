@@ -92,6 +92,17 @@ export default function Hero() {
         },
       });
 
+      const heroButtons = gsap.utils.toArray(
+        ".fh-hero__buttons .fh-hero__button",
+      );
+      const heroBenefits = gsap.utils.toArray(".fh-hero__benefit");
+      const benefitDividers = gsap.utils.toArray(".fh-hero__benefit-divider");
+
+      // Keep the button and benefit rows hidden until their entrance animation.
+      gsap.set([...heroButtons, ...heroBenefits, ...benefitDividers], {
+        willChange: "transform, opacity",
+      });
+
       timeline
         .from(".fh-hero__badge", {
           y: 25,
@@ -120,26 +131,47 @@ export default function Hero() {
           "-=0.5",
         )
 
+        // BUTTON 1 + BUTTON 2: smooth, slightly staggered entrance.
         .from(
-          ".fh-hero__buttons > *",
+          heroButtons,
           {
-            y: 25,
+            y: 34,
             opacity: 0,
-            duration: 0.7,
-            stagger: 0.12,
+            scale: 0.96,
+            duration: 0.8,
+            stagger: 0.16,
+            ease: "back.out(1.25)",
+            clearProps: "willChange",
           },
-          "-=0.4",
+          "-=0.25",
+        )
+
+        // BENEFITS: reveal each item one after another below the buttons.
+        .from(
+          heroBenefits,
+          {
+            y: 22,
+            opacity: 0,
+            duration: 0.65,
+            stagger: 0.18,
+            ease: "power3.out",
+            clearProps: "willChange",
+          },
+          "-=0.2",
         )
 
         .from(
-          ".fh-hero__benefit",
+          benefitDividers,
           {
-            y: 20,
+            scaleY: 0,
             opacity: 0,
-            duration: 0.6,
+            transformOrigin: "center",
+            duration: 0.4,
             stagger: 0.12,
+            ease: "power2.out",
+            clearProps: "willChange",
           },
-          "-=0.3",
+          "<",
         )
 
         .from(
@@ -149,7 +181,7 @@ export default function Hero() {
             opacity: 0,
             duration: 0.8,
           },
-          "-=0.3",
+          "-=0.15",
         )
 
         .from(
@@ -161,6 +193,52 @@ export default function Hero() {
           },
           "-=0.3",
         );
+
+      // PREMIUM GSAP HOVER: lift + soft blue glow.
+      const hoverCleanups = [];
+
+      heroButtons.forEach((button) => {
+        const isPrimary = button.classList.contains("fh-hero__button-primary");
+
+        const onEnter = () => {
+          gsap.to(button, {
+            y: -5,
+            scale: 1.025,
+            duration: 0.28,
+            ease: "power2.out",
+            overwrite: "auto",
+            boxShadow: isPrimary
+              ? "0 14px 36px rgba(0, 140, 255, 0.42)"
+              : "0 12px 30px rgba(0, 180, 255, 0.2)",
+          });
+        };
+
+        const onLeave = () => {
+          gsap.to(button, {
+            y: 0,
+            scale: 1,
+            duration: 0.35,
+            ease: "power3.out",
+            overwrite: "auto",
+            clearProps: "boxShadow",
+          });
+        };
+
+        button.addEventListener("pointerenter", onEnter);
+        button.addEventListener("pointerleave", onLeave);
+        button.addEventListener("focus", onEnter);
+        button.addEventListener("blur", onLeave);
+
+        hoverCleanups.push(() => {
+          button.removeEventListener("pointerenter", onEnter);
+          button.removeEventListener("pointerleave", onLeave);
+          button.removeEventListener("focus", onEnter);
+          button.removeEventListener("blur", onLeave);
+        });
+      });
+
+      // Store cleanup callbacks on this scoped effect for React unmount.
+      hero._heroButtonHoverCleanups = hoverCleanups;
 
       // ====================================
       // TECHNICIAN IMAGE
@@ -246,6 +324,8 @@ export default function Hero() {
     }, hero);
 
     return () => {
+      hero._heroButtonHoverCleanups?.forEach((cleanup) => cleanup());
+      delete hero._heroButtonHoverCleanups;
       ctx.revert();
     };
   }, []);

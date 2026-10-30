@@ -7,14 +7,9 @@ import crypto from "node:crypto";
 import FixHubCustomer from "../models/FixHubCustomer.js";
 
 import {
-  assertMailConfigured,
-  sendVerificationEmail,
   sendPasswordResetEmail,
+  sendWelcomeEmail,
 } from "../services/mailService.js";
-
-// ==========================================
-// FIXHUB CUSTOMER AUTHENTICATION ROUTES
-// ==========================================
 
 const router = Router();
 
@@ -28,9 +23,7 @@ const SESSION_MS = 30 * 24 * 60 * 60 * 1000;
 const EMAIL_TOKEN_MS = 15 * 60 * 1000;
 const EMAIL_COOLDOWN_MS = 60 * 1000;
 
-const COOKIE_NAME = IS_PRODUCTION
-  ? "__Host-fixhub_session"
-  : "fixhub_session";
+const COOKIE_NAME = IS_PRODUCTION ? "__Host-fixhub_session" : "fixhub_session";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -95,12 +88,9 @@ function validAddress(address) {
 function getJwtSecret() {
   const secret = process.env.FIXHUB_JWT_SECRET;
 
-  if (
-    typeof secret !== "string" ||
-    Buffer.byteLength(secret, "utf8") < 32
-  ) {
+  if (typeof secret !== "string" || Buffer.byteLength(secret, "utf8") < 32) {
     const error = new Error(
-      "FIXHUB_JWT_SECRET must contain at least 32 bytes."
+      "FIXHUB_JWT_SECRET must contain at least 32 bytes.",
     );
 
     error.code = "FIXHUB_AUTH_CONFIG_ERROR";
@@ -117,8 +107,7 @@ function getJwtSecret() {
 function publicCustomer(customer) {
   const id = String(customer._id);
 
-  const membershipTier =
-    customer.membershipTier === "gold" ? "gold" : "free";
+  const membershipTier = customer.membershipTier === "gold" ? "gold" : "free";
 
   return {
     id,
@@ -130,10 +119,7 @@ function publicCustomer(customer) {
     membershipTier,
     isGoldMember: membershipTier === "gold",
     goldActivatedAt: customer.goldActivatedAt || null,
-    emailVerified:
-      customer.emailVerified === undefined
-        ? null
-        : customer.emailVerified,
+    emailVerified: customer.emailVerified !== false,
     createdAt: customer.createdAt,
     updatedAt: customer.updatedAt,
   };
@@ -155,7 +141,7 @@ function createSession(res, customer) {
       expiresIn: "30d",
       issuer: "fixhub",
       audience: "fixhub-customers",
-    }
+    },
   );
 
   res.cookie(COOKIE_NAME, token, {
@@ -173,16 +159,13 @@ function clearSession(res) {
 }
 
 // ==========================================
-// SECURE EMAIL TOKENS
+// PASSWORD RESET TOKENS
 // ==========================================
 
 function generateSecureToken() {
   const token = crypto.randomBytes(32).toString("hex");
 
-  const tokenHash = crypto
-    .createHash("sha256")
-    .update(token)
-    .digest("hex");
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
   return { token, tokenHash };
 }
@@ -192,10 +175,7 @@ function hashReceivedToken(token) {
     return null;
   }
 
-  return crypto
-    .createHash("sha256")
-    .update(token.toLowerCase())
-    .digest("hex");
+  return crypto.createHash("sha256").update(token.toLowerCase()).digest("hex");
 }
 
 // ==========================================
@@ -288,21 +268,12 @@ export async function requireCustomer(req, res, next) {
   try {
     const customer = await FixHubCustomer.findById(decoded.sub);
 
-    if (!customer) {
+    if (!customer || !customer.passwordHash) {
       clearSession(res);
 
       return res.status(401).json({
         success: false,
-        message: "Customer account not found.",
-      });
-    }
-
-    if (customer.emailVerified === false) {
-      clearSession(res);
-
-      return res.status(403).json({
-        success: false,
-        message: "Please verify your email address.",
+        message: "Customer account not found. Please login again.",
       });
     }
 
@@ -319,10 +290,7 @@ export async function requireCustomer(req, res, next) {
 
     return next();
   } catch (error) {
-    console.error(
-      "FIXHUB session verification failed:",
-      error.message
-    );
+    console.error("FIXHUB session verification failed:", error.message);
 
     return res.status(500).json({
       success: false,
@@ -352,24 +320,39 @@ router.post("/register", registrationLimiter, async (req, res) => {
     const email = normalizeEmail(req.body?.email);
     const phone = normalizePhone(req.body?.phone);
     const address = String(req.body?.address || "").trim();
+
     const password = req.body?.password;
+    const confirmPassword = req.body?.confirmPassword;
 
     if (
       !validName(fullName) ||
       !email ||
       !PHONE_REGEX.test(phone) ||
-      !validAddress(address) ||
-      !validPassword(password)
+      !validAddress(address)
     ) {
       return res.status(400).json({
         success: false,
         message:
-          "Enter a valid name, email, 10-digit phone number, full address and password of at least 8 characters.",
+          "Enter a valid name, email, 10-digit phone number and full address.",
+      });
+    }
+
+    if (!validPassword(password)) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Password must contain at least 8 characters and cannot exceed 72 bytes.",
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Password and confirm password do not match.",
       });
     }
 
     getJwtSecret();
-    assertMailConfigured();
 
     const existing = await FixHubCustomer.findOne({
       $or: [{ email }, { phone }],
@@ -378,13 +361,12 @@ router.post("/register", registrationLimiter, async (req, res) => {
     if (existing) {
       return res.status(409).json({
         success: false,
-        message: "An account already exists with this email or phone number.",
+        message:
+          "An account already exists with this email or phone number. Please login instead.",
       });
     }
 
     const passwordHash = await bcrypt.hash(password, 12);
-    const verification = generateSecureToken();
-    const now = new Date();
 
     const customer = await FixHubCustomer.create({
       fullName,
@@ -393,34 +375,34 @@ router.post("/register", registrationLimiter, async (req, res) => {
       address,
       passwordHash,
       tokenVersion: 0,
-      emailVerified: false,
-      verificationTokenHash: verification.tokenHash,
-      verificationExpiresAt: new Date(now.getTime() + EMAIL_TOKEN_MS),
-      verificationSentAt: now,
+      emailVerified: true,
+      emailVerifiedAt: new Date(),
     });
 
-    try {
-      await sendVerificationEmail(customer.email, verification.token);
-    } catch (error) {
-      console.error(
-        "FIXHUB verification delivery:",
-        error.code || error.message
-      );
+    // Automatically log in the newly registered customer.
+    createSession(res, customer);
 
-      return res.status(503).json({
-        success: false,
-        requiresVerification: true,
-        message:
-          "Account saved, but the verification email could not be sent. Please use Resend Verification.",
+    // Send welcome email.
+    let emailSent = false;
+
+    try {
+      await sendWelcomeEmail({
+        email: customer.email,
+        fullName: customer.fullName,
       });
+
+      emailSent = true;
+    } catch (emailError) {
+      console.error("FIXHUB registration welcome email:", emailError.message);
     }
 
     return res.status(201).json({
       success: true,
-      requiresVerification: true,
-      message:
-        "Account created! Please check your email to verify your FIXHUB account.",
-      email: customer.email,
+      message: emailSent
+        ? "Welcome to FIXHUB! Your account has been created and a welcome email has been sent."
+        : "Your FIXHUB account has been created, but the welcome email could not be sent.",
+      emailSent,
+      user: publicCustomer(customer),
     });
   } catch (error) {
     if (error.code === 11000) {
@@ -480,14 +462,6 @@ router.post("/login", loginLimiter, async (req, res) => {
       return res.status(401).json({
         success: false,
         message: "Incorrect email/mobile number or password.",
-      });
-    }
-
-    if (customer.emailVerified === false) {
-      return res.status(403).json({
-        success: false,
-        requiresVerification: true,
-        message: "Please verify your email before logging in.",
       });
     }
 
@@ -618,154 +592,7 @@ router.post("/logout", requireCustomer, async (req, res) => {
 });
 
 // ==========================================
-// 6. VERIFY EMAIL
-// POST /api/auth/verify-email
-// ==========================================
-
-router.post("/verify-email", emailLimiter, async (req, res) => {
-  try {
-    const tokenHash = hashReceivedToken(req.body?.token);
-    const newPassword = req.body?.newPassword;
-
-    if (!tokenHash || !validPassword(newPassword)) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Invalid verification link or password. Use at least 8 characters.",
-      });
-    }
-
-    const passwordHash = await bcrypt.hash(newPassword, 12);
-
-    const customer = await FixHubCustomer.findOneAndUpdate(
-      {
-        verificationTokenHash: tokenHash,
-        verificationExpiresAt: { $gt: new Date() },
-        emailVerified: false,
-      },
-      {
-        $set: {
-          emailVerified: true,
-          emailVerifiedAt: new Date(),
-          passwordHash,
-        },
-        $inc: { tokenVersion: 1 },
-        $unset: {
-          verificationTokenHash: "",
-          verificationExpiresAt: "",
-          verificationSentAt: "",
-        },
-      },
-      { new: true }
-    );
-
-    if (!customer) {
-      return res.status(400).json({
-        success: false,
-        message: "Verification link expired or already used.",
-      });
-    }
-
-    return res.json({
-      success: true,
-      message: "Email verified successfully! You can now log in.",
-    });
-  } catch (error) {
-    console.error("FIXHUB email verification:", error.message);
-
-    return res.status(500).json({
-      success: false,
-      message: "Unable to verify email.",
-    });
-  }
-});
-
-// ==========================================
-// 7. RESEND VERIFICATION EMAIL
-// POST /api/auth/resend-verification
-// ==========================================
-
-router.post("/resend-verification", emailLimiter, async (req, res) => {
-  try {
-    const email = normalizeEmail(req.body?.email);
-
-    if (!email) {
-      return res.status(400).json({
-        success: false,
-        message: "Enter a valid email address.",
-      });
-    }
-
-    const customer = await FixHubCustomer.findOne({
-      email,
-      emailVerified: false,
-    });
-
-    if (!customer) {
-      return res.json(genericEmailResponse);
-    }
-
-    const now = new Date();
-
-    if (
-      customer.verificationSentAt &&
-      now.getTime() - new Date(customer.verificationSentAt).getTime() <
-        EMAIL_COOLDOWN_MS
-    ) {
-      return res.json(genericEmailResponse);
-    }
-
-    const verification = generateSecureToken();
-
-    const updated = await FixHubCustomer.findOneAndUpdate(
-      {
-        _id: customer._id,
-        emailVerified: false,
-        $or: [
-          { verificationSentAt: { $exists: false } },
-          {
-            verificationSentAt: {
-              $lt: new Date(now.getTime() - EMAIL_COOLDOWN_MS),
-            },
-          },
-        ],
-      },
-      {
-        $set: {
-          verificationTokenHash: verification.tokenHash,
-          verificationExpiresAt: new Date(now.getTime() + EMAIL_TOKEN_MS),
-          verificationSentAt: now,
-        },
-      },
-      { new: true }
-    );
-
-    if (!updated) {
-      return res.json(genericEmailResponse);
-    }
-
-    try {
-      await sendVerificationEmail(customer.email, verification.token);
-    } catch (error) {
-      console.error(
-        "FIXHUB resend verification:",
-        error.code || error.message
-      );
-    }
-
-    return res.json(genericEmailResponse);
-  } catch (error) {
-    console.error("FIXHUB resend error:", error.message);
-
-    return res.status(500).json({
-      success: false,
-      message: "Unable to process verification request.",
-    });
-  }
-});
-
-// ==========================================
-// 8. FORGOT PASSWORD
+// 6. FORGOT PASSWORD
 // POST /api/auth/forgot-password
 // ==========================================
 
@@ -780,10 +607,7 @@ router.post("/forgot-password", emailLimiter, async (req, res) => {
       });
     }
 
-    const customer = await FixHubCustomer.findOne({
-      email,
-      emailVerified: { $ne: false },
-    });
+    const customer = await FixHubCustomer.findOne({ email });
 
     if (!customer) {
       return res.json(genericEmailResponse);
@@ -804,7 +628,6 @@ router.post("/forgot-password", emailLimiter, async (req, res) => {
     const updated = await FixHubCustomer.findOneAndUpdate(
       {
         _id: customer._id,
-        emailVerified: { $ne: false },
         $or: [
           { passwordResetSentAt: { $exists: false } },
           {
@@ -821,7 +644,7 @@ router.post("/forgot-password", emailLimiter, async (req, res) => {
           passwordResetSentAt: now,
         },
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updated) {
@@ -833,7 +656,7 @@ router.post("/forgot-password", emailLimiter, async (req, res) => {
     } catch (error) {
       console.error(
         "FIXHUB password reset email:",
-        error.code || error.message
+        error.code || error.message,
       );
     }
 
@@ -849,7 +672,7 @@ router.post("/forgot-password", emailLimiter, async (req, res) => {
 });
 
 // ==========================================
-// 9. RESET PASSWORD
+// 7. RESET PASSWORD
 // POST /api/auth/reset-password
 // ==========================================
 
@@ -871,7 +694,6 @@ router.post("/reset-password", emailLimiter, async (req, res) => {
       {
         passwordResetTokenHash: tokenHash,
         passwordResetExpiresAt: { $gt: new Date() },
-        emailVerified: { $ne: false },
       },
       {
         $set: { passwordHash },
@@ -882,7 +704,7 @@ router.post("/reset-password", emailLimiter, async (req, res) => {
           passwordResetSentAt: "",
         },
       },
-      { new: true }
+      { new: true },
     );
 
     if (!customer) {

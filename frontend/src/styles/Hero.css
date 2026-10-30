@@ -411,7 +411,7 @@
 
      width: 100%;
 
-     margin-top: 25px;
+     margin-top: 65px;
 
      flex-shrink: 0;
 
@@ -582,7 +582,7 @@
 
      min-width: 0;
 
-     margin-top: 28px;
+     margin-top: 38px;
 
      padding: 20px 22px;
 
@@ -1001,7 +1001,7 @@
      }
 
      .fh-hero__buttons {
-          margin-top: 23px;
+          margin-top: 55px;
      }
 
      .fh-hero__benefits {
@@ -1009,7 +1009,7 @@
      }
 
      .fh-hero__membership {
-          margin-top: 25px;
+          margin-top: 45px;
           max-width: 535px;
      }
 
@@ -1059,7 +1059,7 @@
      }
 
      .fh-hero__buttons {
-          margin-top: 20px;
+          margin-top: 48px;
      }
 
      .fh-hero__button {
@@ -1420,7 +1420,7 @@
 
           width: 100%;
 
-          margin-top: 23px;
+          margin-top: 28px;
      }
 
      .fh-hero__button {
@@ -1701,5 +1701,131 @@
 
      .fh-hero__pricing-item strong {
           font-size: 24px
+     }
+}
+
+/* ==========================================================
+   EXTRA TOP SPACE ABOVE HERO CTA BUTTONS
+   This creates more distance between the hero description
+   and the "Book a Repair / Explore Services" button row.
+========================================================== */
+
+.fh-hero .fh-hero__buttons {
+     margin-top: 90px !important;
+}
+
+@media (max-width: 1100px) {
+     .fh-hero .fh-hero__buttons {
+          margin-top: 70px !important;
+     }
+}
+
+@media (max-width: 768px) {
+     .fh-hero .fh-hero__buttons {
+          margin-top: 48px !important;
+     }
+}
+
+@media (max-width: 480px) {
+     .fh-hero .fh-hero__buttons {
+          margin-top: 42px !important;
+     }
+}
+
+/* ==========================================================
+   MOBILE HERO — MORE SPACE + FIX BENEFIT ROW FIT
+   Extra breathing room below the CTA buttons and a 3-column
+   benefits layout so the first/last items are not clipped.
+========================================================== */
+
+@media (max-width: 768px) {
+     .fh-hero .fh-hero__benefits {
+          display: grid !important;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          align-items: center;
+          justify-items: center;
+          gap: 8px;
+          width: 100%;
+          margin-top: 56px !important;
+          padding: 0 8px;
+          min-height: 48px;
+          overflow: visible;
+     }
+
+     .fh-hero .fh-hero__benefit {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          width: 100%;
+          min-width: 0;
+          font-size: 10px;
+          line-height: 1.35;
+          white-space: normal;
+     }
+
+     .fh-hero .fh-hero__benefit svg {
+          width: 21px;
+          height: 21px;
+          flex: 0 0 21px;
+     }
+
+     .fh-hero .fh-hero__benefit-divider {
+          display: none !important;
+     }
+}
+
+@media (max-width: 480px) {
+     .fh-hero .fh-hero__benefits {
+          margin-top: 50px !important;
+          gap: 5px;
+          padding: 0 5px;
+     }
+
+     .fh-hero .fh-hero__benefit {
+          gap: 4px;
+          font-size: 9px;
+     }
+
+     .fh-hero .fh-hero__benefit svg {
+          width: 19px;
+          height: 19px;
+          flex-basis: 19px;
+     }
+}
+
+@media (max-width: 360px) {
+     .fh-hero .fh-hero__benefit {
+          font-size: 8px;
+     }
+
+     .fh-hero .fh-hero__benefit svg {
+          width: 17px;
+          height: 17px;
+          flex-basis: 17px;
+     }
+}
+
+
+/* ==========================================================
+   LAPTOP + DESKTOP FIX
+   Keep the benefit row clearly below the CTA buttons.
+   Mobile spacing/layout above is intentionally preserved.
+========================================================== */
+
+@media (min-width: 769px) {
+     .fh-hero .fh-hero__benefits {
+          margin-top: 58px !important;
+          position: relative;
+          z-index: 3;
+     }
+}
+
+/* Short-height laptop screens need slightly less spacing
+   so the full hero content still fits comfortably. */
+@media (min-width: 769px) and (max-height: 760px) {
+     .fh-hero .fh-hero__benefits {
+          margin-top: 46px !important;
      }
 }

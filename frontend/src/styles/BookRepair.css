@@ -6,40 +6,45 @@
      color: #f6faff;
      background: #03101d;
      font-family: inherit;
-     min-height: 100vh
+     min-height: 100vh;
 }
 
 .fbr-page * {
-     box-sizing: border-box
+     box-sizing: border-box;
 }
 
 .fbr-page a {
-     text-decoration: none
+     text-decoration: none;
 }
 
 .fbr-page button,
 .fbr-page input,
 .fbr-page select,
 .fbr-page textarea {
-     font: inherit
+     font: inherit;
 }
 
 .fbr-container {
      width: min(1240px, 92%);
-     margin: auto
+     margin: auto;
 }
 
+/* HERO */
+
 .fbr-hero {
-     background: radial-gradient(circle at 78% 20%, #063b69, #061a2e 44%, #03101d 82%);
-     border-bottom: 1px solid var(--fbr-line)
+     background: radial-gradient(circle at 78% 20%,
+               #063b69,
+               #061a2e 44%,
+               #03101d 82%);
+     border-bottom: 1px solid var(--fbr-line);
 }
 
 .fbr-hero__layout {
      display: grid;
-     grid-template-columns: 1.3fr .7fr;
+     grid-template-columns: 1.3fr 0.7fr;
      gap: 50px;
      align-items: center;
-     padding: 78px 0
+     padding: 78px 0;
 }
 
 .fbr-eyebrow {
@@ -49,7 +54,7 @@
      gap: 9px;
      font-size: 11px;
      font-weight: 800;
-     letter-spacing: 1.6px
+     letter-spacing: 1.6px;
 }
 
 .fbr-hero h1 {
@@ -57,26 +62,26 @@
      max-width: 650px;
      line-height: 1.04;
      margin: 20px 0;
-     letter-spacing: -2.6px
+     letter-spacing: -2.6px;
 }
 
 .fbr-hero h1 span,
 .fbr-cardhead h2 span {
-     color: var(--fbr-cyan)
+     color: var(--fbr-cyan);
 }
 
 .fbr-hero p {
      color: var(--fbr-muted);
      line-height: 1.8;
      max-width: 620px;
-     font-size: 15px
+     font-size: 15px;
 }
 
 .fbr-benefits {
      display: flex;
      gap: 12px;
      flex-wrap: wrap;
-     margin: 26px 0
+     margin: 26px 0;
 }
 
 .fbr-benefits span {
@@ -88,11 +93,11 @@
      border-radius: 30px;
      padding: 9px 12px;
      color: #d8edff;
-     font-size: 12px
+     font-size: 12px;
 }
 
 .fbr-benefits svg {
-     color: var(--fbr-cyan)
+     color: var(--fbr-cyan);
 }
 
 .fbr-primary {
@@ -107,18 +112,18 @@
      border-radius: 12px;
      font-weight: 750;
      cursor: pointer;
-     transition: transform .2s, filter .2s
+     transition: transform 0.2s, filter 0.2s;
 }
 
 .fbr-primary:hover {
      transform: translateY(-2px);
-     filter: brightness(1.09)
+     filter: brightness(1.09);
 }
 
 .fbr-primary:disabled {
-     opacity: .6;
+     opacity: 0.6;
      cursor: not-allowed;
-     transform: none
+     transform: none;
 }
 
 .fbr-hero__side {
@@ -130,7 +135,7 @@
      text-align: center;
      padding: 32px 30px;
      border-radius: 25px;
-     box-shadow: 0 25px 80px #0003
+     box-shadow: 0 25px 80px #0003;
 }
 
 .fbr-hero__device {
@@ -142,34 +147,173 @@
      border-radius: 28px;
      display: grid;
      place-items: center;
-     margin-bottom: 17px
+     margin-bottom: 17px;
 }
 
 .fbr-hero__side>span {
      color: #8fdefe;
      font-size: 11px;
      font-weight: 800;
-     letter-spacing: 1.6px
+     letter-spacing: 1.6px;
 }
 
 .fbr-hero__side>strong {
      font-size: 44px;
      color: #fff;
-     margin: 9px 0
+     margin: 9px 0;
 }
 
 .fbr-hero__side>p {
      font-size: 12px;
-     margin: 0
+     margin: 0;
 }
+
+/* MEMBERSHIP OFFER */
+
+.fbr-membership {
+     position: relative;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 28px;
+     margin-top: 34px;
+     padding: 30px;
+     overflow: hidden;
+     border: 1px solid #087dc1;
+     border-radius: 22px;
+     background:
+          radial-gradient(circle at 5% 50%, #075080, transparent 45%),
+          linear-gradient(120deg, #092c49, #071a2d);
+     box-shadow: 0 15px 45px #0003;
+}
+
+.fbr-membership::after {
+     content: "";
+     position: absolute;
+     width: 190px;
+     height: 190px;
+     border: 1px solid #23baff25;
+     border-radius: 50%;
+     right: 22%;
+     top: -110px;
+     pointer-events: none;
+}
+
+.fbr-membership__content {
+     display: flex;
+     align-items: flex-start;
+     gap: 20px;
+     min-width: 0;
+     position: relative;
+     z-index: 1;
+}
+
+.fbr-membership__icon {
+     width: 58px;
+     height: 58px;
+     min-width: 58px;
+     display: grid;
+     place-items: center;
+     border-radius: 16px;
+     color: #80e7ff;
+     background: #0874aa35;
+     border: 1px solid #2cbcff55;
+}
+
+.fbr-membership__eyebrow {
+     display: inline-flex;
+     align-items: center;
+     gap: 7px;
+     color: #6ce2ff;
+     font-size: 10px;
+     font-weight: 850;
+     letter-spacing: 1.5px;
+}
+
+.fbr-membership__text h2 {
+     font-size: clamp(22px, 3vw, 34px);
+     letter-spacing: -1px;
+     line-height: 1.2;
+     margin: 10px 0;
+     color: #fff;
+}
+
+.fbr-membership__text h2 span {
+     color: #42e4b2;
+}
+
+.fbr-membership__text p {
+     max-width: 640px;
+     color: #c2d9ec;
+     font-size: 13px;
+     line-height: 1.8;
+     margin: 0 0 10px;
+}
+
+.fbr-membership__text small {
+     display: block;
+     max-width: 650px;
+     color: #91b5ce;
+     font-size: 10px;
+     line-height: 1.7;
+}
+
+.fbr-membership__action {
+     position: relative;
+     z-index: 1;
+     min-width: 190px;
+     display: flex;
+     flex-direction: column;
+     align-items: flex-start;
+     gap: 15px;
+}
+
+.fbr-membership__action>div {
+     display: flex;
+     flex-direction: column;
+     gap: 5px;
+}
+
+.fbr-membership__action>div>span {
+     font-size: 10px;
+     font-weight: 800;
+     letter-spacing: 1.4px;
+     color: #9bcde9;
+}
+
+.fbr-membership__action>div>strong {
+     font-size: 30px;
+     color: #fff;
+}
+
+.fbr-membership__button {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     gap: 9px;
+     padding: 13px 17px;
+     border-radius: 10px;
+     color: #fff;
+     font-size: 12px;
+     font-weight: 800;
+     background: linear-gradient(100deg, #0678ff, #00baff);
+     transition: transform 0.2s, filter 0.2s;
+}
+
+.fbr-membership__button:hover {
+     transform: translateY(-2px);
+     filter: brightness(1.1);
+}
+
+/* MAIN */
 
 .fbr-main {
      display: grid;
-     grid-template-columns: minmax(0, 1.6fr) minmax(270px, .85fr);
+     grid-template-columns: minmax(0, 1.6fr) minmax(270px, 0.85fr);
      align-items: start;
      gap: 24px;
      padding-top: 54px;
-     padding-bottom: 90px
+     padding-bottom: 90px;
 }
 
 .fbr-formcard,
@@ -177,17 +321,17 @@
      background: linear-gradient(145deg, #092038, #061626);
      border: 1px solid #174063;
      border-radius: 20px;
-     padding: 30px
+     padding: 30px;
 }
 
 .fbr-cardhead {
-     margin-bottom: 27px
+     margin-bottom: 27px;
 }
 
 .fbr-cardhead h2 {
      font-size: clamp(26px, 3vw, 38px);
      letter-spacing: -1px;
-     margin: 13px 0 10px
+     margin: 13px 0 10px;
 }
 
 .fbr-cardhead p,
@@ -195,12 +339,12 @@
 .fbr-muted {
      color: var(--fbr-muted);
      font-size: 13px;
-     line-height: 1.7
+     line-height: 1.7;
 }
 
 .fbr-form {
      display: grid;
-     gap: 18px
+     gap: 18px;
 }
 
 .fbr-paneltitle {
@@ -211,7 +355,7 @@
      font-weight: 800;
      border-bottom: 1px solid var(--fbr-line);
      padding: 19px 0 15px;
-     margin-bottom: 4px
+     margin-bottom: 4px;
 }
 
 .fbr-paneltitle span {
@@ -222,7 +366,7 @@
      color: #61d7ff;
      display: grid;
      place-items: center;
-     font-size: 11px
+     font-size: 11px;
 }
 
 .fbr-form label {
@@ -230,7 +374,7 @@
      gap: 9px;
      color: #d9edff;
      font-size: 12px;
-     font-weight: 750
+     font-weight: 750;
 }
 
 .fbr-form input,
@@ -245,34 +389,34 @@
      padding: 13px 15px;
      outline: none;
      font-size: 14px;
-     transition: border-color .2s, box-shadow .2s
+     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .fbr-form input:focus,
 .fbr-form select:focus,
 .fbr-form textarea:focus {
      border-color: #0aa8ff;
-     box-shadow: 0 0 0 3px #00aaff19
+     box-shadow: 0 0 0 3px #00aaff19;
 }
 
 .fbr-form input:disabled {
      color: #b2c5d6;
-     background: #0e263d
+     background: #0e263d;
 }
 
 .fbr-form select option {
      background: #0b1e31;
-     color: #fff
+     color: #fff;
 }
 
 .fbr-two {
      display: grid;
      grid-template-columns: repeat(2, minmax(0, 1fr));
-     gap: 14px
+     gap: 14px;
 }
 
 .fbr-search {
-     position: relative
+     position: relative;
 }
 
 .fbr-search svg {
@@ -280,11 +424,11 @@
      top: 50%;
      left: 13px;
      transform: translateY(-50%);
-     color: #54bde9
+     color: #54bde9;
 }
 
 .fbr-search input {
-     padding-left: 40px
+     padding-left: 40px;
 }
 
 .fbr-pricebox {
@@ -296,31 +440,31 @@
      align-items: center;
      justify-content: space-between;
      gap: 12px;
-     color: #36cdff
+     color: #36cdff;
 }
 
 .fbr-pricebox>div {
      display: flex;
      flex-direction: column;
-     gap: 7px
+     gap: 7px;
 }
 
 .fbr-pricebox span {
      color: #b5d5ed;
      letter-spacing: 1.1px;
      font-size: 11px;
-     font-weight: 850
+     font-weight: 850;
 }
 
 .fbr-pricebox strong {
      font-size: clamp(24px, 3vw, 42px);
      line-height: 1.15;
-     color: #fff
+     color: #fff;
 }
 
 .fbr-pricebox small {
      color: #9bbcd3;
-     font-size: 11px
+     font-size: 11px;
 }
 
 .fbr-clarification,
@@ -328,12 +472,12 @@
      font-size: 11px;
      color: #93aac0;
      margin: 0;
-     line-height: 1.7
+     line-height: 1.7;
 }
 
 .fbr-submit {
      width: 100%;
-     min-height: 53px
+     min-height: 53px;
 }
 
 .fbr-error {
@@ -345,7 +489,7 @@
      display: flex;
      align-items: center;
      gap: 8px;
-     font-size: 12px
+     font-size: 12px;
 }
 
 .fbr-success {
@@ -355,13 +499,13 @@
      border: 1px solid #236456;
      padding: 17px;
      border-radius: 12px;
-     color: #b9ffdd
+     color: #b9ffdd;
 }
 
 .fbr-success p {
      font-size: 12px;
      color: #c0e8df;
-     margin: 8px 0
+     margin: 8px 0;
 }
 
 .fbr-success button {
@@ -374,7 +518,7 @@
      color: #f4fffa;
      padding: 9px 11px;
      cursor: pointer;
-     margin-top: 8px
+     margin-top: 8px;
 }
 
 .fbr-login {
@@ -386,53 +530,55 @@
      display: flex;
      flex-direction: column;
      align-items: center;
-     gap: 12px
+     gap: 12px;
 }
 
 .fbr-login svg {
-     color: #2dbfff
+     color: #2dbfff;
 }
 
 .fbr-login h3 {
-     margin: 0
+     margin: 0;
 }
 
 .fbr-login p {
      color: #abc4d7;
      font-size: 13px;
      line-height: 1.7;
-     max-width: 450px
+     max-width: 450px;
 }
+
+/* SIDEBAR */
 
 .fbr-sidebar {
      display: grid;
-     gap: 20px
+     gap: 20px;
 }
 
 .fbr-side-title,
 .fbr-sidecard--small h3 {
      display: flex;
      align-items: center;
-     gap: 10px
+     gap: 10px;
 }
 
 .fbr-side-title svg,
 .fbr-sidecard--small h3 svg {
-     color: #00c3ff
+     color: #00c3ff;
 }
 
 .fbr-sidecard h3 {
      font-size: 19px;
-     margin: 0
+     margin: 0;
 }
 
 .fbr-sidecard>p {
-     margin: 15px 0
+     margin: 15px 0;
 }
 
 .fbr-pricerows {
      display: grid;
-     margin: 20px 0
+     margin: 20px 0;
 }
 
 .fbr-pricerow {
@@ -442,11 +588,11 @@
      gap: 12px;
      padding: 15px 0;
      border-bottom: 1px solid #1a3a57;
-     font-size: 12px
+     font-size: 12px;
 }
 
 .fbr-pricerow span {
-     color: #c4ddf1
+     color: #c4ddf1;
 }
 
 .fbr-pricerow strong {
@@ -456,42 +602,115 @@
      border-radius: 9px;
      font-size: 14px;
      min-width: 64px;
-     text-align: center
+     text-align: center;
 }
 
 .fbr-pricerow.active {
      padding-left: 8px;
      border-radius: 9px;
-     background: #0b3454
+     background: #0b3454;
 }
 
 .fbr-pricerow.active strong {
-     background: #009fff
+     background: #009fff;
 }
 
 .fbr-sidecard>small {
      font-size: 11px;
      color: #8babc1;
      line-height: 1.7;
-     display: block
+     display: block;
+}
+
+/* MEMBERSHIP SIDEBAR CARD */
+
+.fbr-plan-card {
+     border-color: #087dc1;
+     background:
+          radial-gradient(circle at 90% 0%, #075080, transparent 55%),
+          linear-gradient(145deg, #092c49, #061626);
+}
+
+.fbr-plan-icon {
+     width: 48px;
+     height: 48px;
+     display: grid;
+     place-items: center;
+     color: #73e7ff;
+     background: #0b4770;
+     border: 1px solid #1775a8;
+     border-radius: 13px;
+     margin-bottom: 15px;
+}
+
+.fbr-plan-label {
+     display: block;
+     color: #62dfff;
+     font-size: 9px;
+     font-weight: 850;
+     letter-spacing: 1.3px;
+     margin-bottom: 9px;
+}
+
+.fbr-plan-card h3 {
+     font-size: 25px;
+     color: #fff;
+}
+
+.fbr-plan-price {
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     color: #b6d5e9;
+     font-size: 12px;
+     margin: 18px 0;
+}
+
+.fbr-plan-price strong {
+     font-size: 27px;
+     color: #fff;
+}
+
+.fbr-plan-link {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     gap: 9px;
+     width: 100%;
+     padding: 13px 12px;
+     color: #fff;
+     background: linear-gradient(100deg, #0678ff, #00baff);
+     border-radius: 10px;
+     font-size: 12px;
+     font-weight: 800;
+     transition: filter 0.2s, transform 0.2s;
+}
+
+.fbr-plan-link:hover {
+     filter: brightness(1.1);
+     transform: translateY(-2px);
+}
+
+.fbr-plan-card>small {
+     margin-top: 14px;
 }
 
 .fbr-sidecard--small p {
      display: flex;
      align-items: flex-start;
-     gap: 9px
+     gap: 9px;
 }
 
 .fbr-sidecard--small p svg {
      flex-shrink: 0;
      color: #36bafb;
-     margin-top: 2px
+     margin-top: 2px;
 }
 
 .fbr-historytop {
      display: flex;
      align-items: center;
-     justify-content: space-between
+     justify-content: space-between;
 }
 
 .fbr-historytop button {
@@ -500,7 +719,7 @@
      color: #a8d9f8;
      padding: 6px;
      border-radius: 8px;
-     cursor: pointer
+     cursor: pointer;
 }
 
 .fbr-history {
@@ -508,71 +727,118 @@
      flex-direction: column;
      gap: 6px;
      padding: 12px 0;
-     border-bottom: 1px solid #214360
+     border-bottom: 1px solid #214360;
 }
 
 .fbr-history strong {
-     font-size: 13px
+     font-size: 13px;
 }
 
 .fbr-history small {
      color: #8eb4cb;
-     overflow-wrap: anywhere
+     overflow-wrap: anywhere;
 }
 
 .fbr-history span {
      font-size: 11px;
      color: #3bd1ff;
-     text-transform: capitalize
+     text-transform: capitalize;
 }
 
-@media(max-width:850px) {
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
 
      .fbr-hero__layout,
      .fbr-main {
-          grid-template-columns: 1fr
+          grid-template-columns: 1fr;
      }
 
      .fbr-hero__layout {
-          padding: 55px 0
+          padding: 55px 0;
      }
 
      .fbr-hero__side {
-          max-width: 490px
+          max-width: 490px;
      }
 
      .fbr-main {
-          padding-top: 30px
+          padding-top: 30px;
+     }
+
+     .fbr-membership {
+          flex-direction: column;
+          align-items: flex-start;
+     }
+
+     .fbr-membership__action {
+          width: 100%;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
      }
 }
 
-@media(max-width:540px) {
+@media (max-width: 540px) {
      .fbr-container {
-          width: 92%
+          width: 92%;
      }
 
      .fbr-hero h1 {
-          font-size: 43px
+          font-size: 43px;
      }
 
      .fbr-two {
-          grid-template-columns: 1fr
+          grid-template-columns: 1fr;
      }
 
      .fbr-formcard,
      .fbr-sidecard {
-          padding: 20px
+          padding: 20px;
      }
 
      .fbr-hero__side {
-          padding: 20px
+          padding: 20px;
      }
 
      .fbr-benefits {
-          gap: 8px
+          gap: 8px;
      }
 
      .fbr-page .fbr-primary {
-          width: 100%
+          width: 100%;
+     }
+
+     .fbr-membership {
+          padding: 21px;
+          gap: 22px;
+     }
+
+     .fbr-membership__content {
+          gap: 13px;
+     }
+
+     .fbr-membership__icon {
+          width: 44px;
+          height: 44px;
+          min-width: 44px;
+          border-radius: 12px;
+     }
+
+     .fbr-membership__icon svg {
+          width: 23px;
+     }
+
+     .fbr-membership__text h2 {
+          font-size: 23px;
+     }
+
+     .fbr-membership__action {
+          flex-direction: column;
+          align-items: stretch;
+     }
+
+     .fbr-membership__button {
+          width: 100%;
      }
 }

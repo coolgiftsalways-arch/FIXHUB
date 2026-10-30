@@ -3,7 +3,6 @@ import nodemailer from "nodemailer";
 // ==========================================
 // FIXHUB EMAIL SERVICE
 // HOSTINGER SMTP
-// EMAIL VERIFICATION + FORGOT PASSWORD
 // ==========================================
 
 // ==========================================
@@ -14,17 +13,9 @@ function getEmailConfig() {
   const host = String(process.env.SMTP_HOST || "smtp.hostinger.com").trim();
 
   const port = Number(process.env.SMTP_PORT || 465);
-
   const user = String(process.env.SMTP_USER || "").trim();
-
-  // IMPORTANT:
-  // Keep the mailbox password exactly as saved.
-  // Do not remove spaces or special characters.
-
   const password = process.env.SMTP_APP_PASSWORD || "";
-
   const from = String(process.env.MAIL_FROM || user).trim();
-
   const clientUrl = String(process.env.CLIENT_URL || "").trim();
 
   if (!host) {
@@ -105,11 +96,8 @@ export function assertMailConfigured() {
 function createMailTransporter(config) {
   return nodemailer.createTransport({
     host: config.host,
-
     port: config.port,
-
     secure: config.port === 465,
-
     requireTLS: config.port === 587,
 
     auth: {
@@ -118,9 +106,7 @@ function createMailTransporter(config) {
     },
 
     connectionTimeout: 20000,
-
     greetingTimeout: 20000,
-
     socketTimeout: 30000,
 
     tls: {
@@ -158,10 +144,6 @@ function createEmailLink(clientUrl, path, token) {
   }
 
   const url = new URL(path, clientUrl);
-
-  // Keep the token in the URL fragment.
-  // The browser reads it on the
-  // verification / reset password page.
 
   url.hash = new URLSearchParams({
     token,
@@ -208,8 +190,6 @@ function createEmailTemplate({ heading, message, buttonText, actionUrl }) {
         overflow:hidden;
       ">
 
-        <!-- HEADER -->
-
         <div style="
           background:#08223e;
           padding:30px;
@@ -236,8 +216,6 @@ function createEmailTemplate({ heading, message, buttonText, actionUrl }) {
 
         </div>
 
-        <!-- BODY -->
-
         <div style="padding:35px 30px;">
 
           <h2 style="
@@ -255,8 +233,6 @@ function createEmailTemplate({ heading, message, buttonText, actionUrl }) {
           ">
             ${safeMessage}
           </p>
-
-          <!-- ACTION BUTTON -->
 
           <div style="margin:30px 0;">
 
@@ -277,8 +253,6 @@ function createEmailTemplate({ heading, message, buttonText, actionUrl }) {
             </a>
 
           </div>
-
-          <!-- SECURITY NOTICE -->
 
           <div style="
             background:#092a45;
@@ -309,11 +283,8 @@ function createEmailTemplate({ heading, message, buttonText, actionUrl }) {
             If you did not request this action,
             you can ignore this message.
 
-            Never share your security link
-            with anyone.
+            Never share your security link with anyone.
           </p>
-
-          <!-- FALLBACK LINK -->
 
           <p style="
             margin-top:25px;
@@ -321,8 +292,7 @@ function createEmailTemplate({ heading, message, buttonText, actionUrl }) {
             font-size:12px;
             line-height:1.7;
           ">
-            Button not working? Copy this link
-            into your browser:
+            Button not working? Copy this link into your browser:
           </p>
 
           <p style="
@@ -338,8 +308,6 @@ function createEmailTemplate({ heading, message, buttonText, actionUrl }) {
           </p>
 
         </div>
-
-        <!-- FOOTER -->
 
         <div style="
           background:#041222;
@@ -368,7 +336,7 @@ function createEmailTemplate({ heading, message, buttonText, actionUrl }) {
 }
 
 // ==========================================
-// 7. SEND EMAIL USING HOSTINGER SMTP
+// 7. SEND SECURITY EMAIL
 // ==========================================
 
 async function sendFixHubEmail({
@@ -381,7 +349,6 @@ async function sendFixHubEmail({
   token,
 }) {
   const config = getEmailConfig();
-
   const recipient = String(to || "").trim();
 
   const emailPattern = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
@@ -390,21 +357,9 @@ async function sendFixHubEmail({
     throw new Error("Recipient email address is invalid.");
   }
 
-  // ========================================
-  // CREATE SECURE EMAIL LINK
-  // ========================================
-
   const actionUrl = createEmailLink(config.clientUrl, path, token);
 
-  // ========================================
-  // CREATE TRANSPORTER
-  // ========================================
-
   const transporter = createMailTransporter(config);
-
-  // ========================================
-  // BUILD HTML
-  // ========================================
 
   const html = createEmailTemplate({
     heading,
@@ -412,10 +367,6 @@ async function sendFixHubEmail({
     buttonText,
     actionUrl,
   });
-
-  // ========================================
-  // BUILD PLAIN TEXT
-  // ========================================
 
   const text = `
 FIXHUB — MOBILE CARE EXPERTS
@@ -441,40 +392,22 @@ FIXHUB Team
   `.trim();
 
   try {
-    // ======================================
-    // SEND EMAIL
-    // ======================================
-
     const info = await transporter.sendMail({
-      // Explicit sender object avoids
-      // malformed From header addresses.
-
       from: {
         name: "FIXHUB",
         address: config.from,
       },
 
       to: recipient,
-
       subject,
-
       text,
-
       html,
-
-      // Explicit SMTP envelope.
-      // The authenticated mailbox is
-      // used as the envelope sender.
 
       envelope: {
         from: config.user,
         to: [recipient],
       },
     });
-
-    // ======================================
-    // CHECK SMTP ACCEPTANCE
-    // ======================================
 
     const accepted = info.accepted || [];
     const rejected = info.rejected || [];
@@ -487,14 +420,9 @@ FIXHUB Team
       throw new Error("Recipient was not accepted by SMTP.");
     }
 
-    // Do not log the security token
-    // or full verification link.
-
-    console.log("✅ FIXHUB EMAIL ACCEPTED BY HOSTINGER");
-
-    console.log("📧 Accepted recipients:", accepted.length);
-
-    console.log("📧 Rejected recipients:", rejected.length);
+    console.log("FIXHUB EMAIL ACCEPTED BY HOSTINGER");
+    console.log("Accepted recipients:", accepted.length);
+    console.log("Rejected recipients:", rejected.length);
 
     return {
       success: true,
@@ -503,22 +431,10 @@ FIXHUB Team
       rejected: rejected.length,
     };
   } catch (error) {
-    // ======================================
-    // LOG USEFUL ERROR INFORMATION
-    // WITHOUT EXPOSING PASSWORDS
-    // ======================================
-
-    console.error("❌ FIXHUB EMAIL FAILED");
-
+    console.error("FIXHUB EMAIL FAILED");
     console.error("SMTP Code:", error.code || "UNKNOWN");
-
     console.error("SMTP Status:", error.responseCode || "N/A");
-
     console.error("SMTP Command:", error.command || "N/A");
-
-    // Avoid logging full SMTP responses:
-    // they may contain addresses or other
-    // private information.
 
     throw new Error("FIXHUB could not send the security email.");
   } finally {
@@ -533,18 +449,14 @@ FIXHUB Team
 export async function sendVerificationEmail(email, token) {
   return sendFixHubEmail({
     to: email,
-
     subject: "Verify Your FIXHUB Email Address",
-
     heading: "Verify Your Email",
 
     message:
       "Welcome to FIXHUB! Please verify your email address to activate your customer account.",
 
     buttonText: "Verify My Email",
-
     path: "/verify-email",
-
     token,
   });
 }
@@ -556,22 +468,219 @@ export async function sendVerificationEmail(email, token) {
 export async function sendPasswordResetEmail(email, token) {
   return sendFixHubEmail({
     to: email,
-
     subject: "Reset Your FIXHUB Password",
-
     heading: "Reset Your Password",
 
     message:
       "We received a request to reset your FIXHUB account password. Click below to create a new password.",
 
     buttonText: "Reset My Password",
-
     path: "/reset-password",
-
     token,
   });
 }
 
 // ==========================================
-// 10. END OF FIXHUB EMAIL SERVICE
+// 10. CUSTOMER WELCOME EMAIL
 // ==========================================
+
+export async function sendWelcomeEmail({ email, fullName }) {
+  const config = getEmailConfig();
+
+  const recipient = String(email || "").trim();
+
+  const safeName = escapeHtml(fullName || "there");
+
+  const emailPattern = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
+
+  if (!emailPattern.test(recipient)) {
+    throw new Error("Recipient email address is invalid.");
+  }
+
+  const transporter = createMailTransporter(config);
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="en">
+
+      <head>
+        <meta charset="UTF-8" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1"
+        />
+        <title>Welcome to FIXHUB</title>
+      </head>
+
+      <body style="
+        margin:0;
+        padding:30px 15px;
+        background:#edf4fb;
+        font-family:Arial,Helvetica,sans-serif;
+      ">
+
+        <div style="
+          max-width:560px;
+          margin:0 auto;
+          background:#06182b;
+          border:1px solid #16436c;
+          border-radius:18px;
+          overflow:hidden;
+        ">
+
+          <div style="
+            background:#08223e;
+            padding:30px;
+            border-bottom:1px solid #16436c;
+          ">
+
+            <h1 style="
+              margin:0;
+              color:#00bfff;
+              font-size:34px;
+              letter-spacing:1px;
+            ">
+              FIXHUB
+            </h1>
+
+            <p style="
+              color:#a9c2d8;
+              font-size:12px;
+              letter-spacing:2px;
+              margin:8px 0 0;
+            ">
+              MOBILE CARE EXPERTS
+            </p>
+
+          </div>
+
+          <div style="padding:35px 30px;">
+
+            <h2 style="
+              color:#ffffff;
+              font-size:25px;
+              margin:0 0 20px;
+            ">
+              Welcome to FIXHUB, ${safeName}!
+            </h2>
+
+            <p style="
+              color:#c6d7e9;
+              font-size:15px;
+              line-height:1.8;
+            ">
+              Your customer account has been created successfully.
+              We're happy to have you with us.
+
+              You can now log in to manage your account
+              and explore our mobile repair services.
+            </p>
+
+            <a
+              href="${escapeHtml(config.clientUrl)}"
+              style="
+                display:inline-block;
+                margin:20px 0;
+                background:#008cff;
+                color:#ffffff;
+                text-decoration:none;
+                padding:15px 26px;
+                border-radius:10px;
+                font-weight:bold;
+              "
+            >
+              Visit FIXHUB
+            </a>
+
+            <p style="
+              color:#9bb6ce;
+              font-size:13px;
+              line-height:1.8;
+            ">
+              If you did not create this account,
+              please contact FIXHUB support.
+            </p>
+
+          </div>
+
+          <div style="
+            background:#041222;
+            border-top:1px solid #163a5a;
+            padding:24px 30px;
+          ">
+
+            <p style="
+              margin:0;
+              color:#8ba8c0;
+              font-size:12px;
+              line-height:1.8;
+            ">
+              FIXHUB — Mobile Care Experts
+            </p>
+
+          </div>
+
+        </div>
+
+      </body>
+    </html>
+  `;
+
+  const text = `
+FIXHUB — MOBILE CARE EXPERTS
+
+Welcome to FIXHUB, ${fullName || "there"}!
+
+Your customer account has been created successfully.
+
+You can now log in and explore our mobile repair services.
+
+${config.clientUrl}
+
+FIXHUB Team
+  `.trim();
+
+  try {
+    const info = await transporter.sendMail({
+      from: {
+        name: "FIXHUB",
+        address: config.from,
+      },
+
+      to: recipient,
+
+      subject: "Welcome to FIXHUB — Your Account Is Ready!",
+
+      text,
+      html,
+
+      envelope: {
+        from: config.user,
+        to: [recipient],
+      },
+    });
+
+    const accepted = info.accepted || [];
+
+    const wasAccepted = accepted.some(
+      (address) => String(address).toLowerCase() === recipient.toLowerCase(),
+    );
+
+    if (!wasAccepted) {
+      throw new Error("Recipient was not accepted by SMTP.");
+    }
+
+    console.log("FIXHUB welcome email accepted by Hostinger.");
+
+    return {
+      success: true,
+      messageId: info.messageId,
+    };
+  } catch (error) {
+    console.error("FIXHUB welcome email failed:", error.code || error.message);
+
+    throw new Error("FIXHUB could not send the welcome email.");
+  } finally {
+    transporter.close();
+  }
+}
