@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+
 import {
   ArrowRight,
   Check,
@@ -19,8 +20,19 @@ import {
   Smartphone,
   Wrench,
 } from "lucide-react";
+
 import "../styles/Membership.css";
-import { getPhoneImage } from "../utils/phoneImage.js";
+
+import One from "../images/One.png";
+import Two from "../images/Two.png";
+import Three from "../images/Three.png";
+import Four from "../images/Four.png";
+import Five from "../images/Five.png";
+import Six from "../images/Six.png";
+import Seven from "../images/Seven.png";
+import Eight from "../images/Eate.png";
+
+const HERO_IMAGES = [One, Two, Three, Four, Five, Six, Seven, Eight];
 
 const PRICE_TIERS = [
   { label: "Up to ₹20,000", price: 499, max: 20000 },
@@ -84,6 +96,7 @@ const money = (value) =>
 
 function matchingTier(mrp) {
   if (!Number.isFinite(Number(mrp)) || Number(mrp) <= 0) return null;
+
   return PRICE_TIERS.find((tier) => Number(mrp) <= tier.max) || null;
 }
 
@@ -123,129 +136,18 @@ function BrandMark({ brand }) {
   );
 }
 
-function PhoneArtwork({ brand, model, image, large = false }) {
-  const [resolvedImage, setResolvedImage] = useState(image || null);
-  const [failed, setFailed] = useState(false);
-  const [loading, setLoading] = useState(!image);
-  const [retrying, setRetrying] = useState(false);
-  const activeRef = useRef(true);
-  const attemptedFallbackRef = useRef(false);
-
-  useEffect(() => {
-    let active = true;
-
-    activeRef.current = true;
-    attemptedFallbackRef.current = false;
-
-    setResolvedImage(image || null);
-    setFailed(false);
-    setLoading(true);
-    setRetrying(false);
-
-    getPhoneImage(brand, model, image || null)
-      .then((url) => {
-        if (!active) return;
-
-        setResolvedImage(url);
-        setFailed(!url);
-      })
-      .catch((error) => {
-        console.error(
-          `Phone image loading failed for ${brand} ${model}:`,
-          error,
-        );
-
-        if (!active) return;
-
-        setResolvedImage(null);
-        setFailed(true);
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-
-    return () => {
-      active = false;
-      activeRef.current = false;
-    };
-  }, [brand, model, image]);
-
-  async function handleImageError() {
-    if (attemptedFallbackRef.current) {
-      setResolvedImage(null);
-      setFailed(true);
-      setLoading(false);
-      return;
-    }
-
-    attemptedFallbackRef.current = true;
-    setRetrying(true);
-    setLoading(true);
-
-    try {
-      // Retry without the catalogue image to look for a fallback.
-      const fallback = await getPhoneImage(brand, model, null, true);
-
-      if (!activeRef.current) return;
-
-      if (fallback && fallback !== resolvedImage) {
-        setResolvedImage(fallback);
-        setFailed(false);
-      } else {
-        setResolvedImage(null);
-        setFailed(true);
-      }
-    } catch (error) {
-      console.error("Fallback phone image failed:", error);
-
-      if (!activeRef.current) return;
-
-      setResolvedImage(null);
-      setFailed(true);
-    } finally {
-      if (activeRef.current) {
-        setRetrying(false);
-        setLoading(false);
-      }
-    }
-  }
-
-  return (
-    <div className={`fhm-phone-art ${large ? "fhm-phone-art--large" : ""}`}>
-      {resolvedImage && !failed ? (
-        <img
-          src={resolvedImage}
-          alt={`${brand || ""} ${model} phone`}
-          loading="lazy"
-          decoding="async"
-          onError={handleImageError}
-        />
-      ) : (
-        <div
-          className="fhm-image-unavailable"
-          role="img"
-          aria-label={`${brand} ${model} phone image`}
-        >
-          <Smartphone size={large ? 42 : 30} strokeWidth={1.25} />
-          <span>
-            {loading || retrying ? "Loading image..." : "Image unavailable"}
-          </span>
-        </div>
-      )}
-    </div>
-  );
-}
-
 function NumberedPanel({ number, title, subtitle, children }) {
   return (
     <section className="fhm-step">
       <div className="fhm-step-head">
         <span className="fhm-step-number">{number}</span>
+
         <div>
           <h2>{title}</h2>
           <p>{subtitle}</p>
         </div>
       </div>
+
       {children}
     </section>
   );
@@ -259,13 +161,17 @@ export default function Membership() {
   const [catalog, setCatalog] = useState([]);
   const [catalogLoading, setCatalogLoading] = useState(true);
   const [catalogError, setCatalogError] = useState("");
+
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
   const [unlisted, setUnlisted] = useState(false);
+
   const [issue, setIssue] = useState("");
   const [notes, setNotes] = useState("");
+
   const [sending, setSending] = useState(false);
   const [submitError, setSubmitError] = useState("");
+
   const [receipt, setReceipt] = useState(null);
   const [copied, setCopied] = useState(false);
   const [showPriceInfo, setShowPriceInfo] = useState(false);
@@ -296,7 +202,9 @@ export default function Membership() {
           setCatalogError(error.message || "Unable to load phone catalogue.");
         }
       } finally {
-        if (!controller.signal.aborted) setCatalogLoading(false);
+        if (!controller.signal.aborted) {
+          setCatalogLoading(false);
+        }
       }
     }
 
@@ -466,11 +374,13 @@ export default function Membership() {
         <div className="fhm-shell fhm-hero-inner">
           <div className="fhm-hero-copy">
             <span className="fhm-eyebrow">MEMBERSHIP REQUEST</span>
+
             <h1>
               Get Your Mobile
               <br />
               <span>Membership Today</span>
             </h1>
+
             <p>
               Select your phone, get the correct plan automatically
               <br className="fhm-desktop-break" /> and enjoy exclusive service
@@ -479,11 +389,18 @@ export default function Membership() {
           </div>
 
           <div className="fhm-hero-phones" aria-hidden="true">
-            <div className="fhm-hero-phone fhm-hero-phone--left" />
-            <div className="fhm-hero-phone fhm-hero-phone--mid">
-              <div className="fhm-hero-screen" />
+            <div className="fhm-hero-slideshow">
+              {HERO_IMAGES.map((image, index) => (
+                <img
+                  key={image}
+                  src={image}
+                  alt=""
+                  className="fhm-hero-slide"
+                  style={{ animationDelay: `${index * 4}s` }}
+                  loading={index === 0 ? "eager" : "lazy"}
+                />
+              ))}
             </div>
-            <div className="fhm-hero-phone fhm-hero-phone--right" />
           </div>
         </div>
       </section>
@@ -613,13 +530,9 @@ export default function Membership() {
                     </span>
                   )}
 
-                  <PhoneArtwork
-                    brand={brand}
-                    model={entry.model}
-                    image={entry.image}
-                  />
-
-                  <span title={entry.model}>{entry.model}</span>
+                  <span className="fhm-model-name" title={entry.model}>
+                    {entry.model}
+                  </span>
                 </button>
               ))}
 
@@ -640,15 +553,6 @@ export default function Membership() {
         >
           <div className="fhm-plan-layout">
             <div className="fhm-recommendation">
-              <div className="fhm-recommendation-phone">
-                <PhoneArtwork
-                  brand={brand}
-                  model={model || "Phone"}
-                  image={selectedPhone?.image}
-                  large
-                />
-              </div>
-
               <div className="fhm-recommendation-name">
                 <h3>
                   {model
@@ -739,6 +643,7 @@ export default function Membership() {
               <div className="fhm-customer-fields">
                 <div className="fhm-field">
                   <label htmlFor="fhm-name">Full Name</label>
+
                   <div className="fhm-readonly">
                     <Smartphone size={16} />
                     <input id="fhm-name" value={user.fullName || ""} readOnly />
@@ -747,6 +652,7 @@ export default function Membership() {
 
                 <div className="fhm-field">
                   <label htmlFor="fhm-address">Address</label>
+
                   <div className="fhm-readonly">
                     <MapPin size={17} />
                     <input
@@ -759,6 +665,7 @@ export default function Membership() {
 
                 <div className="fhm-field">
                   <label htmlFor="fhm-email">Email Address</label>
+
                   <div className="fhm-readonly">
                     <Mail size={17} />
                     <input id="fhm-email" value={user.email || ""} readOnly />
@@ -767,6 +674,7 @@ export default function Membership() {
 
                 <div className="fhm-field">
                   <label htmlFor="fhm-issue">Repair Issue (Optional)</label>
+
                   <div className="fhm-select-wrap fhm-select-small">
                     <Wrench size={16} />
 
@@ -790,6 +698,7 @@ export default function Membership() {
 
                 <div className="fhm-field">
                   <label htmlFor="fhm-phone">Phone Number</label>
+
                   <div className="fhm-readonly">
                     <Phone size={16} />
                     <input id="fhm-phone" value={user.phone || ""} readOnly />
@@ -866,6 +775,7 @@ export default function Membership() {
 
                     <div>
                       <strong>Request saved</strong>
+
                       <small>
                         Request ID:{" "}
                         <code>
@@ -875,7 +785,8 @@ export default function Membership() {
                     </div>
 
                     <button type="button" onClick={copyId}>
-                      <Copy size={14} /> {copied ? "Copied" : "Copy ID"}
+                      <Copy size={14} />
+                      {copied ? "Copied" : "Copy ID"}
                     </button>
                   </div>
                 )}
@@ -915,6 +826,7 @@ export default function Membership() {
           <div className="fhm-range-head">
             <div>
               <h2>₹ &nbsp;One Fixing Charge</h2>
+
               <p>
                 Based on your phone's original MRP (not current market price).
               </p>

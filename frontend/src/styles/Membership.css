@@ -1760,3 +1760,44 @@
           min-width: 0;
      }
 }
+
+
+.fhm-hero-slideshow {
+     position: relative;
+     width: 100%;
+     height: 100%;
+}
+
+.fhm-hero-slide {
+     position: absolute;
+     inset: 0;
+     width: 100%;
+     height: 100%;
+     object-fit: contain;
+     opacity: 0;
+     animation: fhmHeroSlide 32s infinite;
+}
+
+@keyframes fhmHeroSlide {
+
+     0%,
+     12% {
+          opacity: 1;
+     }
+
+     16%,
+     100% {
+          opacity: 0;
+     }
+}
+
+@media (prefers-reduced-motion: reduce) {
+     .fhm-hero-slide {
+          animation: none;
+     }
+
+     .fhm-hero-slide:first-child {
+          opacity: 1;
+     }
+}
+

@@ -11,6 +11,7 @@ const BLOCKED_TERMS = [
   "advertisement",
 ];
 
+
 function isLikelyPhonePhoto(title = "") {
   const lower = title.toLowerCase();
 
