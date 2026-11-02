@@ -1,6 +1,5 @@
 // ============================================================
 // FIXHUB PHONE IMAGE DATABASE
-// Individual imports + phone image mapping
 // ============================================================
 
 // ============================================================
@@ -369,8 +368,10 @@ import nothingPhone3aPro from "./Nothing/nothing-phone-3a-pro-new-1.jpg";
 import nothingPhone3 from "./Nothing/nothing-phone-3-new-1.jpg";
 
 // ============================================================
-// ONEPLUS NORD CE SERIES - IMAGE URLS
+// 12. EXTERNAL IMAGE URLS
 // ============================================================
+
+// ONEPLUS NORD CE SERIES
 
 const oneplusNordCE2Image =
   "https://oasis.opstatics.com/content/dam/oasis/page/2022/operation/feb/0211/nord-ce-2-5g/Blue.png";
@@ -379,16 +380,103 @@ const oneplusNordCE2LiteImage =
   "https://cell-shop.com.mx/wp-content/uploads/2024/02/oneplus-nord-ce-2-lite-5g-128gb-dual-sim-8gb-ram-4.png";
 
 const oneplusNordCE3Image =
-  "https://i.gadgets360cdn.com/products/large/oneplus-nord-ce-3-659x800-1690863917.jpg";
+  "https://oasis.opstatics.com/content/dam/oasis/page/2023/global/product/ziti/ziti-specs-blue.png";
 
 const oneplusNordCE3LiteImage =
   "https://oasis.opstatics.com/content/dam/oasis/page/2023/global/product/larry/specs/product-green.png";
+
+const oneplusNordCE4Image =
+  "https://oasis.opstatics.com/content/dam/oasis/page/2024/in/benz/benz-green-v2.png";
+
+const oneplusNordCE4LiteImage =
+  "https://m.media-amazon.com/images/I/51KJE22BKrL._SL1000_.jpg";
+
+const oneplusNordCE5Image =
+  "https://cit-node.blr1.cdn.digitaloceanspaces.com/decent_image/245f7d09-7f4d-4d96-9784-f781eeda4eec-oneplus-nord-ce5-price-in-bd-2.png";
+
+// OPPO
+
+const oppoA5ProImage =
+  "https://produ-bucket-media.s3.amazonaws.com/product/203974/2025/8/11/57413d6fe3115ab8d028bbbf6d809302.jpg?scale=500&qlty=75";
+
+const oppoF21ProImage = "https://static.digit.in/default/image1-0d69125f95.png";
+
+const oppoF27ProPlusImage =
+  "https://image.oppo.com/content/dam/oppo/common/mkt/v2-2/f27-in/navigation/440_440_green_v1.png";
+
+const oppoF9ProImage =
+  "https://images.fonearena.com/blog/wp-content/uploads/2018/09/OPPO-F9-Pro-Starry-Purple.jpg";
+
+const oppoReno5ProImage =
+  "https://cdn.dxomark.com/wp-content/uploads/medias/post-85183/featured_oppo_reno5pro5g.jpg";
+
+// VIVO
+
+const vivoS2FEImage =
+  "https://cdn.beebom.com/content/2026/09/vivo-y600i-back-design-showcased.jpg";
+
+const vivoV27Image =
+  "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1677055996798/5840566107b8a22a9347e3ebe5bc13d3.png";
+
+const vivoV29Image =
+  "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1691568917373/4b036add7683275dc73d535f9dc023f1.png";
+
+const vivoX50Image =
+  "https://wwwstatic.vivo.com.cn/vivoportal/files/image/detail/20200601/336bbe20ae171ac27001b585f1d13b88.png";
+
+const vivoX200Image =
+  "https://en.shiftdelete.net/wp-content/uploads/2024/10/vivo-x200-satis-kapak.webp";
+
+const vivoY21Image =
+  "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1640949106580/6d0de6e5868086bb76dcc5a07bbb673c.png";
+
+const vivoY28Image =
+  "https://www.mobiledokan.com/media/vivo-y28-4g-gleaming-orange-official-image.webp";
+
+const vivoY35Image =
+  "https://in-exstatic-vivofs.vivo.com/gdHFRinHEMrj3yPG/1660563273753/1d426c79ed0e3f2c70482fcbf8915d00.png";
+
+// XIAOMI EXTERNAL IMAGE URLS
+
+const xiaomiMi10Image =
+  "https://media.rbcdn.ru/media/upload_tmp/2018/mi-10-ultra_15.png";
+
+const xiaomiMi10TImage =
+  "https://fdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-mi-10t-5g-1.jpg";
+
+const xiaomiMi10TProImage =
+  "https://fdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-mi-10t-pro-02.jpg";
+
+const xiaomiMi11UltraImage =
+  "https://i01.appmifile.com/webfile/globalimg/products/pc/mi-11-ultra/pc-specs-header.png";
+
 // ============================================================
-// 12. PHONE IMAGE MAPPING
+// 13. REALME EXTERNAL IMAGE URLS
+// ============================================================
+
+const realmeC65Image =
+  "https://rukminim2.flixcart.com/image/960/1280/xif0q/mobile/n/e/c/-original-imahy99ngbtpm2cz.jpeg?q=60";
+
+const realmeC71Image =
+  "https://image05.realme.net/general/20250715/175257138077517301eb6f95b4602acf1483f4bde183c.png";
+
+const realmeGT6Image =
+  "https://fdn.gsmarena.com/imgroot/news/24/06/realme-gt-6-official/-1200x900m/gsmarena_001.jpg";
+
+const realmeNarzo50ProImage =
+  "https://m.media-amazon.com/images/I/8129V02wQuL._AC_SL1500_.jpg";
+
+const realmeNarzo60ProImage =
+  "https://fdn2.gsmarena.com/vv/pics/realme/realme-narzo60-pro-5g-1.jpg";
+
+const realmeNarzo80LiteImage =
+  "https://www.mymobileindia.com/devices/wp-content/uploads/2026/10/realme-Narzo-80-Lite-4G-2048x2048.jpg";
+
+// ============================================================
+// 14. PHONE IMAGE MAPPING
 // ============================================================
 
 export const PHONE_IMAGES = {
-
   // APPLE
   ...{
     "iPhone 18 Pro": iphone18Pro,
@@ -519,26 +607,17 @@ export const PHONE_IMAGES = {
     "OnePlus Nord 3": oneplusNord3,
     "OnePlus Nord 4": oneplusNord4,
     "OnePlus Nord 5": oneplusNord5,
-
-    "OnePlus Nord ce 2": oneplusNordCE2Image,
     "OnePlus Nord CE 2": oneplusNordCE2Image,
-    "OnePlus Nord CE2": oneplusNordCE2Image,
     "OnePlus Nord CE 2 5G": oneplusNordCE2Image,
-
     "OnePlus Nord CE 2 Lite": oneplusNordCE2LiteImage,
-    "OnePlus Nord CE2 Lite": oneplusNordCE2LiteImage,
     "OnePlus Nord CE 2 Lite 5G": oneplusNordCE2LiteImage,
-
     "OnePlus Nord CE 3": oneplusNordCE3Image,
     "OnePlus Nord CE 3 5G": oneplusNordCE3Image,
-
     "OnePlus Nord CE 3 Lite": oneplusNordCE3LiteImage,
-    "OnePlus Nord CE3 Lite": oneplusNordCE3LiteImage,
     "OnePlus Nord CE 3 Lite 5G": oneplusNordCE3LiteImage,
-
-    "OnePlus Nord CE 4": oneplusNordCE4,
-    "OnePlus Nord CE 4 Lite": oneplusNordCE4Lite,
-    "OnePlus Nord CE 5": oneplusNordCE5,
+    "OnePlus Nord CE 4": oneplusNordCE4Image,
+    "OnePlus Nord CE 4 Lite": oneplusNordCE4LiteImage,
+    "OnePlus Nord CE 5": oneplusNordCE5Image,
   },
 
   // XIAOMI
@@ -553,10 +632,21 @@ export const PHONE_IMAGES = {
     "Xiaomi 15 Ultra": xiaomi15Ultra,
     "Xiaomi 17": xiaomi17,
     "Xiaomi 17 Ultra": xiaomi17Ultra,
-    "Xiaomi Mi 10T 5G": xiaomiMi10T,
-    "Xiaomi Mi 10T Pro": xiaomiMi10TPro,
-    "Xiaomi Mi 11 Ultra": xiaomiMi11Ultra,
-    "Xiaomi Mi 11 Ultra 5G": xiaomiMi11Ultra,
+
+    "Mi 10": xiaomiMi10Image,
+    "Xiaomi Mi 10": xiaomiMi10Image,
+
+    "Mi 10T": xiaomiMi10TImage,
+    "Xiaomi Mi 10T": xiaomiMi10TImage,
+    "Xiaomi Mi 10T 5G": xiaomiMi10TImage,
+
+    "Mi 10T Pro": xiaomiMi10TProImage,
+    "Xiaomi Mi 10T Pro": xiaomiMi10TProImage,
+
+    "Xiaomi Mi 11 Ultra": xiaomiMi11UltraImage,
+    "Xiaomi Mi 11 Ultra 5G": xiaomiMi11UltraImage,
+    "Mi 11 Ultra": xiaomiMi11UltraImage,
+
     "Xiaomi Mi 11X": xiaomiMi11X,
     "Xiaomi Mi 11X Pro": xiaomiMi11XPro,
     "Mi 11X": xiaomiMi11X,
@@ -588,15 +678,20 @@ export const PHONE_IMAGES = {
   ...{
     "OPPO A3 Pro": oppoA3Pro,
     "OPPO A3x": oppoA3x,
-    "OPPO A5 Pro 5G": oppoA5Pro,
+    "OPPO A5 Pro": oppoA5ProImage,
+    "OPPO A5 Pro 5G": oppoA5ProImage,
     "OPPO F7": oppoF7,
     "OPPO F9": oppoF9,
+    "OPPO F9 Pro": oppoF9ProImage,
     "OPPO F11 Pro": oppoF11Pro,
     "OPPO F15": oppoF15,
     "OPPO F17 Pro": oppoF17Pro,
     "OPPO F19 Pro": oppoF19Pro,
+    "OPPO F21 Pro": oppoF21ProImage,
     "OPPO F23 5G": oppoF23,
     "OPPO F25 Pro": oppoF25Pro,
+    "OPPO F27 Pro+": oppoF27ProPlusImage,
+    "OPPO F27 Pro Plus": oppoF27ProPlusImage,
     "OPPO F35": oppoF35,
     "OPPO F35 Pro": oppoF35Pro,
     "OPPO Find X2": oppoFindX2,
@@ -607,9 +702,12 @@ export const PHONE_IMAGES = {
     "OPPO Reno2": oppoReno2,
     "OPPO Reno3 Pro": oppoReno3Pro,
     "OPPO Reno4 Pro": oppoReno4Pro,
-    "OPPO Reno5 Pro 5G": oppoReno5Pro,
+    "OPPO Reno5 Pro": oppoReno5ProImage,
+    "OPPO Reno5 Pro 5G": oppoReno5ProImage,
+    "OPPO Reno6 Pro": oppoReno6Pro,
     "OPPO Reno6 Pro 5G": oppoReno6Pro,
     "OPPO Reno7 4G": oppoReno7,
+    "OPPO Reno7 Pro": oppoReno7Pro,
     "OPPO Reno7 Pro 5G": oppoReno7Pro,
     "OPPO Reno8 Pro": oppoReno8Pro,
     "OPPO Reno10 Pro": oppoReno10Pro,
@@ -623,6 +721,7 @@ export const PHONE_IMAGES = {
   // VIVO
   ...{
     "Vivo S2": vivoS2,
+    "Vivo S2 FE 5G": vivoS2FEImage,
     "Vivo S17 Pro": vivoS17Pro,
     "Vivo V9": vivoV9,
     "Vivo V11 Pro": vivoV11Pro,
@@ -633,26 +732,38 @@ export const PHONE_IMAGES = {
     "Vivo V21 5G": vivoV21,
     "Vivo V23 5G": vivoV23,
     "Vivo V25 Pro": vivoV25Pro,
+    "Vivo V27": vivoV27Image,
+    "Vivo V27 5G": vivoV27Image,
     "Vivo V27 Pro": vivoV27Pro,
+    "Vivo V29": vivoV29Image,
+    "Vivo V29 5G": vivoV29Image,
     "Vivo V30": vivoV30,
     "Vivo V40": vivoV40,
     "Vivo V40 Pro": vivoV40Pro,
     "Vivo V80": vivoV80,
-    "Vivo X50 4G": vivoX50,
+    "Vivo X50": vivoX50Image,
+    "Vivo X50 4G": vivoX50Image,
     "Vivo X60": vivoX60,
     "Vivo X70 Pro": vivoX70Pro,
     "Vivo X80": vivoX80,
     "Vivo X90": vivoX90,
     "Vivo X100": vivoX100,
-    "Vivo X200": vivoX200,
+    "Vivo X200": vivoX200Image,
+    "Vivo X200 5G": vivoX200Image,
     "Vivo X200 FE": vivoX200FE,
     "Vivo X Fold6": vivoXFold6,
     "Vivo Y05": vivoY05,
     "Vivo Y20": vivoY20,
-    "Vivo Y28 5G": vivoY28,
+    "Vivo Y21": vivoY21Image,
+    "Vivo Y21 5G": vivoY21Image,
+    "Vivo Y28": vivoY28Image,
+    "Vivo Y28 4G": vivoY28Image,
+    "Vivo Y28 5G": vivoY28Image,
     "Vivo Y33s": vivoY33s,
+    "Vivo Y35": vivoY35Image,
     "Vivo Y56 5G": vivoY56,
     "Vivo Y100": vivoY100,
+    "Vivo Y200": vivoY200,
     "Vivo Y200 5G": vivoY200,
   },
 
@@ -686,17 +797,25 @@ export const PHONE_IMAGES = {
     "Realme C33": realmeC33,
     "Realme C35": realmeC35,
     "Realme C55": realmeC55,
+    "Realme C65 5G": realmeC65Image,
+    "Realme C65": realmeC65Image,
+    "Realme C71": realmeC71Image,
     "Realme C75 5G": realmeC75,
     "Realme GT2 Pro": realmeGT2Pro,
+    "Realme GT6": realmeGT6Image,
+    "Realme GT 6": realmeGT6Image,
     "Realme GT7": realmeGT7,
     "Realme GT7 Pro": realmeGT7Pro,
     "Realme GT Neo3": realmeGTNeo3,
     "Realme Narzo 20 Pro": realmeNarzo20Pro,
     "Realme Narzo 30 Pro": realmeNarzo30Pro,
-    "Realme Narzo 50 Pro 5G": realmeNarzo50Pro,
-    "Realme Narzo 60 Pro 5G": realmeNarzo60Pro,
+    "Realme Narzo 50 Pro 5G": realmeNarzo50ProImage,
+    "Realme Narzo 50 Pro": realmeNarzo50ProImage,
+    "Realme Narzo 60 Pro 5G": realmeNarzo60ProImage,
+    "Realme Narzo 60 Pro": realmeNarzo60ProImage,
     "Realme Narzo 70 Pro": realmeNarzo70Pro,
-    "Realme Narzo 80 Lite 4G": realmeNarzo80Lite,
+    "Realme Narzo 80 Lite 4G": realmeNarzo80LiteImage,
+    "Realme Narzo 80 Lite": realmeNarzo80LiteImage,
   },
 
   // POCO
@@ -763,7 +882,7 @@ export const PHONE_IMAGES = {
 };
 
 // ============================================================
-// 13. NORMALIZE PHONE MODEL
+// 15. NORMALIZE PHONE MODEL
 // ============================================================
 
 function normalizeModel(model) {
@@ -774,7 +893,7 @@ function normalizeModel(model) {
 }
 
 // ============================================================
-// 14. GET PHONE IMAGE
+// 16. GET PHONE IMAGE
 // ============================================================
 
 export function getPhoneImage(model) {
@@ -782,54 +901,22 @@ export function getPhoneImage(model) {
 
   const normalized = normalizeModel(model);
 
-  // Direct match
   const directMatch = Object.keys(PHONE_IMAGES).find(
-    (key) => normalizeModel(key) === normalized
+    (key) => normalizeModel(key) === normalized,
   );
 
   if (directMatch) {
     return PHONE_IMAGES[directMatch];
   }
 
-  // Remove common brand prefixes
-  const prefixes = [
-    "samsung ",
-    "oppo ",
-    "vivo ",
-    "realme ",
-    "poco ",
-    "motorola ",
-    "moto ",
-    "nothing ",
-    "galaxy ",
-    "oneplus ",
-  ];
+  const simplifiedModel = normalized.replace(/[^a-z0-9]/g, "");
 
-  let cleanedModel = normalized;
+  const simplifiedMatch = Object.keys(PHONE_IMAGES).find(
+    (key) => key.replace(/[^a-z0-9]/gi, "").toLowerCase() === simplifiedModel,
+  );
 
-  for (const prefix of prefixes) {
-    if (cleanedModel.startsWith(prefix)) {
-      cleanedModel = cleanedModel.slice(prefix.length);
-      break;
-    }
-  }
-
-  // Match after removing brand prefix
-  const aliasMatch = Object.keys(PHONE_IMAGES).find((key) => {
-    let keyName = normalizeModel(key);
-
-    for (const prefix of prefixes) {
-      if (keyName.startsWith(prefix)) {
-        keyName = keyName.slice(prefix.length);
-        break;
-      }
-    }
-
-    return keyName === cleanedModel;
-  });
-
-  if (aliasMatch) {
-    return PHONE_IMAGES[aliasMatch];
+  if (simplifiedMatch) {
+    return PHONE_IMAGES[simplifiedMatch];
   }
 
   console.warn("[FIXHUB] Phone image not found:", model);
@@ -838,7 +925,7 @@ export function getPhoneImage(model) {
 }
 
 // ============================================================
-// 15. GET ALL PHONE MODELS
+// 17. GET ALL PHONE MODELS
 // ============================================================
 
 export function getAllPhoneModels() {
@@ -846,37 +933,63 @@ export function getAllPhoneModels() {
 }
 
 // ============================================================
-// 16. CHECK PHONE IMAGE
+// 18. CHECK PHONE IMAGES
 // ============================================================
 
 export function checkPhoneImages() {
   console.log("========== FIXHUB PHONE IMAGE TEST ==========");
 
-  console.log("Total mapped phones:", Object.keys(PHONE_IMAGES).length);
-
   const models = [
     "iPhone 15 Pro Max",
     "Galaxy S26 Ultra",
+
     "OnePlus 12",
+    "Mi 10",
+    "Mi 10T",
+    "Mi 10T Pro",
+    "Mi 11 Ultra",
     "OnePlus Nord CE 2 5G",
     "OnePlus Nord CE 2 Lite 5G",
     "OnePlus Nord CE 3 5G",
     "OnePlus Nord CE 3 Lite 5G",
-    "Xiaomi 14",
-    "Redmi Note 13 Pro 5G",
-    "OPPO A3 Pro",
-    "Vivo V40",
+    "OnePlus Nord CE 4",
+    "OnePlus Nord CE 4 Lite",
+    "OnePlus Nord CE 5",
+
+    "OPPO A5 Pro",
+    "OPPO A5 Pro 5G",
+    "OPPO F9 Pro",
+    "OPPO F21 Pro",
+    "OPPO F27 Pro+",
+    "OPPO Reno5 Pro",
+    "OPPO Reno5 Pro 5G",
+
+    "Vivo S2 FE 5G",
+    "Vivo V27",
+    "Vivo V29",
+    "Vivo X50",
+    "Vivo X200",
+    "Vivo Y21",
+    "Vivo Y28",
+    "Vivo Y35",
+
     "Realme GT7 Pro",
+    "Realme C65 5G",
+    "Realme C71",
+    "Realme GT 6",
+    "Realme Narzo 50 Pro",
+    "Realme Narzo 60 Pro",
+    "Realme Narzo 80 Lite",
+
     "POCO X6 Pro",
     "Motorola Edge 50 Pro",
     "Nothing Phone 1",
     "Nothing Phone 2",
     "Nothing Phone 2a",
-    "Nothing Phone 2a Plus",
     "Nothing Phone 3a",
-    "Nothing Phone 3a Pro",
-    "Nothing Phone 3",
   ];
+
+  console.log("Total mapped phones:", Object.keys(PHONE_IMAGES).length);
 
   models.forEach((model) => {
     const image = getPhoneImage(model);
