@@ -450,9 +450,57 @@ const xiaomiMi10TProImage =
 const xiaomiMi11UltraImage =
   "https://i01.appmifile.com/webfile/globalimg/products/pc/mi-11-ultra/pc-specs-header.png";
 
-// ============================================================
-// 13. REALME EXTERNAL IMAGE URLS
-// ============================================================
+// REDMI EXTERNAL IMAGE URLS
+
+const redmi13Image =
+  "https://cdn.bdspec.com/mobile/smartphone/xiaomi-redmi-note-13-5g-bangladesh/xiaomi-redmi-note-13-5g-bangladesh-03.webp";
+
+const redmi17C5GImage =
+  "https://cdn-files.kimovil.com/default/0013/82/thumb_1281062_default_big.png";
+
+const redmi7Image =
+  "https://devicehd.com/img_dir/smartphones/xiaomi-redmi-7-2.png";
+
+const redmi7AImage =
+  "https://fdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-redmi-7a-mzb8008in.jpg";
+
+const redmi8Image =
+  "https://imei24.com/img/xiaomi/14_30_23_Xiaomi_Redmi_8_2.jpg";
+
+const redmi8AImage =
+  "https://fdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-redmi-8a-0.jpg";
+
+const redmi9Image =
+  "https://c2.lestechnophiles.com/images.frandroid.com/wp-content/uploads/2020/06/xiaomi-redmi-9-frandroid-2020.png?resize=580";
+
+const redmi9AImage =
+  "https://www.xiaomistore.tn/wp-content/uploads/2022/08/ezgif.com-gif-maker-4-1.png";
+
+const redmiNote10Image =
+  "https://phonesdata.com/files/models/Xiaomi-Redmi-Note-10-774.jpg";
+
+const redmiNote10ProMaxImage =
+  "https://api.priceinkenya.com/media/124070/conversions/xiaomi-redmi-note-10-pro-max-6gb128gb-8U68rB4wZR-original.webp";
+
+const redmiNote11Image =
+  "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1648199221.0063088.png";
+
+const redmiNote11ProPlusImage =
+  "https://media.ldlc.com/r1600/ld/products/00/05/94/49/LD0005944981_0005947036.jpg";
+
+const redmiNote12Image =
+  "https://m.media-amazon.com/images/I/81sTK4zipDL._SL1500_.jpg";
+
+const redmiNote12ProImage =
+  "https://pokharamobilestore.com/wp-content/uploads/2023/04/Redmi-Note-12-Pro-5g-Black_n.jpg";
+
+const redmiNote12ProPlusImage =
+  "https://media.ldlc.com/r1600/ld/products/00/06/04/77/LD0006047745.jpg";
+
+const redmiNote14Image =
+  "https://cdn.bdspec.com/mobile/smartphone/xiaomi-redmi-note-14-5g-bangladesh/xiaomi-redmi-note-14-5g-bangladesh.webp";
+
+// REALME EXTERNAL IMAGE URLS
 
 const realmeC65Image =
   "https://rukminim2.flixcart.com/image/960/1280/xif0q/mobile/n/e/c/-original-imahy99ngbtpm2cz.jpeg?q=60";
@@ -472,8 +520,28 @@ const realmeNarzo60ProImage =
 const realmeNarzo80LiteImage =
   "https://www.mymobileindia.com/devices/wp-content/uploads/2026/10/realme-Narzo-80-Lite-4G-2048x2048.jpg";
 
+// POCO EXTERNAL IMAGE URLS
+
+const pocoF1Image =
+  "https://xiaomiui.net/wp-content/themes/xiaomiuiwp/assets/phones/devicephotos/pocophone_f1_beryllium_3.png";
+
+const pocoF4Image =
+  "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1655103819.18028494.png";
+
+const pocoM6_5GImage =
+  "https://m.media-amazon.com/images/I/719LcA76E5L._SL1500_.jpg";
+
+const pocoX4Pro5GImage =
+  "https://i.blogs.es/374bda/poco-x4-pro-5g/original.jpeg";
+
+const pocoX6Pro5GImage =
+  "https://smuggler.com.pk/mobiles/images/xiaomi/poco-x6-pro-5g_3.webp?v=1792540756";
+
+const pocoX8Image =
+  "https://cdn.etoren.com/upload/images/0.51081500_1773800271_xiaomi-poco-x8-pro-max-5g-dual-sim-256gb-white-12gb-ram-global-version.png";
+
 // ============================================================
-// 14. PHONE IMAGE MAPPING
+// 13. PHONE IMAGE MAPPING
 // ============================================================
 
 export const PHONE_IMAGES = {
@@ -632,21 +700,16 @@ export const PHONE_IMAGES = {
     "Xiaomi 15 Ultra": xiaomi15Ultra,
     "Xiaomi 17": xiaomi17,
     "Xiaomi 17 Ultra": xiaomi17Ultra,
-
     "Mi 10": xiaomiMi10Image,
     "Xiaomi Mi 10": xiaomiMi10Image,
-
     "Mi 10T": xiaomiMi10TImage,
     "Xiaomi Mi 10T": xiaomiMi10TImage,
     "Xiaomi Mi 10T 5G": xiaomiMi10TImage,
-
     "Mi 10T Pro": xiaomiMi10TProImage,
     "Xiaomi Mi 10T Pro": xiaomiMi10TProImage,
-
     "Xiaomi Mi 11 Ultra": xiaomiMi11UltraImage,
     "Xiaomi Mi 11 Ultra 5G": xiaomiMi11UltraImage,
     "Mi 11 Ultra": xiaomiMi11UltraImage,
-
     "Xiaomi Mi 11X": xiaomiMi11X,
     "Xiaomi Mi 11X Pro": xiaomiMi11XPro,
     "Mi 11X": xiaomiMi11X,
@@ -655,17 +718,34 @@ export const PHONE_IMAGES = {
 
   // REDMI
   ...{
+    "Redmi 7": redmi7Image,
+    "Redmi 7A": redmi7AImage,
+    "Redmi 8": redmi8Image,
+    "Redmi 8A": redmi8AImage,
+    "Redmi 9": redmi9Image,
+    "Redmi 9A": redmi9AImage,
     "Redmi 9 Power": redmi9Power,
     "Redmi 10": redmi10,
     "Redmi 10A": redmi10A,
     "Redmi 10 Power": redmi10Power,
+    "Redmi Note 10": redmiNote10Image,
+    "Redmi Note 10 Pro": redmiNote10Pro,
+    "Redmi Note 10 Pro Max": redmiNote10ProMaxImage,
+    "Redmi Note 11": redmiNote11Image,
+    "Redmi Note 11 Pro+": redmiNote11ProPlusImage,
+    "Redmi Note 12 5G": redmiNote12Image,
     "Redmi 12": redmi12,
+    "Redmi 13 5G": redmi13Image,
     "Redmi 13C": redmi13C,
     "Redmi 13C 5G": redmi13C5G,
     "Redmi 14C": redmi14C,
     "Redmi 17C": redmi17C,
-    "Redmi Note 10 Pro": redmiNote10Pro,
+    "Redmi 17C 5G": redmi17C5GImage,
+    "Redmi Note 12 Pro 5G": redmiNote12ProImage,
+    "Redmi Note 12 Pro+ 5G": redmiNote12ProPlusImage,
+    "Redmi Note 13 5G": redmi13Image,
     "Redmi Note 13 Pro 5G": redmiNote13Pro,
+    "Redmi Note 14 5G": redmiNote14Image,
     "Redmi Note 13 Pro+": redmiNote13ProPlus,
     "Redmi Note 14 Pro 5G": redmiNote14Pro,
     "Redmi Note 14 Pro+ 5G": redmiNote14ProPlus,
@@ -820,27 +900,35 @@ export const PHONE_IMAGES = {
 
   // POCO
   ...{
-    "POCO F4 5G": pocoF4,
+    "POCO F1": pocoF1Image,
+    "POCOPHONE F1": pocoF1Image,
+    "POCO F4": pocoF4Image,
+    "POCO F4 5G": pocoF4Image,
     "POCO F5": pocoF5,
     "POCO F5 Pro": pocoF5Pro,
     "POCO F6": pocoF6,
-    "POCO F7": pocoF7,
     "POCO F6 Pro": pocoF6Pro,
+    "POCO F7": pocoF7,
     "POCO M2": pocoM2,
     "POCO M2 Pro": pocoM2Pro,
     "POCO M3": pocoM3,
     "POCO M4 Pro": pocoM4Pro,
+    "POCO M6 5G": pocoM6_5GImage,
     "POCO M6 Pro": pocoM6Pro,
     "POCO X2": pocoX2,
     "POCO X3": pocoX3,
     "POCO X3 Pro": pocoX3Pro,
-    "POCO X4 Pro": pocoX4Pro,
+    "POCO X4 Pro": pocoX4Pro5GImage,
+    "POCO X4 Pro 5G": pocoX4Pro5GImage,
     "POCO X5 5G": pocoX5,
     "POCO X5 Pro 5G": pocoX5Pro,
     "POCO X6": pocoX6,
-    "POCO X6 Pro": pocoX6Pro,
+    "POCO X6 5G": pocoX6,
+    "POCO X6 Pro": pocoX6Pro5GImage,
+    "POCO X6 Pro 5G": pocoX6Pro5GImage,
+    "POCO X8 5G": pocoX8Image,
+    "POCO X8 Pro Max 5G": pocoX8Image,
     "POCO X8 Pro": pocoX8Pro,
-    "POCOPHONE F1": pocoF1,
   },
 
   // MOTOROLA
@@ -882,7 +970,7 @@ export const PHONE_IMAGES = {
 };
 
 // ============================================================
-// 15. NORMALIZE PHONE MODEL
+// NORMALIZE PHONE MODEL
 // ============================================================
 
 function normalizeModel(model) {
@@ -893,7 +981,7 @@ function normalizeModel(model) {
 }
 
 // ============================================================
-// 16. GET PHONE IMAGE
+// GET PHONE IMAGE
 // ============================================================
 
 export function getPhoneImage(model) {
@@ -925,7 +1013,7 @@ export function getPhoneImage(model) {
 }
 
 // ============================================================
-// 17. GET ALL PHONE MODELS
+// GET ALL PHONE MODELS
 // ============================================================
 
 export function getAllPhoneModels() {
@@ -933,7 +1021,7 @@ export function getAllPhoneModels() {
 }
 
 // ============================================================
-// 18. CHECK PHONE IMAGES
+// CHECK PHONE IMAGES
 // ============================================================
 
 export function checkPhoneImages() {
@@ -942,12 +1030,13 @@ export function checkPhoneImages() {
   const models = [
     "iPhone 15 Pro Max",
     "Galaxy S26 Ultra",
-
     "OnePlus 12",
+
     "Mi 10",
     "Mi 10T",
     "Mi 10T Pro",
     "Mi 11 Ultra",
+
     "OnePlus Nord CE 2 5G",
     "OnePlus Nord CE 2 Lite 5G",
     "OnePlus Nord CE 3 5G",
@@ -981,7 +1070,32 @@ export function checkPhoneImages() {
     "Realme Narzo 60 Pro",
     "Realme Narzo 80 Lite",
 
-    "POCO X6 Pro",
+    "Redmi 7",
+    "Redmi 7A",
+    "Redmi 8",
+    "Redmi 8A",
+    "Redmi 9",
+    "Redmi 9A",
+    "Redmi 13 5G",
+    "Redmi 17C 5G",
+    "Redmi Note 10",
+    "Redmi Note 10 Pro Max",
+    "Redmi Note 11",
+    "Redmi Note 11 Pro+",
+    "Redmi Note 12 5G",
+    "Redmi Note 12 Pro 5G",
+    "Redmi Note 12 Pro+ 5G",
+    "Redmi Note 13 5G",
+    "Redmi Note 14 5G",
+
+    "POCO F1",
+    "POCO F4 5G",
+    "POCO M6 5G",
+    "POCO X4 Pro 5G",
+    "POCO X6 5G",
+    "POCO X6 Pro 5G",
+    "POCO X8 5G",
+
     "Motorola Edge 50 Pro",
     "Nothing Phone 1",
     "Nothing Phone 2",
