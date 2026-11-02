@@ -2408,3 +2408,107 @@
           line-height: 1.45;
      }
 }
+
+
+
+/* =========================================================
+   FINAL PHONE IMAGE FIT FIX
+   Keep the complete source image visible inside each card.
+   These rules intentionally override earlier duplicate rules.
+========================================================= */
+
+.fhm-page .fhm-model-grid {
+     align-items: stretch;
+}
+
+.fhm-page .fhm-model-card {
+     min-width: 0;
+     overflow: hidden;
+}
+
+.fhm-page .fhm-model-card-image {
+     position: relative;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     width: 100%;
+     height: 235px;
+     min-height: 235px;
+     padding: 18px;
+     margin: 0 0 12px;
+     overflow: hidden;
+     box-sizing: border-box;
+     border-radius: 12px;
+     background: #ffffff;
+}
+
+/* Also cover images nested inside a wrapper */
+.fhm-page .fhm-model-card-image img,
+.fhm-page .fhm-model-card-image .fhm-model-image {
+     display: block;
+     flex: 0 1 auto;
+     width: auto !important;
+     height: auto !important;
+     max-width: 100% !important;
+     max-height: 100% !important;
+     object-fit: contain !important;
+     object-position: center center !important;
+     padding: 0 !important;
+     margin: auto !important;
+     transform: none !important;
+}
+
+/* Never enlarge the image on hover */
+.fhm-page .fhm-model-card:hover .fhm-model-card-image img,
+.fhm-page .fhm-model-card:hover .fhm-model-image {
+     transform: none !important;
+}
+
+/* If the image component has an intermediate wrapper */
+.fhm-page .fhm-model-card-image>div,
+.fhm-page .fhm-model-card-image .fhm-phone-image-wrap {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     width: 100%;
+     height: 100%;
+     min-width: 0;
+     min-height: 0;
+     overflow: hidden;
+}
+
+/* Keep the model label clear and consistent */
+.fhm-page .fhm-model-card-name {
+     flex: 0 0 auto;
+     width: 100%;
+     padding: 5px 4px 4px;
+     line-height: 1.45;
+     text-align: center;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+     .fhm-page .fhm-model-card-image {
+          height: 205px;
+          min-height: 205px;
+          padding: 16px;
+     }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+     .fhm-page .fhm-model-card-image {
+          height: 175px;
+          min-height: 175px;
+          padding: 13px;
+     }
+}
+
+/* Small mobile */
+@media (max-width: 380px) {
+     .fhm-page .fhm-model-card-image {
+          height: 155px;
+          min-height: 155px;
+          padding: 11px;
+     }
+}

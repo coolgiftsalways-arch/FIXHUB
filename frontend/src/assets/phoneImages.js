@@ -1,314 +1,770 @@
-// =====================================================
+// ============================================================
 // FIXHUB PHONE IMAGE DATABASE
-// APPLE + SAMSUNG + ONEPLUS + XIAOMI + REDMI
-// =====================================================
+// Individual imports + phone image mapping
+// ============================================================
 
-// =====================================================
-// AUTOMATIC IMAGE IMPORT
-// =====================================================
+// ============================================================
+// 1. APPLE IMAGE IMPORTS
+// ============================================================
 
-const ALL_PHONE_FILES = import.meta.glob("./**/*.{jpg,jpeg,png,webp,avif}", {
-  eager: true,
-  query: "?url",
-  import: "default",
-});
+import iphone18Pro from "./iPhone/18promax.png";
+import iphone18 from "./iPhone/18pro.png";
+import iphone17ProMax from "./iPhone/apple-iphone-17-pro-max-1.jpg";
+import iphone17Pro from "./iPhone/apple-iphone-17-pro-1.jpg";
+import iphone17 from "./iPhone/apple-iphone-17-1.jpg";
+import iphoneAir from "./iPhone/apple-iphone-air-1.jpg";
+import iphone16ProMax from "./iPhone/apple-iphone-16-pro-max-1.jpg";
+import iphone16Pro from "./iPhone/apple-iphone-16-pro-1.jpg";
+import iphone16Plus from "./iPhone/apple-iphone-16-plus-1.jpg";
+import iphone16 from "./iPhone/apple-iphone-16-1.jpg";
+import iphone16e from "./iPhone/apple-iphone-16e-1.jpg";
+import iphone15ProMax from "./iPhone/apple-iphone-15-pro-max-1.jpg";
+import iphone15Pro from "./iPhone/apple-iphone-15-pro-1.jpg";
+import iphone15Plus from "./iPhone/apple-iphone-15-plus-1.jpg";
+import iphone15 from "./iPhone/apple-iphone-15-1.jpg";
+import iphone14ProMax from "./iPhone/apple-iphone-14-pro-max-1.jpg";
+import iphone14Pro from "./iPhone/apple-iphone-14-pro-3.jpg";
+import iphone14Plus from "./iPhone/14pluse.png";
+import iphone14 from "./iPhone/apple-iphone-14-3.jpg";
+import iphoneSE2022 from "./iPhone/apple-iphone-se-2022-0.jpg";
+import iphone13ProMax from "./iPhone/apple-iphone-13-pro-max-01.jpg";
+import iphone13Pro from "./iPhone/apple-iphone-13-pro-01.jpg";
+import iphone13 from "./iPhone/apple-iphone-13-01.jpg";
+import iphone13Mini from "./iPhone/apple-iphone-13-mini-01.jpg";
+import iphone12ProMax from "./iPhone/apple-iphone-12-pro-max-1.jpg";
+import iphone12Pro from "./iPhone/apple-iphone-12-pro-r1.jpg";
+import iphone12 from "./iPhone/apple-iphone-12-r1.jpg";
+import iphone12Mini from "./iPhone/apple-iphone-12-mini-r1.jpg";
+import iphoneSE2020 from "./iPhone/apple-iphone-se-2020-2.jpg";
+import iphone11ProMax from "./iPhone/apple-iphone-11-pro-max-4.jpg";
+import iphone11Pro from "./iPhone/11pro.png";
+import iphone11 from "./iPhone/apple-iphone-11-2.jpg";
 
-// =====================================================
-// IMAGE FINDER
-// =====================================================
+// ============================================================
+// 2. SAMSUNG IMAGE IMPORTS
+// ============================================================
 
-function findImage(filename) {
-  if (!filename) return null;
+import samsungS26Ultra from "./Samsung/samsung-galaxy-s26-ultra-1.jpg";
+import samsungS26Plus from "./Samsung/samsung-galaxy-s26-plus-1.jpg";
+import samsungS26 from "./Samsung/samsung-galaxy-s26-1.jpg";
+import samsungFold7 from "./Samsung/Fold7.png";
+import samsungFlip7 from "./Samsung/samsung-galaxy-z-flip7-03.jpg";
+import samsungFlip7FE from "./Samsung/samsung-galaxy-z-flip7-fe-1.jpg";
+import samsungS25Ultra from "./Samsung/samsung-galaxy-s25-ultra-sm-s938-1.jpg";
+import samsungS25Plus from "./Samsung/samsung-galaxy-s25-plus-sm-s936-1.jpg";
+import samsungS25 from "./Samsung/samsung-galaxy-s25-sm-s931-1.jpg";
+import samsungFold6 from "./Samsung/samsung-galaxy-z-fold6-2.jpg";
+import samsungFlip6 from "./Samsung/samsung-galaxy-z-flip6-1.jpg";
+import samsungS24Ultra from "./Samsung/samsung-galaxy-s24-ultra-5g-sm-s928-0.jpg";
+import samsungS24Plus from "./Samsung/samsung-galaxy-s24-plus-5g-sm-s926-1.jpg";
+import samsungS24 from "./Samsung/samsung-galaxy-s24-5g-sm-s921-1.jpg";
+import samsungFold5 from "./Samsung/samsung-galaxy-z-fold5-5g-r3.jpg";
+import samsungFlip5 from "./Samsung/samsung-galaxy-z-flip5-5g-r1.jpg";
+import samsungS23Ultra from "./Samsung/samsung-galaxy-s23-ultra-5g-1.jpg";
+import samsungS23Plus from "./Samsung/samsung-galaxy-s23-plus-5g-3.jpg";
+import samsungS23 from "./Samsung/S23.png";
+import samsungFold4 from "./Samsung/samsung-galaxy-z-fold4-5g-2.jpg";
+import samsungFlip4 from "./Samsung/samsung-galaxy-z-flip4-5g-01.jpg";
+import samsungS22Ultra from "./Samsung/samsung-galaxy-s22-ultra-5g-2.jpg";
+import samsungS22Plus from "./Samsung/samsung-galaxy-s22-plus-5g-2.jpg";
+import samsungS22 from "./Samsung/samsung-galaxy-s22-5g-2.jpg";
+import samsungFold3 from "./Samsung/galaxy-z-fold-3-1.jpg";
+import samsungFlip3 from "./Samsung/galaxy-z-flip3-1.jpg";
+import samsungS21Ultra from "./Samsung/samsung-galaxy-s21-ultra-5g-1.jpg";
+import samsungS21Plus from "./Samsung/samsung-galaxy-s21-plus-5g-1.jpg";
+import samsungS21 from "./Samsung/samsung-galaxy-s21-5g-0.jpg";
+import samsungS20Ultra from "./Samsung/samsung-galaxy-s20-ultra-10.jpg";
+import samsungS20Plus from "./Samsung/samsung-galaxy-s20-plus-1.jpg";
+import samsungS20 from "./Samsung/samsung-galaxy-s20-5g-r1.jpg";
+import samsungA56 from "./Samsung/samsung-galaxy-a56-1.jpg";
+import samsungA55 from "./Samsung/samsung-galaxy-a55-1.jpg";
+import samsungA54 from "./Samsung/samsung-galaxy-a54-5.jpg";
+import samsungA53 from "./Samsung/samsung-galaxy-a53-5g-1.jpg";
+import samsungA52s from "./Samsung/galaxy-a52s-1.jpg";
+import samsungA52 from "./Samsung/samsung-galaxy-a52-4g-10.jpg";
+import samsungA35 from "./Samsung/samsung-galaxy-a35-1.jpg";
+import samsungA25 from "./Samsung/samsung-galaxy-a25-1.jpg";
+import samsungA16 from "./Samsung/samsung-galaxy-a16-lte-1.jpg";
+import samsungA15 from "./Samsung/samsung-galaxy-a15-lte-1.jpg";
+import samsungA14 from "./Samsung/samsung-galaxy-a14-5g-1.jpg";
+import samsungA08 from "./Samsung/samsung-galaxy-a08-4g-1.jpg";
+import samsungA05s from "./Samsung/samsung-galaxy-a05s-1.jpg";
+import samsungA05 from "./Samsung/samsung-galaxy-a05-1.jpg";
+import samsungF70 from "./Samsung/samsung-galaxy-f70-11.jpg";
+import samsungF36 from "./Samsung/samsung-galaxy-f36-1.jpg";
+import samsungF55 from "./Samsung/samsung-galaxy-f55-1.jpg";
+import samsungF34 from "./Samsung/samsung-galaxy-f34-1.jpg";
+import samsungF15 from "./Samsung/samsung-galaxy-f15-5g-1.jpg";
+import samsungM55 from "./Samsung/samsung-galaxy-m55-1.jpg";
+import samsungM35 from "./Samsung/samsung-galaxy-m35-1.jpg";
+import samsungM34 from "./Samsung/samsung-galaxy-m34-5g-3.jpg";
+import samsungM33 from "./Samsung/samsung-galaxy-m33-1.jpg";
+import samsungM31 from "./Samsung/samsung-galaxy-m31-sm-m315f-2.jpg";
+import samsungNote20Ultra from "./Samsung/samsung-galaxy-note20-ultra-1.jpg";
+import samsungNote20 from "./Samsung/samsung-galaxy-note20-1.jpg";
+import samsungNote10Plus from "./Samsung/samsung-galaxy-note10-plus-aura-glow.jpg";
+import samsungNote10 from "./Samsung/samsung-galaxy-note10-aura-glow.jpg";
 
-  const candidates = Array.isArray(filename) ? filename : [filename];
+// ============================================================
+// 3. ONEPLUS IMAGE IMPORTS
+// ============================================================
 
-  for (const name of candidates) {
-    const target = name.split("/").pop().toLowerCase();
+import oneplus7 from "./One Plus/oneplus-7-1.jpg";
+import oneplus7Pro from "./One Plus/oneplus-7-pro-1.jpg";
+import oneplus7T from "./One Plus/oneplus-7t-1.jpg";
+import oneplus7TPro from "./One Plus/oneplus-7t-pro-0.jpg";
+import oneplus8 from "./One Plus/oneplus-8-1.jpg";
+import oneplus8Pro from "./One Plus/oneplus-8-pro-1.jpg";
+import oneplus8T from "./One Plus/oneplus-8t-1.jpg";
+import oneplus9 from "./One Plus/oneplus-9-1.jpg";
+import oneplus9Pro from "./One Plus/oneplus-9-pro-1.jpg";
+import oneplus9R from "./One Plus/oneplus-9r-2.jpg";
+import oneplus10Pro from "./One Plus/oneplus-10-pro-1.jpg";
+import oneplus10R from "./One Plus/oneplus-10r-1.jpg";
+import oneplus10T from "./One Plus/oneplus-10t-5g-1.jpg";
+import oneplus11 from "./One Plus/oneplus-11-2.jpg";
+import oneplus11r from "./One Plus/11r.png";
+import oneplus12 from "./One Plus/oneplus-12-1.jpg";
+import oneplus12R from "./One Plus/oneplus-12r-1.jpg";
+import oneplus13 from "./One Plus/oneplus-13-1.jpg";
+import oneplus13R from "./One Plus/oneplus-13r-1.jpg";
+import oneplus15 from "./One Plus/oneplus-15-1.jpg";
+import oneplus16 from "./One Plus/oneplus-16-1.jpg";
+import oneplusAce2 from "./One Plus/noarce2.png";
+import oneplusNord from "./One Plus/oneplus-nord-1.jpg";
+import oneplusNord2 from "./One Plus/oneplus-nord-2-5g-1.jpg";
+import oneplusNord2T from "./One Plus/oneplus-nord-2t-5g-1.jpg";
+import oneplusNord3 from "./One Plus/oneplus-nord-3-5g-1.jpg";
+import oneplusNord4 from "./One Plus/oneplus-nord4-1.jpg";
+import oneplusNordce2 from "./One Plus/noarce2.png";
+import oneplusNord5 from "./One Plus/oneplus-nord5-2.jpg";
+import oneplusNordCE3 from "./One Plus/oneplus-nord-ce3-5g-1.jpg";
+import oneplusNordCE3Lite from "./One Plus/oneplus-nord-ce-3-lite-1.jpg";
+import oneplusNordCE4 from "./One Plus/oneplus-nord-ce4-11.jpg";
+import oneplusNordCE4Lite from "./One Plus/oneplus-nord-ce4-lite-intl-1.jpg";
+import oneplusNordCE5 from "./One Plus/oneplus-nord-ce5-3.jpg";
 
-    const foundPath = Object.keys(ALL_PHONE_FILES).find(
-      (path) => path.split("/").pop().toLowerCase() === target,
-    );
+// ============================================================
+// 4. XIAOMI IMAGE IMPORTS
+// ============================================================
 
-    if (foundPath) {
-      return ALL_PHONE_FILES[foundPath];
-    }
-  }
+import xiaomi11TPro from "./Xiiaomi/xiaomi-11t-pro-1.jpg";
+import xiaomi12 from "./Xiiaomi/xiaomi-12-1.jpg";
+import xiaomi13Pro from "./Xiiaomi/xiaomi-13-pro-black-1.jpg";
+import xiaomi14 from "./Xiiaomi/xiaomi-14-01.jpg";
+import xiaomi14Ultra from "./Xiiaomi/xiaomi-14-ultra-01.jpg";
+import xiaomi15 from "./Xiiaomi/xiaomi-15-1.jpg";
+import xiaomi15Ultra from "./Xiiaomi/xiaomi-15-ultra-5.jpg";
+import xiaomi17 from "./Xiiaomi/xiaomi-17-b.jpg";
+import xiaomi17Ultra from "./Xiiaomi/xiaomi-17-ultra-global-1.jpg";
+import xiaomiMi10T from "./Xiiaomi/xiaomi-mi-10t-5g-1.jpg";
+import xiaomiMi10TPro from "./Xiiaomi/xiaomi-mi-10t-5g-1.jpg";
+import xiaomiMi11Ultra from "./Xiiaomi/xiaomi-mi11-ultra-5g-k1-1.jpg";
+import xiaomiMi11X from "./Xiiaomi/xiaomi-mi11x-1.jpg";
+import xiaomiMi11XPro from "./Xiiaomi/xiaomi-mi11x-pro-0.jpg";
 
-  return null;
-}
+// ============================================================
+// 5. REDMI IMAGE IMPORTS
+// ============================================================
 
-// =====================================================
-// APPLE IPHONE DATABASE
-// =====================================================
+import redmi9Power from "./Redmi/redmi-9-power-0.jpg";
+import redmi10 from "./Redmi/redmi-10-1.jpg";
+import redmi10A from "./Redmi/redmi-10a-2.jpg";
+import redmi10Power from "./Redmi/redmi-10-power-05.jpg";
+import redmi12 from "./Redmi/-redmi-12-1.jpg";
+import redmi13C from "./Redmi/redmi-13c-1.jpg";
+import redmi13C5G from "./Redmi/redmi-13c-5g-1.jpg";
+import redmi14C from "./Redmi/redmi-14c-1.jpg";
+import redmi17C from "./Redmi/redmi-17c-11.jpg";
+import redmiNote10Pro from "./Redmi/redmi-note10-pro-1.jpg";
+import redmiNote13Pro from "./Redmi/redmi-note-13-pro-5g-1.jpg";
+import redmiNote13ProPlus from "./Redmi/redmi-note-13-pro-plus-01.jpg";
+import redmiNote14Pro from "./Redmi/xiaomi-redmi-note-14-pro-5g-gl-1.jpg";
+import redmiNote14ProPlus from "./Redmi/xiaomi-redmi-note-14-pro-plus-5g-gl-1.jpg";
+import redmiNote15 from "./Redmi/xiaomi-redmi-note-15-global-1.jpg";
+import redmiNote15Pro from "./Redmi/xiaomi-redmi-note-15-pro-global-1.jpg";
+import redmiNote15ProPlus from "./Redmi/xiaomi-redmi-note-15-pro-plus-global-1.jpg";
 
-const APPLE_IMAGES = {
-  "iPhone 18 Pro": "18promax.png",
-  "iPhone 18": "18pro.png",
+// ============================================================
+// 6. OPPO IMAGE IMPORTS
+// ============================================================
 
-  "iPhone 17 Pro Max": "apple-iphone-17-pro-max-1.jpg",
-  "iPhone 17 Pro": "apple-iphone-17-pro-1.jpg",
-  "iPhone 17": "apple-iphone-17-1.jpg",
-  "iPhone Air": "apple-iphone-air-1.jpg",
+import oppoA3Pro from "./OPPO/oppo-a3-pro-1.jpg";
+import oppoA3x from "./OPPO/oppo-a3x-1.jpg";
+import oppoA5Pro from "./OPPO/a5pro.png";
+import oppoF7 from "./OPPO/oppo-f7-cph1819-1.jpg";
+import oppoF9 from "./OPPO/oppo-f9-1.jpg";
+import oppoF11Pro from "./OPPO/oppo-f11-pro-10.jpg";
+import oppoF15 from "./OPPO/oppo-f15-cph2001-1.jpg";
+import oppoF17Pro from "./OPPO/oppo-f17-pro-1.jpg";
+import oppoF19Pro from "./OPPO/oppo-f19-pro-0.jpg";
+import oppoF23 from "./OPPO/oppo-f23-5g-1.jpg";
+import oppoF25Pro from "./OPPO/oppo-f25-pro-1.jpg";
+import oppoF35 from "./OPPO/oppo-f35-1.jpg";
+import oppoF35Pro from "./OPPO/oppo-f35-pro-1.jpg";
+import oppoFindX2 from "./OPPO/oppo-find-x2-ocean-glass.jpg";
+import oppoFindX5Pro from "./OPPO/oppo-find-x5-pro-3.jpg";
+import oppoFindX8 from "./OPPO/oppo-find-x8-1.jpg";
+import oppoFindX10 from "./OPPO/oppo-find-x10-1.jpg";
+import oppoFindX10ProMax from "./OPPO/oppo-find-x10-pro-max-1.jpg";
+import oppoReno2 from "./OPPO/oppo-reno2-1.jpg";
+import oppoReno3Pro from "./OPPO/oppo-reno3-pro-0.jpg";
+import oppoReno4Pro from "./OPPO/oppo-reno4-pro-2.jpg";
+import oppoReno5Pro from "./OPPO/oppo-reno5-pro-5g-1.jpg";
+import oppoReno6Pro from "./OPPO/oppo-reno6-pro-5g-2.jpg";
+import oppoReno7 from "./OPPO/oppo-reno7-4g-1.jpg";
+import oppoReno7Pro from "./OPPO/oppo-reno7-pro-5g-1.jpg";
+import oppoReno8Pro from "./OPPO/oppo-reno8-pro-02.jpg";
+import oppoReno10Pro from "./OPPO/oppo-reno10-pro-international-1.jpg";
+import oppoReno11 from "./OPPO/oppo-reno11-international-1.jpg";
+import oppoReno12 from "./OPPO/oppo-reno12-1.jpg";
+import oppoReno13 from "./OPPO/oppo-reno13-cn-1.jpg";
+import oppoReno14 from "./OPPO/oppo-reno14-0.jpg";
+import oppoReno14Pro from "./OPPO/oppo-reno14-pro-1.jpg";
 
-  "iPhone 16 Pro Max": "apple-iphone-16-pro-max-1.jpg",
-  "iPhone 16 Pro": "apple-iphone-16-pro-1.jpg",
-  "iPhone 16 Plus": "apple-iphone-16-plus-1.jpg",
-  "iPhone 16": "apple-iphone-16-1.jpg",
-  "iPhone 16e": "apple-iphone-16e-1.jpg",
+// ============================================================
+// 7. VIVO IMAGE IMPORTS
+// ============================================================
 
-  "iPhone 15 Pro Max": "apple-iphone-15-pro-max-1.jpg",
-  "iPhone 15 Pro": "apple-iphone-15-pro-1.jpg",
-  "iPhone 15 Plus": "apple-iphone-15-plus-1.jpg",
-  "iPhone 15": "apple-iphone-15-1.jpg",
+import vivoS2 from "./Vivo/vivo-s2-fe-1.jpg";
+import vivoS17Pro from "./Vivo/vivo-s17-pro-1.jpg";
+import vivoV9 from "./Vivo/vivo-v9-4.jpg";
+import vivoV11Pro from "./Vivo/vivo-v11-pro-supernova-red.jpg";
+import vivoV15Pro from "./Vivo/vivo-v15-pro-ruby-red1.jpg";
+import vivoV17Pro from "./Vivo/vivo-v17-pro-vivo-1909-pd1931f-1.jpg";
+import vivoV19 from "./Vivo/vivo-v19-dual-selfie-2.jpg";
+import vivoV20 from "./Vivo/vivo-v20-1.jpg";
+import vivoV21 from "./Vivo/vivo-v21-5g-1.jpg";
+import vivoV23 from "./Vivo/vivo-v23-5g-1.jpg";
+import vivoV25Pro from "./Vivo/vivo-v25-pro-1.jpg";
+import vivoV27Pro from "./Vivo/vivo-v27-pro-1.jpg";
+import vivoV30 from "./Vivo/vivo-v30-1.jpg";
+import vivoV40 from "./Vivo/vivo-v40-2.jpg";
+import vivoV40Pro from "./Vivo/vivo-v40-pro-1.jpg";
+import vivoV80 from "./Vivo/vivo-v80-1.jpg";
+import vivoX50 from "./Vivo/vivo-x50-4g-1.jpg";
+import vivoX60 from "./Vivo/vivo-x60-global-3.jpg";
+import vivoX70Pro from "./Vivo/vivo-x70-pro-1.jpg";
+import vivoX80 from "./Vivo/vivo-x80-1.jpg";
+import vivoX90 from "./Vivo/vivo-x90-1.jpg";
+import vivoX100 from "./Vivo/vivo-x100-1.jpg";
+import vivoX200 from "./Vivo/vivo-x200-1.jpg";
+import vivoX200FE from "./Vivo/vivo-x200-fe-b.jpg";
+import vivoXFold6 from "./Vivo/vivo-x-fold6-4.jpg";
+import vivoY05 from "./Vivo/vivo-y05-1.jpg";
+import vivoY20 from "./Vivo/vivo-y20-.jpg";
+import vivoY28 from "./Vivo/vivo-y28-5g-1.jpg";
+import vivoY33s from "./Vivo/vivo-y33s-2.jpg";
+import vivoY56 from "./Vivo/vivo-y56-5g-1.jpg";
+import vivoY100 from "./Vivo/vivo-y100-1.jpg";
+import vivoY200 from "./Vivo/vivo-y200-5g-gl-1.jpg";
 
-  "iPhone 14 Pro Max": "apple-iphone-14-pro-max-1.jpg",
-  "iPhone 14 Pro": "apple-iphone-14-pro-3.jpg",
-  "iPhone 14 Plus": "14pluse.png",
-  "iPhone 14": "apple-iphone-14-3.jpg",
+// ============================================================
+// 8. REALME IMAGE IMPORTS
+// ============================================================
 
-  "iPhone SE (2022)": "apple-iphone-se-2022-0.jpg",
+import realme3Pro from "./Realme/realme-3pro-3.jpg";
+import realme5Pro from "./Realme/realme-5-pro-rmx1971-1.jpg";
+import realme6Pro from "./Realme/realme-6-pro-1.jpg";
+import realme7Pro from "./Realme/realme-7-pro-1.jpg";
+import realme8Pro from "./Realme/realme-8-pro-ofic-1.jpg";
+import realme9ProPlus from "./Realme/realme-9-pro-plus-1.jpg";
+import realme10ProPlus from "./Realme/realme-10-pro-plus-1.jpg";
+import realme11ProPlus from "./Realme/realme-11-pro-plus-2.jpg";
+import realme12Pro from "./Realme/realme-12-pro-2.jpg";
+import realme12ProPlus from "./Realme/realme-12-pro-plus-0.jpg";
+import realme12x from "./Realme/realme-12x-1.jpg";
+import realme13Pro from "./Realme/realme-13-pro-1.jpg";
+import realme13ProPlus from "./Realme/realme-13-pro-plus-1.jpg";
+import realme14Pro from "./Realme/realme-14pro-1.jpg";
+import realme14ProPlus from "./Realme/realme-14pro-plus-1.jpg";
+import realme15 from "./Realme/realme-15-int-1.jpg";
+import realme15Pro from "./Realme/realme-15-pro-01.jpg";
+import realme16 from "./Realme/realme-16-1.jpg";
+import realme16Pro from "./Realme/realme-16-pro-1.jpg";
+import realme16ProPlus from "./Realme/realme-16-pro-plus-1.jpg";
+import realmeC11 from "./Realme/realme-c11-1.jpg";
+import realmeC15 from "./Realme/realme-c15-1.jpg";
+import realmeC21 from "./Realme/realme-c21-1.jpg";
+import realmeC25 from "./Realme/realme-c25-1.jpg";
+import realmeC30 from "./Realme/realme-c30-1.jpg";
+import realmeC33 from "./Realme/realme-c33-2.jpg";
+import realmeC35 from "./Realme/realme-c35-1.jpg";
+import realmeC55 from "./Realme/realme-c55-1.jpg";
+import realmeC75 from "./Realme/realme-c75-5g-1.jpg";
+import realmeGT2Pro from "./Realme/realme-gt2-pro-1.jpg";
+import realmeGT7 from "./Realme/realme-gt-7-1.jpg";
+import realmeGT7Pro from "./Realme/realme-gt7-pro-1.jpg";
+import realmeGTNeo3 from "./Realme/realme-gt-neo3-0.jpg";
+import realmeNarzo20Pro from "./Realme/realme-narzo-20-pro-1.jpg";
+import realmeNarzo30Pro from "./Realme/realme-narzo-30-pro-3.jpg";
+import realmeNarzo50Pro from "./Realme/realme-narzo-50-pro-5g-1.jpg";
+import realmeNarzo60Pro from "./Realme/realme-narzo60-pro-5g-1.jpg";
+import realmeNarzo70Pro from "./Realme/realme-narzo-70-pro-1.jpg";
+import realmeNarzo80Lite from "./Realme/realme-narzo-80-lite-4g-01.jpg";
 
-  "iPhone 13 Pro Max": "apple-iphone-13-pro-max-01.jpg",
-  "iPhone 13 Pro": "apple-iphone-13-pro-01.jpg",
-  "iPhone 13": "apple-iphone-13-01.jpg",
-  "iPhone 13 mini": "apple-iphone-13-mini-01.jpg",
+// ============================================================
+// 9. POCO IMAGE IMPORTS
+// ============================================================
 
-  "iPhone 12 Pro Max": "apple-iphone-12-pro-max-1.jpg",
-  "iPhone 12 Pro": "apple-iphone-12-pro-r1.jpg",
-  "iPhone 12": "apple-iphone-12-r1.jpg",
-  "iPhone 12 mini": "apple-iphone-12-mini-r1.jpg",
+import pocoF4 from "./POCO/poco-f4-5g-1.jpg";
+import pocoF5 from "./POCO/poco-f5-2.jpg";
+import pocoF5Pro from "./POCO/poco-f5-pro-2.jpg";
+import pocoF6 from "./POCO/poco-f6-1.jpg";
+import pocoF7 from "./POCO/poco-f7-1.jpg";
+import pocoF6Pro from "./POCO/poco-f6-pro-1.jpg";
+import pocoM2 from "./POCO/poco-m2-mzb9921in-1.jpg";
+import pocoM2Pro from "./POCO/poco-m2-pro-01.jpg";
+import pocoM3 from "./POCO/poco-m3-0.jpg";
+import pocoM4Pro from "./POCO/poco-m4-pro-1.jpg";
+import pocoM6Pro from "./POCO/poco-m6-pro-1.jpg";
+import pocoX2 from "./POCO/poco-x2-1.jpg";
+import pocoX3 from "./POCO/poco-x3-1.jpg";
+import pocoX3Pro from "./POCO/poco-x3-pro-1.jpg";
+import pocoX4Pro from "./POCO/poco-x4-pro-1.jpg";
+import pocoX5 from "./POCO/poco-x5-5g-1.jpg";
+import pocoX5Pro from "./POCO/poco-x5-pro-5g-1.jpg";
+import pocoX6 from "./POCO/poco-x6-0.jpg";
+import pocoX6Pro from "./POCO/poco-x6-pro-0.jpg";
+import pocoX8Pro from "./POCO/xiaomi-poco-x8-pro-1.jpg";
+import pocoF1 from "./POCO/pocophone-f1-2.jpg";
 
-  "iPhone SE (2020)": "apple-iphone-se-2020-2.jpg",
+// ============================================================
+// 10. MOTOROLA IMAGE IMPORTS
+// ============================================================
 
-  "iPhone 11 Pro Max": "apple-iphone-11-pro-max-4.jpg",
-  "iPhone 11 Pro": "11pro.png",
-  "iPhone 11": "apple-iphone-11-2.jpg",
+import motoEdge20 from "./Motorola/motorola-edge-20-1.jpg";
+import motoEdge30 from "./Motorola/motorola-edge-30-1.jpg";
+import motoEdge40Neo from "./Motorola/motorola-edge-40-neo-1.jpg";
+import motoEdge50Fusion from "./Motorola/motorola-edge-50-fusion-1.jpg";
+import motoEdge50Pro from "./Motorola/motorola-edge50-pro-1.jpg";
+import motoEdge50Ultra from "./Motorola/motorola-edge-50-ultra-0.jpg";
+import motoEdge70Fusion from "./Motorola/motorola-edge-70-fusion-1.jpg";
+import motoG96 from "./Motorola/motorola-g96-1.jpg";
+import motoG34 from "./Motorola/motorola-moto-g34-china-1.jpg";
+import motoG40Fusion from "./Motorola/motorola-moto-g40-fusion-1.jpg";
+import motoG45 from "./Motorola/motorola-moto-g45-5g-1.jpg";
+import motoG52 from "./Motorola/motorola-moto-g52-1.jpg";
+import motoG62 from "./Motorola/motorola-moto-g62-1.jpg";
+import motoG73 from "./Motorola/motorola-moto-g73-1.jpg";
+import motoG84 from "./Motorola/motorola-moto-g84-1.jpg";
+import motoG85 from "./Motorola/motorola-moto-g85-1.jpg";
+import motoRazr40 from "./Motorola/motorola-razr-40-1.jpg";
+import motoRazr40Ultra from "./Motorola/motorola-razr-40-ultra-1.jpg";
+import motoRazr50 from "./Motorola/motorola-razr-50-1.jpg";
+import motoRazr50Ultra from "./Motorola/motorola-razr-50-ultra-1.jpg";
+import motoRazr60 from "./Motorola/motorola-razr-60-1.jpg";
+import motoRazr60Ultra from "./Motorola/motorola-razr-60-ultra-1.jpg";
+
+// ============================================================
+// 11. NOTHING IMAGE IMPORTS
+// ============================================================
+
+import nothingPhone1 from "./Nothing/nothing1.png";
+import nothingPhone2 from "./Nothing/nothing-phone2-1_.jpg";
+import nothingPhone2a from "./Nothing/nothing-phone-2a-1.jpg";
+import nothingPhone2aPlus from "./Nothing/nothing-phone-2a-plus-00.jpg";
+import nothingPhone3a from "./Nothing/nothing-phone-3a-new-1.jpg";
+import nothingPhone3aPro from "./Nothing/nothing-phone-3a-pro-new-1.jpg";
+import nothingPhone3 from "./Nothing/nothing-phone-3-new-1.jpg";
+
+// ============================================================
+// ONEPLUS NORD CE SERIES - IMAGE URLS
+// ============================================================
+
+const oneplusNordCE2Image =
+  "https://oasis.opstatics.com/content/dam/oasis/page/2022/operation/feb/0211/nord-ce-2-5g/Blue.png";
+
+const oneplusNordCE2LiteImage =
+  "https://cell-shop.com.mx/wp-content/uploads/2024/02/oneplus-nord-ce-2-lite-5g-128gb-dual-sim-8gb-ram-4.png";
+
+const oneplusNordCE3Image =
+  "https://i.gadgets360cdn.com/products/large/oneplus-nord-ce-3-659x800-1690863917.jpg";
+
+const oneplusNordCE3LiteImage =
+  "https://oasis.opstatics.com/content/dam/oasis/page/2023/global/product/larry/specs/product-green.png";
+// ============================================================
+// 12. PHONE IMAGE MAPPING
+// ============================================================
+
+export const PHONE_IMAGES = {
+
+  // APPLE
+  ...{
+    "iPhone 18 Pro": iphone18Pro,
+    "iPhone 18": iphone18,
+    "iPhone 17 Pro Max": iphone17ProMax,
+    "iPhone 17 Pro": iphone17Pro,
+    "iPhone 17": iphone17,
+    "iPhone Air": iphoneAir,
+    "iPhone 16 Pro Max": iphone16ProMax,
+    "iPhone 16 Pro": iphone16Pro,
+    "iPhone 16 Plus": iphone16Plus,
+    "iPhone 16": iphone16,
+    "iPhone 16e": iphone16e,
+    "iPhone 15 Pro Max": iphone15ProMax,
+    "iPhone 15 Pro": iphone15Pro,
+    "iPhone 15 Plus": iphone15Plus,
+    "iPhone 15": iphone15,
+    "iPhone 14 Pro Max": iphone14ProMax,
+    "iPhone 14 Pro": iphone14Pro,
+    "iPhone 14 Plus": iphone14Plus,
+    "iPhone 14": iphone14,
+    "iPhone SE (2022)": iphoneSE2022,
+    "iPhone 13 Pro Max": iphone13ProMax,
+    "iPhone 13 Pro": iphone13Pro,
+    "iPhone 13": iphone13,
+    "iPhone 13 mini": iphone13Mini,
+    "iPhone 12 Pro Max": iphone12ProMax,
+    "iPhone 12 Pro": iphone12Pro,
+    "iPhone 12": iphone12,
+    "iPhone 12 mini": iphone12Mini,
+    "iPhone SE (2020)": iphoneSE2020,
+    "iPhone 11 Pro Max": iphone11ProMax,
+    "iPhone 11 Pro": iphone11Pro,
+    "iPhone 11": iphone11,
+  },
+
+  // SAMSUNG
+  ...{
+    "Galaxy S26 Ultra": samsungS26Ultra,
+    "Galaxy S26+": samsungS26Plus,
+    "Galaxy S26": samsungS26,
+    "Galaxy Z Fold7": samsungFold7,
+    "Galaxy Z Flip7": samsungFlip7,
+    "Galaxy Z Flip7 FE": samsungFlip7FE,
+    "Galaxy S25 Ultra": samsungS25Ultra,
+    "Galaxy S25+": samsungS25Plus,
+    "Galaxy S25": samsungS25,
+    "Galaxy Z Fold6": samsungFold6,
+    "Galaxy Z Flip6": samsungFlip6,
+    "Galaxy S24 Ultra": samsungS24Ultra,
+    "Galaxy S24+": samsungS24Plus,
+    "Galaxy S24": samsungS24,
+    "Galaxy Z Fold5": samsungFold5,
+    "Galaxy Z Flip5": samsungFlip5,
+    "Galaxy S23 Ultra": samsungS23Ultra,
+    "Galaxy S23+": samsungS23Plus,
+    "Galaxy S23": samsungS23,
+    "Galaxy Z Fold4": samsungFold4,
+    "Galaxy Z Flip4": samsungFlip4,
+    "Galaxy S22 Ultra": samsungS22Ultra,
+    "Galaxy S22+": samsungS22Plus,
+    "Galaxy S22": samsungS22,
+    "Galaxy Z Fold3": samsungFold3,
+    "Galaxy Z Flip3": samsungFlip3,
+    "Galaxy S21 Ultra": samsungS21Ultra,
+    "Galaxy S21+": samsungS21Plus,
+    "Galaxy S21": samsungS21,
+    "Galaxy S20 Ultra": samsungS20Ultra,
+    "Galaxy S20+": samsungS20Plus,
+    "Galaxy S20": samsungS20,
+    "Galaxy A56 5G": samsungA56,
+    "Galaxy A55 5G": samsungA55,
+    "Galaxy A54 5G": samsungA54,
+    "Galaxy A53 5G": samsungA53,
+    "Galaxy A52s 5G": samsungA52s,
+    "Galaxy A52": samsungA52,
+    "Galaxy A35 5G": samsungA35,
+    "Galaxy A25 5G": samsungA25,
+    "Galaxy A16": samsungA16,
+    "Galaxy A15": samsungA15,
+    "Galaxy A14 5G": samsungA14,
+    "Galaxy A08": samsungA08,
+    "Galaxy A05s": samsungA05s,
+    "Galaxy A05": samsungA05,
+    "Galaxy F70 5G": samsungF70,
+    "Galaxy F36 5G": samsungF36,
+    "Galaxy F55 5G": samsungF55,
+    "Galaxy F34 5G": samsungF34,
+    "Galaxy F15 5G": samsungF15,
+    "Galaxy M55 5G": samsungM55,
+    "Galaxy M35 5G": samsungM35,
+    "Galaxy M34 5G": samsungM34,
+    "Galaxy M33 5G": samsungM33,
+    "Galaxy M31": samsungM31,
+    "Galaxy Note20 Ultra": samsungNote20Ultra,
+    "Galaxy Note20": samsungNote20,
+    "Galaxy Note10+": samsungNote10Plus,
+    "Galaxy Note10": samsungNote10,
+  },
+
+  // ONEPLUS
+  ...{
+    "OnePlus 7": oneplus7,
+    "OnePlus 7 Pro": oneplus7Pro,
+    "OnePlus 7T": oneplus7T,
+    "OnePlus 7T Pro": oneplus7TPro,
+    "OnePlus 8": oneplus8,
+    "OnePlus 8 Pro": oneplus8Pro,
+    "OnePlus 8T": oneplus8T,
+    "OnePlus 9": oneplus9,
+    "OnePlus 9 Pro": oneplus9Pro,
+    "OnePlus 9R": oneplus9R,
+    "OnePlus 10 Pro": oneplus10Pro,
+    "OnePlus 10R": oneplus10R,
+    "OnePlus 10T": oneplus10T,
+    "OnePlus 11": oneplus11,
+    "OnePlus 11R": oneplus11r,
+    "OnePlus 12": oneplus12,
+    "OnePlus 12R": oneplus12R,
+    "OnePlus 13": oneplus13,
+    "OnePlus 13R": oneplus13R,
+    "OnePlus 15": oneplus15,
+    "OnePlus 16": oneplus16,
+    "OnePlus Ace 2": oneplusAce2,
+    "OnePlus Nord": oneplusNord,
+    "OnePlus Nord 2": oneplusNord2,
+    "OnePlus Nord 2T": oneplusNord2T,
+    "OnePlus Nord 3": oneplusNord3,
+    "OnePlus Nord 4": oneplusNord4,
+    "OnePlus Nord 5": oneplusNord5,
+
+    "OnePlus Nord ce 2": oneplusNordCE2Image,
+    "OnePlus Nord CE 2": oneplusNordCE2Image,
+    "OnePlus Nord CE2": oneplusNordCE2Image,
+    "OnePlus Nord CE 2 5G": oneplusNordCE2Image,
+
+    "OnePlus Nord CE 2 Lite": oneplusNordCE2LiteImage,
+    "OnePlus Nord CE2 Lite": oneplusNordCE2LiteImage,
+    "OnePlus Nord CE 2 Lite 5G": oneplusNordCE2LiteImage,
+
+    "OnePlus Nord CE 3": oneplusNordCE3Image,
+    "OnePlus Nord CE 3 5G": oneplusNordCE3Image,
+
+    "OnePlus Nord CE 3 Lite": oneplusNordCE3LiteImage,
+    "OnePlus Nord CE3 Lite": oneplusNordCE3LiteImage,
+    "OnePlus Nord CE 3 Lite 5G": oneplusNordCE3LiteImage,
+
+    "OnePlus Nord CE 4": oneplusNordCE4,
+    "OnePlus Nord CE 4 Lite": oneplusNordCE4Lite,
+    "OnePlus Nord CE 5": oneplusNordCE5,
+  },
+
+  // XIAOMI
+  ...{
+    "Xiaomi 11T Pro": xiaomi11TPro,
+    "Xiaomi 12": xiaomi12,
+    "Xiaomi 12 Pro": xiaomi12,
+    "Xiaomi 13 Pro": xiaomi13Pro,
+    "Xiaomi 14": xiaomi14,
+    "Xiaomi 14 Ultra": xiaomi14Ultra,
+    "Xiaomi 15": xiaomi15,
+    "Xiaomi 15 Ultra": xiaomi15Ultra,
+    "Xiaomi 17": xiaomi17,
+    "Xiaomi 17 Ultra": xiaomi17Ultra,
+    "Xiaomi Mi 10T 5G": xiaomiMi10T,
+    "Xiaomi Mi 10T Pro": xiaomiMi10TPro,
+    "Xiaomi Mi 11 Ultra": xiaomiMi11Ultra,
+    "Xiaomi Mi 11 Ultra 5G": xiaomiMi11Ultra,
+    "Xiaomi Mi 11X": xiaomiMi11X,
+    "Xiaomi Mi 11X Pro": xiaomiMi11XPro,
+    "Mi 11X": xiaomiMi11X,
+    "Mi 11X Pro": xiaomiMi11XPro,
+  },
+
+  // REDMI
+  ...{
+    "Redmi 9 Power": redmi9Power,
+    "Redmi 10": redmi10,
+    "Redmi 10A": redmi10A,
+    "Redmi 10 Power": redmi10Power,
+    "Redmi 12": redmi12,
+    "Redmi 13C": redmi13C,
+    "Redmi 13C 5G": redmi13C5G,
+    "Redmi 14C": redmi14C,
+    "Redmi 17C": redmi17C,
+    "Redmi Note 10 Pro": redmiNote10Pro,
+    "Redmi Note 13 Pro 5G": redmiNote13Pro,
+    "Redmi Note 13 Pro+": redmiNote13ProPlus,
+    "Redmi Note 14 Pro 5G": redmiNote14Pro,
+    "Redmi Note 14 Pro+ 5G": redmiNote14ProPlus,
+    "Redmi Note 15": redmiNote15,
+    "Redmi Note 15 Pro": redmiNote15Pro,
+    "Redmi Note 15 Pro+": redmiNote15ProPlus,
+  },
+
+  // OPPO
+  ...{
+    "OPPO A3 Pro": oppoA3Pro,
+    "OPPO A3x": oppoA3x,
+    "OPPO A5 Pro 5G": oppoA5Pro,
+    "OPPO F7": oppoF7,
+    "OPPO F9": oppoF9,
+    "OPPO F11 Pro": oppoF11Pro,
+    "OPPO F15": oppoF15,
+    "OPPO F17 Pro": oppoF17Pro,
+    "OPPO F19 Pro": oppoF19Pro,
+    "OPPO F23 5G": oppoF23,
+    "OPPO F25 Pro": oppoF25Pro,
+    "OPPO F35": oppoF35,
+    "OPPO F35 Pro": oppoF35Pro,
+    "OPPO Find X2": oppoFindX2,
+    "OPPO Find X5 Pro": oppoFindX5Pro,
+    "OPPO Find X8": oppoFindX8,
+    "OPPO Find X10": oppoFindX10,
+    "OPPO Find X10 Pro Max": oppoFindX10ProMax,
+    "OPPO Reno2": oppoReno2,
+    "OPPO Reno3 Pro": oppoReno3Pro,
+    "OPPO Reno4 Pro": oppoReno4Pro,
+    "OPPO Reno5 Pro 5G": oppoReno5Pro,
+    "OPPO Reno6 Pro 5G": oppoReno6Pro,
+    "OPPO Reno7 4G": oppoReno7,
+    "OPPO Reno7 Pro 5G": oppoReno7Pro,
+    "OPPO Reno8 Pro": oppoReno8Pro,
+    "OPPO Reno10 Pro": oppoReno10Pro,
+    "OPPO Reno11": oppoReno11,
+    "OPPO Reno12": oppoReno12,
+    "OPPO Reno13": oppoReno13,
+    "OPPO Reno14": oppoReno14,
+    "OPPO Reno14 Pro": oppoReno14Pro,
+  },
+
+  // VIVO
+  ...{
+    "Vivo S2": vivoS2,
+    "Vivo S17 Pro": vivoS17Pro,
+    "Vivo V9": vivoV9,
+    "Vivo V11 Pro": vivoV11Pro,
+    "Vivo V15 Pro": vivoV15Pro,
+    "Vivo V17 Pro": vivoV17Pro,
+    "Vivo V19": vivoV19,
+    "Vivo V20": vivoV20,
+    "Vivo V21 5G": vivoV21,
+    "Vivo V23 5G": vivoV23,
+    "Vivo V25 Pro": vivoV25Pro,
+    "Vivo V27 Pro": vivoV27Pro,
+    "Vivo V30": vivoV30,
+    "Vivo V40": vivoV40,
+    "Vivo V40 Pro": vivoV40Pro,
+    "Vivo V80": vivoV80,
+    "Vivo X50 4G": vivoX50,
+    "Vivo X60": vivoX60,
+    "Vivo X70 Pro": vivoX70Pro,
+    "Vivo X80": vivoX80,
+    "Vivo X90": vivoX90,
+    "Vivo X100": vivoX100,
+    "Vivo X200": vivoX200,
+    "Vivo X200 FE": vivoX200FE,
+    "Vivo X Fold6": vivoXFold6,
+    "Vivo Y05": vivoY05,
+    "Vivo Y20": vivoY20,
+    "Vivo Y28 5G": vivoY28,
+    "Vivo Y33s": vivoY33s,
+    "Vivo Y56 5G": vivoY56,
+    "Vivo Y100": vivoY100,
+    "Vivo Y200 5G": vivoY200,
+  },
+
+  // REALME
+  ...{
+    "Realme 3 Pro": realme3Pro,
+    "Realme 5 Pro": realme5Pro,
+    "Realme 6 Pro": realme6Pro,
+    "Realme 7 Pro": realme7Pro,
+    "Realme 8 Pro": realme8Pro,
+    "Realme 9 Pro+": realme9ProPlus,
+    "Realme 10 Pro+": realme10ProPlus,
+    "Realme 11 Pro+": realme11ProPlus,
+    "Realme 12 Pro": realme12Pro,
+    "Realme 12 Pro+": realme12ProPlus,
+    "Realme 12x": realme12x,
+    "Realme 13 Pro": realme13Pro,
+    "Realme 13 Pro+": realme13ProPlus,
+    "Realme 14 Pro": realme14Pro,
+    "Realme 14 Pro+": realme14ProPlus,
+    "Realme 15": realme15,
+    "Realme 15 Pro": realme15Pro,
+    "Realme 16": realme16,
+    "Realme 16 Pro": realme16Pro,
+    "Realme 16 Pro+": realme16ProPlus,
+    "Realme C11": realmeC11,
+    "Realme C15": realmeC15,
+    "Realme C21": realmeC21,
+    "Realme C25": realmeC25,
+    "Realme C30": realmeC30,
+    "Realme C33": realmeC33,
+    "Realme C35": realmeC35,
+    "Realme C55": realmeC55,
+    "Realme C75 5G": realmeC75,
+    "Realme GT2 Pro": realmeGT2Pro,
+    "Realme GT7": realmeGT7,
+    "Realme GT7 Pro": realmeGT7Pro,
+    "Realme GT Neo3": realmeGTNeo3,
+    "Realme Narzo 20 Pro": realmeNarzo20Pro,
+    "Realme Narzo 30 Pro": realmeNarzo30Pro,
+    "Realme Narzo 50 Pro 5G": realmeNarzo50Pro,
+    "Realme Narzo 60 Pro 5G": realmeNarzo60Pro,
+    "Realme Narzo 70 Pro": realmeNarzo70Pro,
+    "Realme Narzo 80 Lite 4G": realmeNarzo80Lite,
+  },
+
+  // POCO
+  ...{
+    "POCO F4 5G": pocoF4,
+    "POCO F5": pocoF5,
+    "POCO F5 Pro": pocoF5Pro,
+    "POCO F6": pocoF6,
+    "POCO F7": pocoF7,
+    "POCO F6 Pro": pocoF6Pro,
+    "POCO M2": pocoM2,
+    "POCO M2 Pro": pocoM2Pro,
+    "POCO M3": pocoM3,
+    "POCO M4 Pro": pocoM4Pro,
+    "POCO M6 Pro": pocoM6Pro,
+    "POCO X2": pocoX2,
+    "POCO X3": pocoX3,
+    "POCO X3 Pro": pocoX3Pro,
+    "POCO X4 Pro": pocoX4Pro,
+    "POCO X5 5G": pocoX5,
+    "POCO X5 Pro 5G": pocoX5Pro,
+    "POCO X6": pocoX6,
+    "POCO X6 Pro": pocoX6Pro,
+    "POCO X8 Pro": pocoX8Pro,
+    "POCOPHONE F1": pocoF1,
+  },
+
+  // MOTOROLA
+  ...{
+    "Motorola Edge 20": motoEdge20,
+    "Motorola Edge 30": motoEdge30,
+    "Motorola Edge 40 Neo": motoEdge40Neo,
+    "Motorola Edge 50 Fusion": motoEdge50Fusion,
+    "Motorola Edge 50 Pro": motoEdge50Pro,
+    "Motorola Edge 50 Ultra": motoEdge50Ultra,
+    "Motorola Edge 70 Fusion": motoEdge70Fusion,
+    "Moto G96": motoG96,
+    "Moto G34": motoG34,
+    "Moto G40 Fusion": motoG40Fusion,
+    "Moto G45 5G": motoG45,
+    "Moto G52": motoG52,
+    "Moto G62": motoG62,
+    "Moto G73": motoG73,
+    "Moto G84": motoG84,
+    "Moto G85": motoG85,
+    "Motorola Razr 40": motoRazr40,
+    "Motorola Razr 40 Ultra": motoRazr40Ultra,
+    "Motorola Razr 50": motoRazr50,
+    "Motorola Razr 50 Ultra": motoRazr50Ultra,
+    "Motorola Razr 60": motoRazr60,
+    "Motorola Razr 60 Ultra": motoRazr60Ultra,
+  },
+
+  // NOTHING
+  ...{
+    "Nothing Phone 1": nothingPhone1,
+    "Nothing Phone 2": nothingPhone2,
+    "Nothing Phone 2a": nothingPhone2a,
+    "Nothing Phone 2a Plus": nothingPhone2aPlus,
+    "Nothing Phone 3a": nothingPhone3a,
+    "Nothing Phone 3a Pro": nothingPhone3aPro,
+    "Nothing Phone 3": nothingPhone3,
+  },
 };
 
-// =====================================================
-// SAMSUNG DATABASE
-// =====================================================
-
-const SAMSUNG_IMAGES = {
-  // S26 SERIES
-  "Galaxy S26 Ultra": "samsung-galaxy-s26-ultra-1.jpg",
-  "Galaxy S26+": "samsung-galaxy-s26-plus-1.jpg",
-  "Galaxy S26": "samsung-galaxy-s26-1.jpg",
-
-  // Z7 SERIES
-  "Galaxy Z Fold7": "Fold7.png",
-  "Galaxy Z Flip7": "samsung-galaxy-z-flip7-03.jpg",
-  "Galaxy Z Flip7 FE": "samsung-galaxy-z-flip7-fe-1.jpg",
-
-  // S25 SERIES
-  "Galaxy S25 Ultra": "samsung-galaxy-s25-ultra-sm-s938-1.jpg",
-  "Galaxy S25+": "samsung-galaxy-s25-plus-sm-s936-1.jpg",
-  "Galaxy S25": "samsung-galaxy-s25-sm-s931-1.jpg",
-
-  // Z6 SERIES
-  "Galaxy Z Fold6": "samsung-galaxy-z-fold6-2.jpg",
-  "Galaxy Z Flip6": "samsung-galaxy-z-flip6-1.jpg",
-
-  // S24 SERIES
-  "Galaxy S24 Ultra": "samsung-galaxy-s24-ultra-5g-sm-s928-0.jpg",
-  "Galaxy S24+": "samsung-galaxy-s24-plus-5g-sm-s926-1.jpg",
-  "Galaxy S24": "samsung-galaxy-s24-5g-sm-s921-1.jpg",
-
-  // Z5 SERIES
-  "Galaxy Z Fold5": "samsung-galaxy-z-fold5-5g-r3.jpg",
-  "Galaxy Z Flip5": "samsung-galaxy-z-flip5-5g-r1.jpg",
-
-  // S23 SERIES
-  "Galaxy S23 Ultra": "samsung-galaxy-s23-ultra-5g-1.jpg",
-  "Galaxy S23+": "samsung-galaxy-s23-plus-5g-3.jpg",
-  "Galaxy S23": "S23.png",
-
-  // Z4 SERIES
-  "Galaxy Z Fold4": "samsung-galaxy-z-fold4-5g-2.jpg",
-  "Galaxy Z Flip4": "samsung-galaxy-z-flip4-5g-01.jpg",
-
-  // S22 SERIES
-  "Galaxy S22 Ultra": "samsung-galaxy-s22-ultra-5g-2.jpg",
-  "Galaxy S22+": "samsung-galaxy-s22-plus-5g-2.jpg",
-  "Galaxy S22": "samsung-galaxy-s22-5g-2.jpg",
-
-  // Z3 SERIES
-  "Galaxy Z Fold3": "galaxy-z-fold-3-1.jpg",
-  "Galaxy Z Flip3": "galaxy-z-flip3-1.jpg",
-
-  // S21 SERIES
-  "Galaxy S21 Ultra": "samsung-galaxy-s21-ultra-5g-1.jpg",
-  "Galaxy S21+": "samsung-galaxy-s21-plus-5g-1.jpg",
-  "Galaxy S21": "samsung-galaxy-s21-5g-0.jpg",
-
-  // S20 SERIES
-  "Galaxy S20 Ultra": "samsung-galaxy-s20-ultra-10.jpg",
-  "Galaxy S20+": "samsung-galaxy-s20-plus-1.jpg",
-  "Galaxy S20": "samsung-galaxy-s20-5g-r1.jpg",
-
-  // A SERIES
-  "Galaxy A56 5G": "samsung-galaxy-a56-1.jpg",
-  "Galaxy A55 5G": "samsung-galaxy-a55-1.jpg",
-  "Galaxy A54 5G": "samsung-galaxy-a54-5.jpg",
-  "Galaxy A53 5G": "samsung-galaxy-a53-5g-1.jpg",
-  "Galaxy A52s 5G": "galaxy-a52s-1.jpg",
-  "Galaxy A52": "samsung-galaxy-a52-4g-10.jpg",
-  "Galaxy A35 5G": "samsung-galaxy-a35-1.jpg",
-  "Galaxy A25 5G": "samsung-galaxy-a25-1.jpg",
-  "Galaxy A16": "samsung-galaxy-a16-lte-1.jpg",
-  "Galaxy A15": "samsung-galaxy-a15-lte-1.jpg",
-  "Galaxy A14 5G": "samsung-galaxy-a14-5g-1.jpg",
-  "Galaxy A08": "samsung-galaxy-a08-4g-1.jpg",
-  "Galaxy A05s": "samsung-galaxy-a05s-1.jpg",
-  "Galaxy A05": "samsung-galaxy-a05-1.jpg",
-
-  // F SERIES
-  "Galaxy F70 5G": "samsung-galaxy-f70-11.jpg",
-  "Galaxy F36 5G": "samsung-galaxy-f36-1.jpg",
-  "Galaxy F55 5G": "samsung-galaxy-f55-1.jpg",
-  "Galaxy F34 5G": "samsung-galaxy-f34-1.jpg",
-  "Galaxy F15 5G": "samsung-galaxy-f15-5g-1.jpg",
-
-  // M SERIES
-  "Galaxy M55 5G": "samsung-galaxy-m55-1.jpg",
-  "Galaxy M35 5G": "samsung-galaxy-m35-1.jpg",
-  "Galaxy M34 5G": "samsung-galaxy-m34-5g-3.jpg",
-  "Galaxy M33 5G": "samsung-galaxy-m33-1.jpg",
-  "Galaxy M31": "samsung-galaxy-m31-sm-m315f-2.jpg",
-
-  // NOTE SERIES
-  "Galaxy Note20 Ultra": "samsung-galaxy-note20-ultra-1.jpg",
-  "Galaxy Note20": "samsung-galaxy-note20-1.jpg",
-  "Galaxy Note10+": "samsung-galaxy-note10-plus-aura-glow.jpg",
-  "Galaxy Note10": "samsung-galaxy-note10-aura-glow.jpg",
-};
-
-// =====================================================
-// ONEPLUS DATABASE
-// =====================================================
-
-const ONEPLUS_IMAGES = {
-  // 7 SERIES
-  "OnePlus 7": "oneplus-7-1.jpg",
-  "OnePlus 7 Pro": "oneplus-7-pro-1.jpg",
-  "OnePlus 7T": "oneplus-7t-1.jpg",
-  "OnePlus 7T Pro": "oneplus-7t-pro-0.jpg",
-
-  // 8 SERIES
-  "OnePlus 8": "oneplus-8-1.jpg",
-  "OnePlus 8 Pro": "oneplus-8-pro-1.jpg",
-  "OnePlus 8T": "oneplus-8t-1.jpg",
-
-  // 9 SERIES
-  "OnePlus 9": "oneplus-9-1.jpg",
-  "OnePlus 9 Pro": "oneplus-9-pro-1.jpg",
-  "OnePlus 9R": "oneplus-9r-2.jpg",
-
-  // 10 SERIES
-  "OnePlus 10 Pro": "oneplus-10-pro-1.jpg",
-  "OnePlus 10R": "oneplus-10r-1.jpg",
-  "OnePlus 10T": "oneplus-10t-5g-1.jpg",
-
-  // 11 TO 16
-  "OnePlus 11": "oneplus-11-2.jpg",
-  "OnePlus 12": "oneplus-12-1.jpg",
-  "OnePlus 12R": "oneplus-12r-1.jpg",
-  "OnePlus 13": "oneplus-13-1.jpg",
-  "OnePlus 13R": "oneplus-13r-1.jpg",
-  "OnePlus 15": "oneplus-15-1.jpg",
-  "OnePlus 16": "oneplus-16-1.jpg",
-
-  // ACE
-  "OnePlus Ace 2": "oneplus-ace2-1.jpg",
-
-  // NORD
-  "OnePlus Nord": "oneplus-nord-1.jpg",
-  "OnePlus Nord 2": "oneplus-nord-2-5g-1.jpg",
-  "OnePlus Nord 2T": "oneplus-nord-2t-5g-1.jpg",
-  "OnePlus Nord 3": "oneplus-nord-3-5g-1.jpg",
-  "OnePlus Nord 4": "oneplus-nord4-1.jpg",
-  "OnePlus Nord 5": "oneplus-nord5-2.jpg",
-
-  // NORD CE
-  "OnePlus Nord CE 3": "oneplus-nord-ce3-5g-1.jpg",
-  "OnePlus Nord CE 3 Lite": "oneplus-nord-ce-3-lite-1.jpg",
-  "OnePlus Nord CE 4": "oneplus-nord-ce4-11.jpg",
-  "OnePlus Nord CE 4 Lite": "oneplus-nord-ce4-lite-intl-1.jpg",
-  "OnePlus Nord CE 5": "oneplus-nord-ce5-3.jpg",
-};
-
-// =====================================================
-// XIAOMI DATABASE
-// =====================================================
-
-const XIAOMI_IMAGES = {
-  "Xiaomi 11T Pro": "xiaomi-11t-pro-1.jpg",
-
-  "Xiaomi 12": "xiaomi-12-1.jpg",
-
-  // No separate Xiaomi 12 Pro image was supplied.
-  // This entry uses the Xiaomi 12 image as a fallback.
-  "Xiaomi 12 Pro": "xiaomi-12-1.jpg",
-
-  "Xiaomi 13 Pro": "xiaomi-13-pro-black-1.jpg",
-
-  "Xiaomi 14": "xiaomi-14-01.jpg",
-  "Xiaomi 14 Ultra": "xiaomi-14-ultra-01.jpg",
-
-  "Xiaomi 15": "xiaomi-15-1.jpg",
-  "Xiaomi 15 Ultra": "xiaomi-15-ultra-5.jpg",
-
-  "Xiaomi 17": "xiaomi-17-b.jpg",
-  "Xiaomi 17 Ultra": "xiaomi-17-ultra-global-1.jpg",
-
-  "Xiaomi Mi 10T 5G": "xiaomi-mi-10t-5g-1.jpg",
-  "Xiaomi Mi 10T Pro": "xiaomi-mi-10t-pro-02.jpg",
-
-  "Xiaomi Mi 11 Ultra": "xiaomi-mi11-ultra-5g-k1-1.jpg",
-  "Xiaomi Mi 11 Ultra 5G": "xiaomi-mi11-ultra-5g-k1-1.jpg",
-
-  "Xiaomi Mi 11X": "xiaomi-mi11x-1.jpg",
-  "Xiaomi Mi 11X Pro": "xiaomi-mi11x-pro-0.jpg",
-
-  "Mi 11X": "xiaomi-mi11x-1.jpg",
-  "Mi 11X Pro": "xiaomi-mi11x-pro-0.jpg",
-};
-
-// =====================================================
-// REDMI DATABASE
-// =====================================================
-
-const REDMI_IMAGES = {
-  "Redmi 9 Power": "redmi-9-power-0.jpg",
-
-  "Redmi 10": "redmi-10-1.jpg",
-  "Redmi 10A": "redmi-10a-2.jpg",
-  "Redmi 10 Power": "redmi-10-power-05.jpg",
-
-  "Redmi 12": "-redmi-12-1.jpg",
-
-  "Redmi 13C": "redmi-13c-1.jpg",
-  "Redmi 13C 5G": "redmi-13c-5g-1.jpg",
-
-  "Redmi 14C": "redmi-14c-1.jpg",
-  "Redmi 17C": "redmi-17c-11.jpg",
-
-  "Redmi Note 10 Pro": "redmi-note10-pro-1.jpg",
-
-  "Redmi Note 13 Pro 5G": "redmi-note-13-pro-5g-1.jpg",
-  "Redmi Note 13 Pro+": "redmi-note-13-pro-plus-01.jpg",
-
-  "Redmi Note 14 Pro 5G": "xiaomi-redmi-note-14-pro-5g-gl-1.jpg",
-  "Redmi Note 14 Pro+ 5G": "xiaomi-redmi-note-14-pro-plus-5g-gl-1.jpg",
-
-  "Redmi Note 15": "xiaomi-redmi-note-15-global-1.jpg",
-  "Redmi Note 15 Pro": "xiaomi-redmi-note-15-pro-global-1.jpg",
-  "Redmi Note 15 Pro+": "xiaomi-redmi-note-15-pro-plus-global-1.jpg",
-};
-
-// =====================================================
-// NORMALIZE MODEL NAME
-// =====================================================
+// ============================================================
+// 13. NORMALIZE PHONE MODEL
+// ============================================================
 
 function normalizeModel(model) {
   return String(model || "")
@@ -317,158 +773,120 @@ function normalizeModel(model) {
     .toLowerCase();
 }
 
-// =====================================================
-// GET PHONE IMAGE
-// IMPORTANT: NAMED EXPORT
-// =====================================================
+// ============================================================
+// 14. GET PHONE IMAGE
+// ============================================================
 
 export function getPhoneImage(model) {
   if (!model) return null;
 
   const normalized = normalizeModel(model);
 
-  // APPLE
-
-  const appleKey = Object.keys(APPLE_IMAGES).find(
-    (key) => normalizeModel(key) === normalized,
+  // Direct match
+  const directMatch = Object.keys(PHONE_IMAGES).find(
+    (key) => normalizeModel(key) === normalized
   );
 
-  if (appleKey) {
-    return findImage(APPLE_IMAGES[appleKey]);
+  if (directMatch) {
+    return PHONE_IMAGES[directMatch];
   }
 
-  // SAMSUNG
-
-  const samsungKey = Object.keys(SAMSUNG_IMAGES).find(
-    (key) => normalizeModel(key) === normalized,
-  );
-
-  if (samsungKey) {
-    return findImage(SAMSUNG_IMAGES[samsungKey]);
-  }
-
-  // Samsung aliases
-
-  const samsungAlias = normalized
-    .replace(/^samsung\s+/, "")
-    .replace(/^galaxy\s+/, "");
-
-  const samsungMatch = Object.keys(SAMSUNG_IMAGES).find(
-    (key) => normalizeModel(key).replace(/^galaxy\s+/, "") === samsungAlias,
-  );
-
-  if (samsungMatch) {
-    return findImage(SAMSUNG_IMAGES[samsungMatch]);
-  }
-
-  // ONEPLUS
-
-  const oneplusKey = Object.keys(ONEPLUS_IMAGES).find(
-    (key) => normalizeModel(key) === normalized,
-  );
-
-  if (oneplusKey) {
-    return findImage(ONEPLUS_IMAGES[oneplusKey]);
-  }
-
-  // XIAOMI
-
-  const xiaomiKey = Object.keys(XIAOMI_IMAGES).find(
-    (key) => normalizeModel(key) === normalized,
-  );
-
-  if (xiaomiKey) {
-    return findImage(XIAOMI_IMAGES[xiaomiKey]);
-  }
-
-  // REDMI
-
-  const redmiKey = Object.keys(REDMI_IMAGES).find(
-    (key) => normalizeModel(key) === normalized,
-  );
-
-  if (redmiKey) {
-    return findImage(REDMI_IMAGES[redmiKey]);
-  }
-
-  // FINAL FALLBACK: SEARCH BY MODEL NAME
-
-  const allDatabases = [
-    APPLE_IMAGES,
-    SAMSUNG_IMAGES,
-    ONEPLUS_IMAGES,
-    XIAOMI_IMAGES,
-    REDMI_IMAGES,
+  // Remove common brand prefixes
+  const prefixes = [
+    "samsung ",
+    "oppo ",
+    "vivo ",
+    "realme ",
+    "poco ",
+    "motorola ",
+    "moto ",
+    "nothing ",
+    "galaxy ",
+    "oneplus ",
   ];
 
-  for (const database of allDatabases) {
-    const match = Object.keys(database).find(
-      (key) => normalizeModel(key) === normalized,
-    );
+  let cleanedModel = normalized;
 
-    if (match) {
-      return findImage(database[match]);
+  for (const prefix of prefixes) {
+    if (cleanedModel.startsWith(prefix)) {
+      cleanedModel = cleanedModel.slice(prefix.length);
+      break;
     }
   }
 
-  console.warn("[FIXHUB] Image not found:", model);
+  // Match after removing brand prefix
+  const aliasMatch = Object.keys(PHONE_IMAGES).find((key) => {
+    let keyName = normalizeModel(key);
+
+    for (const prefix of prefixes) {
+      if (keyName.startsWith(prefix)) {
+        keyName = keyName.slice(prefix.length);
+        break;
+      }
+    }
+
+    return keyName === cleanedModel;
+  });
+
+  if (aliasMatch) {
+    return PHONE_IMAGES[aliasMatch];
+  }
+
+  console.warn("[FIXHUB] Phone image not found:", model);
 
   return null;
 }
 
-// =====================================================
-// EXPORT DATABASES
-// =====================================================
+// ============================================================
+// 15. GET ALL PHONE MODELS
+// ============================================================
 
-export {
-  APPLE_IMAGES,
-  SAMSUNG_IMAGES,
-  ONEPLUS_IMAGES,
-  XIAOMI_IMAGES,
-  REDMI_IMAGES,
-};
+export function getAllPhoneModels() {
+  return Object.keys(PHONE_IMAGES);
+}
 
-// =====================================================
-// DEBUG FUNCTION
-// =====================================================
+// ============================================================
+// 16. CHECK PHONE IMAGE
+// ============================================================
 
 export function checkPhoneImages() {
-  console.log("========== FIXHUB IMAGE TEST ==========");
+  console.log("========== FIXHUB PHONE IMAGE TEST ==========");
 
-  console.log("Total images detected:", Object.keys(ALL_PHONE_FILES).length);
+  console.log("Total mapped phones:", Object.keys(PHONE_IMAGES).length);
 
-  const testModels = [
-    "iPhone 11",
+  const models = [
     "iPhone 15 Pro Max",
-
-    "Galaxy A05",
-    "Galaxy A05s",
     "Galaxy S26 Ultra",
-
-    "OnePlus 7",
     "OnePlus 12",
-    "OnePlus Nord 5",
-
-    "Mi 11X Pro",
-    "Xiaomi 11T Pro",
-    "Xiaomi 12 Pro",
-    "Xiaomi 13 Pro",
+    "OnePlus Nord CE 2 5G",
+    "OnePlus Nord CE 2 Lite 5G",
+    "OnePlus Nord CE 3 5G",
+    "OnePlus Nord CE 3 Lite 5G",
     "Xiaomi 14",
-    "Xiaomi 14 Ultra",
-    "Xiaomi 15",
-    "Xiaomi 17",
-
-    "Redmi 10",
-    "Redmi 13C",
     "Redmi Note 13 Pro 5G",
-    "Redmi Note 15 Pro",
+    "OPPO A3 Pro",
+    "Vivo V40",
+    "Realme GT7 Pro",
+    "POCO X6 Pro",
+    "Motorola Edge 50 Pro",
+    "Nothing Phone 1",
+    "Nothing Phone 2",
+    "Nothing Phone 2a",
+    "Nothing Phone 2a Plus",
+    "Nothing Phone 3a",
+    "Nothing Phone 3a Pro",
+    "Nothing Phone 3",
   ];
 
-  testModels.forEach((model) => {
+  models.forEach((model) => {
     const image = getPhoneImage(model);
 
-    console.log(image ? "✅ IMAGE FOUND" : "❌ IMAGE MISSING", model, image);
+    console.log(image ? "FOUND" : "MISSING", model, image);
   });
 
-  console.log("======================================");
+  console.log("==============================================");
 }
+
+// ============================================================
+// END OF FIXHUB PHONE IMAGE DATABASE
+// ============================================================

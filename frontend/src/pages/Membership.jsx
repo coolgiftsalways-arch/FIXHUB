@@ -196,7 +196,7 @@ function NumberedPanel({ number, title, subtitle, children }) {
 
 function PhoneModelImage({ brand, model, className = "" }) {
   // getPhoneImage handles both Apple and Samsung models.
-  const image = getPhoneImage(model);
+  const image = getPhoneImage(model, brand);
   const [imageFailed, setImageFailed] = useState(false);
 
   useEffect(() => {
@@ -266,6 +266,7 @@ export default function Membership() {
     async function loadCatalog() {
       try {
         const response = await fetch("/api/membership-requests/catalog", {
+          credentials: "include",
           signal: controller.signal,
         });
 
@@ -334,9 +335,23 @@ export default function Membership() {
     const entries =
       catalog.find((entry) => entry.brand === brand)?.models || [];
 
+    // Some catalogue responses contain duplicate model names.
+    // Keep the first record for each exact model name to avoid duplicate React keys.
+    const uniqueEntries = Array.from(
+      new Map(
+        entries
+          .filter((entry) => entry && typeof entry.model === "string")
+          .map((entry) => [
+            entry.model.trim(),
+            { ...entry, model: entry.model.trim() },
+          ])
+          .filter(([modelName]) => Boolean(modelName)),
+      ).values(),
+    );
+
     const priority = MODEL_PRIORITY[brand] || [];
 
-    return [...entries].sort((a, b) => {
+    return [...uniqueEntries].sort((a, b) => {
       const ai = priority.indexOf(a.model);
       const bi = priority.indexOf(b.model);
 
