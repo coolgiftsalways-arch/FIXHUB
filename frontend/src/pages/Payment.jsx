@@ -195,7 +195,7 @@ export default function Payment() {
                 rel="noopener noreferrer"
                 className="checkout-pay-button"
               >
-                Pay Now
+                Pay With Razorpay
                 <ExternalLink size={17} />
               </a>
             )}

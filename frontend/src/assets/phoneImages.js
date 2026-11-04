@@ -367,6 +367,151 @@ import nothingPhone3a from "./Nothing/nothing-phone-3a-new-1.jpg";
 import nothingPhone3aPro from "./Nothing/nothing-phone-3a-pro-new-1.jpg";
 import nothingPhone3 from "./Nothing/nothing-phone-3-new-1.jpg";
 
+
+
+
+
+
+// ============================================================
+// 11. IQOO IMAGE IMPORTS
+// ============================================================
+
+import iqoo3 from "./iQOO/iqoo-3-5g-1.jpg";
+import iqoo7 from "./iQOO/iqoo-7-1.jpg";
+import iqoo9 from "./iQOO/iqoo-9-global-1.jpg";
+import iqoo9Pro from "./iQOO/iqoo-9-pro-global-1.jpg";
+import iqoo9SE from "./iQOO/iqoo-9-se-1.jpg";
+import iqoo11 from "./iQOO/iqoo11-.jpg";
+import iqoo12 from "./iQOO/iqoo12-10.jpg";
+
+import iqooNeo6 from "./iQOO/iqoo-neo6-5g-1.jpg";
+import iqooNeo7 from "./iQOO/iqoo-neo7-1.jpg";
+import iqooNeo7Pro from "./iQOO/iqoo-neo-7-pro-00.jpg";
+import iqooNeo7_5G from "./iQOO/iqoo-neo-7-5g-1.jpg";
+import iqooNeo9 from "./iQOO/iqoo-neo9-1.jpg";
+import iqooNeo10 from "./iQOO/iqoo-neo-10-1.jpg";
+
+import iqooV60Lite from "./iQOO/iqoo-v60-lite-1.jpg";
+
+import iqooZ3 from "./iQOO/iqoo-z3-0.jpg";
+import iqooZ5 from "./iQOO/iqoo-z5-0.jpg";
+import iqooZ6 from "./iQOO/iqoo-z6-1.jpg";
+import iqooZ7 from "./iQOO/iqoo-z7-in-1.jpg";
+import iqooZ9 from "./iQOO/iqoo-z9-1.jpg";
+import iqooZ9x from "./iQOO/iqoo-z9x-1.jpg";
+
+import iqoo13 from "./iQOO/vivo-iqoo-13-1.jpg";
+import iqoo15 from "./iQOO/vivo-iqoo-15-1.jpg";
+
+
+
+// ============================================================
+// 12. GOOGLE PIXEL IMAGE IMPORTS
+// ============================================================
+
+// ============================================================
+// GOOGLE PIXEL IMAGE IMPORTS
+// ============================================================
+
+import pixel3 from "./Google/google-pixel-3-4.jpg";
+import pixel3a from "./Google/google-pixel-3a-1.jpg";
+import pixel3XL from "./Google/google-pixel-3xl-4.jpg";
+
+import pixel4 from "./Google/google-pixel-4-1.jpg";
+import pixel4a from "./Google/google-pixel-4a-1.jpg";
+
+import pixel5 from "./Google/google-pixel-5-5g-1.jpg";
+
+import pixel6 from "./Google/google-pixel-6-1.jpg";
+import pixel6a from "./Google/google-pixel-6a-0.jpg";
+import pixel6Pro from "./Google/google-pixel-6-pro-1.jpg";
+
+import pixel7 from "./Google/google-pixel7-2.jpg";
+import pixel7a from "./Google/google-pixel-7a-2.jpg";
+import pixel7Pro from "./Google/google-pixel7-pro-2.jpg";
+
+import pixel8 from "./Google/google-pixel-8-1.jpg";
+import pixel8a from "./Google/google-pixel-8a-1.jpg";
+import pixel8Pro from "./Google/google-pixel-8-pro-1.jpg";
+
+import pixel9 from "./Google/google-pixel-9-1.jpg";
+import pixel9a from "./Google/google-pixel-9a-1.jpg";
+import pixel9Pro from "./Google/google-pixel-9-pro-1.jpg";
+import pixel9ProXL from "./Google/google-pixel-9-pro-xl-1.jpg";
+
+import pixel10 from "./Google/google-pixel-10-11.jpg";
+import pixel10Pro from "./Google/google-pixel-10-pro-11.jpg";
+import pixel10ProXL from "./Google/google-pixel-10-pro-xl-11.jpg";
+
+
+
+
+// ============================================================
+// INFINIX IMAGE IMPORTS
+// ============================================================
+
+import infinixGT20Pro from "./Infinix/infinix-gt-20-pro-0.jpg";
+import infinixGT50Pro from "./Infinix/infinix-gt50-pro-1.jpg";
+
+import infinixHot11 from "./Infinix/infinix-hot11-1.jpg";
+import infinixHot60i5G from "./Infinix/infinix-hot-60i-5g-00.jpg";
+
+import infinixNote10Pro from "./Infinix/infinix-note-10-pro-1.jpg";
+import infinixNote40 from "./Infinix/infinix-note-40-4g-2.jpg";
+import infinixNote40Pro5G from "./Infinix/infinix-note-40-pro-5g-2.jpg";
+
+import infinixZero5G from "./Infinix/infinix-zero-5g-05.jpg";
+import infinixZero40 from "./Infinix/infinix-zero40-5g-3.jpg";
+
+import infinixGT10Pro from "./Infinix/infinix-gt-10-pro-1.jpg";
+
+import infinixHot10 from "./Infinix/infinix-hot10-2.jpg";
+import infinixHot12 from "./Infinix/infinix-hot12-1.jpg";
+import infinixHot30 from "./Infinix/infinix-hot30-1.jpg";
+import infinixHot40i from "./Infinix/infinix-hot-40i-1.jpg";
+import infinixHot70Pro from "./Infinix/infinix-hot-70-pro-1.jpg";
+
+import infinixNote12 from "./Infinix/infinix-note12-1.jpg";
+import infinixNote30 from "./Infinix/infinix-note30-4g-0.jpg";
+
+import infinixZero30 from "./Infinix/infinix-zero30-5g-1.jpg";
+
+
+
+// ============================================================
+// TECNO IMAGE IMPORTS
+// ============================================================
+// ============================================================
+// TECNO IMAGE IMPORTS
+// ============================================================
+
+import tecnoCamon15 from "./Tecno/tecno-camon-15-1.jpg";
+import tecnoCamon16 from "./Tecno/tecno-camon-16.jpg";
+import tecnoCamon17 from "./Tecno/tecno-camon-17-1.jpg";
+import tecnoCamon18 from "./Tecno/tecno-camon-18-3.jpg";
+import tecnoCamon19Pro from "./Tecno/tecno-camon-19-pro-1.jpg";
+import tecnoCamon20Pro from "./Tecno/tecno-camon20-pro-1.jpg";
+import tecnoCamon30 from "./Tecno/tecno-camon-30-01.jpg";
+import tecnoCamon30Pro from "./Tecno/tecno-camon-30-pro-1.jpg";
+
+import tecnoPhantomX2 from "./Tecno/tecno-phantom-x2-1.jpg";
+import tecnoPhantomVFlip2 from "./Tecno/tecno-phantom-v-flip2-5g-11.jpg";
+
+import tecnoPova2 from "./Tecno/tecno-pova-2-1.jpg";
+import tecnoPova6Pro from "./Tecno/tecno-pova-6-pro-02.jpg";
+import tecnoPova7 from "./Tecno/tecno-pova7-5g-1.jpg";
+import tecnoPova7Pro from "./Tecno/tecno-pova7-pro-3.jpg";
+
+import tecnoSpark6 from "./Tecno/tecno-spark6-1.jpg";
+import tecnoSpark8 from "./Tecno/tecno-spark-8-1.jpg";
+import tecnoSpark10 from "./Tecno/tecno-spark10-1.jpg";
+import tecnoSpark20 from "./Tecno/tecno-spark-20-1.jpg";
+import tecnoSpark50S from "./Tecno/tecno-spark-50s-5g-3.jpg";
+
+import tecnoGsmarena006 from "./Tecno/gsmarena_006.jpg";
+
+
+
 // ============================================================
 // 12. EXTERNAL IMAGE URLS
 // ============================================================
@@ -540,6 +685,79 @@ const pocoX6Pro5GImage =
 const pocoX8Image =
   "https://cdn.etoren.com/upload/images/0.51081500_1773800271_xiaomi-poco-x8-pro-max-5g-dual-sim-256gb-white-12gb-ram-global-version.png";
 
+
+
+
+  // ============================================================
+// MOTOROLA EXTERNAL IMAGE URLS
+// ============================================================
+
+const motoG34Image =
+  "https://kdtec.cl/wp-content/uploads/2024/03/Motorola-Moto-G34-5G-Azul-2-1.jpeg";
+
+const motoG62Image =
+  "https://phonesdata.com/files/models/Motorola-Moto-G62-5G-637.jpg";
+
+const motoG73Image =
+  "https://mobizoo.com.br/wp-content/uploads/2023/02/motorola-moto-g73-5g-780x780.jpg";
+
+const motoG84Image =
+  "https://m.media-amazon.com/images/I/71J4guGST-L._AC_.jpg";
+
+const motoG85Image =
+  "https://m.media-amazon.com/images/I/71zoUhd6fXL.jpg";
+
+const motoG96Image =
+  "https://www.gizmochina.com/wp-content/uploads/2025/07/Moto-G96-5G-1-2-768x768.png";
+
+
+
+
+
+
+  // ============================================================
+// IQOO EXTERNAL IMAGE URLS
+// ============================================================
+
+const iqoo3Image =
+  "https://www.chooseyourmobile.com/wp-content/uploads/2020/05/Vivo-iQOO3-specs.jpg";
+
+const iqoo7LegendImage =
+  "https://cdn.dxomark.com/wp-content/uploads/medias/post-84513/IQOO7-Legend-featured-image-packshot-review.jpg";
+
+const iqoo9ProImage =
+  "https://in-exstatic-vivofs.vivo.com/gdHFRinHEMrj3yPG/1680677944425/f754a74288190ce38fd54f7d8f04c28d.png";
+
+const iqooZ10RImage =
+  "https://m.media-amazon.com/images/I/61WM6IDaBPL._SL1200_.jpg";
+
+
+
+  // ============================================================
+// INFINIX EXTERNAL IMAGE URLS
+// ============================================================
+
+const infinixHot60i5GImage =
+  "https://cdn.beebom.com/mobile/infinix-hot-60i-5g-front-back-1.png";
+
+const infinixNote30Image =
+  "https://images.priceoye.pk/infinix-note-30-pakistan-priceoye-uh7xs.jpg";
+
+const infinixNote40Image =
+  "https://images.priceoye.pk/infinix-note-40-pakistan-priceoye-qf4vp.jpg";
+
+const infinixNote40ProImage =
+  "https://oyemobile.com.pk/backend/public/storage/media/2026/10/infinix/note-40-pro-plus/main.webp";
+
+const infinixZero30Image =
+  "https://static.toiimg.com/thumb/resizemode-4,msid-133368544,width-1070/133368544.jpg";
+
+const infinixZero40Image =
+  "https://cdn.beebom.com/mobile/infinix-zero-40-4g-front-back-2.png";
+
+
+  const infinixHot60_5GPlusImage =
+    "https://www.mobiledokan.com/media/infinix-hot-60-tundra-green-official-image.webp";
 // ============================================================
 // 13. PHONE IMAGE MAPPING
 // ============================================================
@@ -932,6 +1150,7 @@ export const PHONE_IMAGES = {
   },
 
   // MOTOROLA
+  // MOTOROLA
   ...{
     "Motorola Edge 20": motoEdge20,
     "Motorola Edge 30": motoEdge30,
@@ -940,15 +1159,32 @@ export const PHONE_IMAGES = {
     "Motorola Edge 50 Pro": motoEdge50Pro,
     "Motorola Edge 50 Ultra": motoEdge50Ultra,
     "Motorola Edge 70 Fusion": motoEdge70Fusion,
-    "Moto G96": motoG96,
-    "Moto G34": motoG34,
+
+    // Motorola G Series
+    "Moto G34": motoG34Image,
+    "Moto G34 5G": motoG34Image,
+
     "Moto G40 Fusion": motoG40Fusion,
+
     "Moto G45 5G": motoG45,
     "Moto G52": motoG52,
-    "Moto G62": motoG62,
-    "Moto G73": motoG73,
-    "Moto G84": motoG84,
-    "Moto G85": motoG85,
+
+    "Moto G62": motoG62Image,
+    "Moto G62 5G": motoG62Image,
+
+    "Moto G73": motoG73Image,
+    "Moto G73 5G": motoG73Image,
+
+    "Moto G84": motoG84Image,
+    "Moto G84 5G": motoG84Image,
+
+    "Moto G85": motoG85Image,
+    "Moto G85 5G": motoG85Image,
+
+    "Moto G96": motoG96Image,
+    "Moto G96 5G": motoG96Image,
+
+    // Motorola Razr Series
     "Motorola Razr 40": motoRazr40,
     "Motorola Razr 40 Ultra": motoRazr40Ultra,
     "Motorola Razr 50": motoRazr50,
@@ -956,7 +1192,6 @@ export const PHONE_IMAGES = {
     "Motorola Razr 60": motoRazr60,
     "Motorola Razr 60 Ultra": motoRazr60Ultra,
   },
-
   // NOTHING
   ...{
     "Nothing Phone 1": nothingPhone1,
@@ -966,6 +1201,231 @@ export const PHONE_IMAGES = {
     "Nothing Phone 3a": nothingPhone3a,
     "Nothing Phone 3a Pro": nothingPhone3aPro,
     "Nothing Phone 3": nothingPhone3,
+  },
+
+  // ============================================================
+  // IQOO
+  // ============================================================
+
+  // ============================================================
+  // IQOO
+  // ============================================================
+
+  ...{
+    "iQOO 3": iqoo3Image,
+    "iQOO 3 5G": iqoo3Image,
+
+    "iQOO 7": iqoo7,
+    "iQOO 7 Legend": iqoo7LegendImage,
+
+    "iQOO 9": iqoo9,
+    "iQOO 9 5G": iqoo9,
+
+    "iQOO 9 Pro": iqoo9ProImage,
+    "iQOO 9 Pro 5G": iqoo9ProImage,
+
+    "iQOO 9 SE": iqoo9SE,
+
+    "iQOO 11": iqoo11,
+    "iQOO 11 5G": iqoo11,
+
+    "iQOO 12": iqoo12,
+    "iQOO 12 5G": iqoo12,
+
+    "iQOO 13": iqoo13,
+    "iQOO 13 5G": iqoo13,
+
+    "iQOO 15": iqoo15,
+
+    // Neo Series
+    "iQOO Neo 6": iqooNeo6,
+    "iQOO Neo 6 5G": iqooNeo6,
+
+    "iQOO Neo 7": iqooNeo7,
+    "iQOO Neo 7 5G": iqooNeo7_5G,
+
+    "iQOO Neo 7 Pro": iqooNeo7Pro,
+    "iQOO Neo 7 Pro 5G": iqooNeo7Pro,
+
+    "iQOO Neo 9": iqooNeo9,
+    "iQOO Neo 9 5G": iqooNeo9,
+
+    "iQOO Neo 10": iqooNeo10,
+    "iQOO Neo 10 5G": iqooNeo10,
+
+    // Z Series
+    "iQOO Z3": iqooZ3,
+    "iQOO Z3 5G": iqooZ3,
+
+    "iQOO Z5": iqooZ5,
+    "iQOO Z5 5G": iqooZ5,
+
+    "iQOO Z6": iqooZ6,
+    "iQOO Z6 5G": iqooZ6,
+
+    "iQOO Z7": iqooZ7,
+    "iQOO Z7 5G": iqooZ7,
+
+    "iQOO Z9": iqooZ9,
+    "iQOO Z9 5G": iqooZ9,
+
+    "iQOO Z9x": iqooZ9x,
+    "iQOO Z9x 5G": iqooZ9x,
+
+    "iQOO Z10R": iqooZ10RImage,
+    "iQOO Z10R 5G": iqooZ10RImage,
+
+    "iQOO V60 Lite": iqooV60Lite,
+  },
+
+  // ============================================================
+  // GOOGLE PIXEL
+  // ============================================================
+
+  // ============================================================
+  // GOOGLE PIXEL
+  // ============================================================
+
+  ...{
+    "Pixel 3": pixel3,
+    "Pixel 3a": pixel3a,
+    "Pixel 3 XL": pixel3XL,
+
+    "Pixel 4": pixel4,
+    "Pixel 4a": pixel4a,
+
+    "Pixel 5": pixel5,
+    "Pixel 5 5G": pixel5,
+
+    "Pixel 6": pixel6,
+    "Pixel 6a": pixel6a,
+    "Pixel 6 Pro": pixel6Pro,
+
+    "Pixel 7": pixel7,
+    "Pixel 7a": pixel7a,
+    "Pixel 7 Pro": pixel7Pro,
+
+    "Pixel 8": pixel8,
+    "Pixel 8a": pixel8a,
+    "Pixel 8 Pro": pixel8Pro,
+
+    "Pixel 9": pixel9,
+    "Pixel 9a": pixel9a,
+    "Pixel 9 Pro": pixel9Pro,
+    "Pixel 9 Pro XL": pixel9ProXL,
+
+    "Pixel 10": pixel10,
+    "Pixel 10 Pro": pixel10Pro,
+    "Pixel 10 Pro XL": pixel10ProXL,
+
+    // Also support Google Pixel naming
+    "Google Pixel 3": pixel3,
+    "Google Pixel 3a": pixel3a,
+    "Google Pixel 3 XL": pixel3XL,
+    "Google Pixel 4": pixel4,
+    "Google Pixel 4a": pixel4a,
+    "Google Pixel 5": pixel5,
+    "Google Pixel 6": pixel6,
+    "Google Pixel 6a": pixel6a,
+    "Google Pixel 6 Pro": pixel6Pro,
+    "Google Pixel 7": pixel7,
+    "Google Pixel 7a": pixel7a,
+    "Google Pixel 7 Pro": pixel7Pro,
+    "Google Pixel 8": pixel8,
+    "Google Pixel 8a": pixel8a,
+    "Google Pixel 8 Pro": pixel8Pro,
+    "Google Pixel 9": pixel9,
+    "Google Pixel 9a": pixel9a,
+    "Google Pixel 9 Pro": pixel9Pro,
+    "Google Pixel 9 Pro XL": pixel9ProXL,
+    "Google Pixel 10": pixel10,
+    "Google Pixel 10 Pro": pixel10Pro,
+    "Google Pixel 10 Pro XL": pixel10ProXL,
+  },
+
+  // ============================================================
+  // INFINIX
+  // ============================================================
+
+  // ============================================================
+  // INFINIX
+  // ============================================================
+
+  ...{
+    // GT Series
+    "Infinix GT 10 Pro": infinixGT10Pro,
+    "Infinix GT 20 Pro": infinixGT20Pro,
+    "Infinix GT 50 Pro": infinixGT50Pro,
+
+    // HOT Series
+    "Infinix Hot 10": infinixHot10,
+    "Infinix Hot 11": infinixHot11,
+    "Infinix Hot 12": infinixHot12,
+    "Infinix Hot 30": infinixHot30,
+    "Infinix Hot 40i": infinixHot40i,
+
+    "Infinix Hot 60i 5G": infinixHot60i5GImage,
+
+    "Infinix Hot 70 Pro": infinixHot70Pro,
+
+    // NOTE Series
+    "Infinix Note 10 Pro": infinixNote10Pro,
+    "Infinix Note 12": infinixNote12,
+
+    "Infinix Note 30": infinixNote30Image,
+    "Infinix Note 30 4G": infinixNote30Image,
+
+    "Infinix Note 40": infinixNote40Image,
+    "Infinix Note 40 4G": infinixNote40Image,
+
+    "Infinix Note 40 Pro": infinixNote40ProImage,
+    "Infinix Note 40 Pro 5G": infinixNote40ProImage,
+
+    // ZERO Series
+    "Infinix Zero 5G": infinixZero5G,
+
+    "Infinix Zero 30": infinixZero30Image,
+    "Infinix Zero 30 5G": infinixZero30Image,
+
+    "Infinix Zero 40": infinixZero40Image,
+    "Infinix Zero 40 5G": infinixZero40Image,
+
+    "Infinix Hot 60 5G+": infinixHot60_5GPlusImage,
+    "Infinix Hot 60 5G Plus": infinixHot60_5GPlusImage,
+  },
+
+  // ============================================================
+  // TECNO
+  // ============================================================
+
+  ...{
+    // CAMON SERIES
+    "Tecno Camon 15": tecnoCamon15,
+    "Tecno Camon 16": tecnoCamon16,
+    "Tecno Camon 17": tecnoCamon17,
+    "Tecno Camon 18": tecnoCamon18,
+    "Tecno Camon 19 Pro": tecnoCamon19Pro,
+    "Tecno Camon 20 Pro": tecnoCamon20Pro,
+    "Tecno Camon 30": tecnoCamon30,
+    "Tecno Camon 30 Pro": tecnoCamon30Pro,
+
+    // PHANTOM SERIES
+    "Tecno Phantom X2": tecnoPhantomX2,
+    "Tecno Phantom V Flip 2 5G": tecnoPhantomVFlip2,
+    "Tecno Phantom V Flip2 5G": tecnoPhantomVFlip2,
+
+    // POVA SERIES
+    "Tecno Pova 2": tecnoPova2,
+    "Tecno Pova 6 Pro": tecnoPova6Pro,
+    "Tecno Pova 7 5G": tecnoPova7,
+    "Tecno Pova 7 Pro": tecnoPova7Pro,
+
+    // SPARK SERIES
+    "Tecno Spark 6": tecnoSpark6,
+    "Tecno Spark 8": tecnoSpark8,
+    "Tecno Spark 10": tecnoSpark10,
+    "Tecno Spark 20": tecnoSpark20,
+    "Tecno Spark 50S 5G": tecnoSpark50S,
   },
 };
 
