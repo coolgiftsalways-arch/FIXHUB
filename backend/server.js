@@ -24,11 +24,13 @@ import razorpayWebhookRoutes from "./routes/razorpayWebhookRoutes.js";
 dotenv.config();
 
 const app = express();
+
 const PORT = Number(process.env.PORT || 3000);
 const production = process.env.NODE_ENV === "production";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 const frontendDist = path.resolve(__dirname, "../frontend/dist");
 
 // ==========================================
@@ -53,9 +55,10 @@ function addAllowedOrigin(value) {
 
   try {
     const url = new URL(value.trim());
+
     allowedOrigins.add(url.origin);
 
-    // Allow both example.com and www.example.com.
+    // Allow both www and non-www versions.
     const altHost = url.hostname.startsWith("www.")
       ? url.hostname.slice(4)
       : `www.${url.hostname}`;
@@ -66,18 +69,25 @@ function addAllowedOrigin(value) {
       );
     }
   } catch {
-    console.warn(`Ignoring invalid origin in CLIENT_URL: ${value}`);
+    console.warn(`Ignoring invalid origin: ${value}`);
   }
 }
 
-// CLIENT_URL can hold several origins separated by commas, e.g.
-// CLIENT_URL=https://fixhubsolutions.in,https://orangered-fox-540676.hostingersite.com
+// Official FixHub domains
+addAllowedOrigin("https://fixhubsolutions.in");
+addAllowedOrigin("https://www.fixhubsolutions.in");
+
+// Hostinger preview domain
+addAllowedOrigin("https://orangered-fox-540676.hostingersite.com");
+
+// Read additional domains from CLIENT_URL.
 String(process.env.CLIENT_URL || "")
   .split(",")
   .map((value) => value.trim())
   .filter(Boolean)
   .forEach(addAllowedOrigin);
 
+// Local development
 if (!production) {
   addAllowedOrigin("http://localhost:5173");
   addAllowedOrigin("http://127.0.0.1:5173");
@@ -90,6 +100,7 @@ console.log(
   [...allowedOrigins].join(", ") || "(none configured)",
 );
 
+// CORS middleware
 app.use(
   cors({
     origin(origin, callback) {
@@ -98,6 +109,7 @@ app.use(
       }
 
       console.warn("Blocked CORS origin:", origin);
+
       return callback(new Error("CORS origin not allowed."));
     },
 
@@ -111,8 +123,7 @@ app.use(
 
 // ==========================================
 // RAZORPAY WEBHOOK
-// Base URL: /api/razorpay/webhook
-// Must stay BEFORE express.json(): the signature check needs the raw body.
+// MUST BE BEFORE express.json()
 // ==========================================
 
 app.use("/api/razorpay/webhook", razorpayWebhookRoutes);
@@ -327,8 +338,6 @@ if (production) {
 // ==========================================
 
 app.use((error, _req, res, next) => {
-  console.error("FIXHUB SERVER ERROR:", error.stack || error.message);
-
   if (res.headersSent) {
     return next(error);
   }
@@ -343,7 +352,10 @@ app.use((error, _req, res, next) => {
   }
 
   if (error.message === "CORS origin not allowed.") {
+    console.warn("CORS request rejected.");
     status = 403;
+  } else {
+    console.error("FIXHUB SERVER ERROR:", error.stack || error.message);
   }
 
   res.status(status).json({
@@ -372,6 +384,32 @@ mongoose.connection.on("error", (error) => {
 // START SERVER
 // ==========================================
 
+let server;
+let stopping = false;
+
+async function shutdown(signal) {
+  if (stopping) return;
+
+  stopping = true;
+
+  console.log(`${signal} received. Shutting down FIXHUB...`);
+
+  if (server) {
+    await new Promise((resolve) => {
+      server.close(resolve);
+    });
+  }
+
+  try {
+    await mongoose.disconnect();
+    console.log("MongoDB disconnected.");
+  } catch (error) {
+    console.error("MongoDB shutdown error:", error.message);
+  }
+
+  process.exit(0);
+}
+
 async function startServer() {
   if (!process.env.MONGO_URI) {
     console.error("Startup failed: MONGO_URI is missing. Check backend/.env.");
@@ -379,8 +417,6 @@ async function startServer() {
     process.exitCode = 1;
     return;
   }
-
-  let server;
 
   try {
     console.log("Connecting to MongoDB Atlas...");
@@ -399,6 +435,7 @@ async function startServer() {
       console.log("----------------------------------");
       console.log("FIXHUB BACKEND STARTED");
       console.log(`Server: http://localhost:${PORT}`);
+
       console.log("Customer authentication: registered");
       console.log("Admin authentication: registered");
       console.log("Admin dashboard API: registered");
@@ -406,51 +443,20 @@ async function startServer() {
       console.log("Repair bookings API: registered");
       console.log("Repair payments API: registered");
       console.log("Razorpay webhook: registered");
+
       console.log("MongoDB: connected");
+
       console.log("----------------------------------");
     });
 
     server.on("error", (error) => {
       console.error("HTTP server error:", error.message);
-      process.exitCode = 1;
     });
-
-    // ======================================
-    // GRACEFUL SHUTDOWN
-    // ======================================
-
-    let stopping = false;
-
-    async function shutdown(signal) {
-      if (stopping) return;
-
-      stopping = true;
-
-      console.log(`${signal} received. Shutting down FIXHUB...`);
-
-      if (server) {
-        await new Promise((resolve) => {
-          server.close(resolve);
-        });
-      }
-
-      try {
-        await mongoose.disconnect();
-      } catch (error) {
-        console.error("MongoDB shutdown error:", error.message);
-      }
-
-      process.exit(0);
-    }
 
     process.once("SIGINT", () => shutdown("SIGINT"));
     process.once("SIGTERM", () => shutdown("SIGTERM"));
   } catch (error) {
     console.error("FIXHUB startup failed:", error.stack || error.message);
-
-    if (server) {
-      server.close();
-    }
 
     try {
       await mongoose.disconnect();
