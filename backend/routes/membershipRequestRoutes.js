@@ -7,7 +7,10 @@ import MembershipRequest from "../models/MembershipRequest.js";
 import Payment from "../models/Payment.js";
 
 import { requireAdmin } from "./authRoutes.js";
-import { createFixHubPaymentLink } from "../utils/razorpayPayment.js";
+import {
+  createFixHubPaymentLink,
+  refreshPaymentFromRazorpay,
+} from "../utils/razorpayPayment.js";
 
 import {
   getPhoneCatalog,
@@ -154,6 +157,8 @@ function serializePayment(payment) {
     status: payment.status,
     paymentUrl: payment.paymentUrl || null,
     razorpayStatus: payment.razorpayStatus || null,
+    razorpayStatus: payment.razorpayStatus || null,
+    couponCode: payment.couponCode || null,
     createdAt: payment.createdAt,
     updatedAt: payment.updatedAt,
     verifiedAt: payment.verifiedAt,
@@ -186,6 +191,47 @@ const limitPayments = rateLimit({
   },
 });
 
+// ==========================================
+// ₹1 TEST COUPON
+// Enabled only when TEST_COUPON_CODE is set in backend/.env.
+// Optional: TEST_COUPON_EMAILS=a@x.com,b@y.com limits who can use it.
+// Remove these variables when you finish testing.
+// ==========================================
+
+const TEST_COUPON_AMOUNT = 1;
+
+function resolveTestCoupon(rawCode, customer) {
+  const entered = String(rawCode || "")
+    .trim()
+    .toUpperCase();
+
+  if (!entered) return { applied: false };
+
+  const configured = String(process.env.TEST_COUPON_CODE || "")
+    .trim()
+    .toUpperCase();
+
+  if (!configured || entered !== configured) {
+    return { applied: false, error: "Invalid coupon code." };
+  }
+
+  const allowedEmails = String(process.env.TEST_COUPON_EMAILS || "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (
+    allowedEmails.length > 0 &&
+    !allowedEmails.includes(String(customer?.email || "").toLowerCase())
+  ) {
+    return {
+      applied: false,
+      error: "This coupon is not available for your account.",
+    };
+  }
+
+  return { applied: true, code: configured };
+}
 // ==========================================
 // FIND OWN MEMBERSHIP REQUEST
 // ==========================================
@@ -330,7 +376,7 @@ router.post("/", requireCustomer, limitRequests, async (req, res) => {
 // ==========================================
 // 3. CREATE MEMBERSHIP PAYMENT + RAZORPAY QR
 // POST /api/membership-requests/payment
-// Body: { requestId: "FH-MEM-..." }
+// Body: { requestId: "FH-MEM-...", couponCode?: "..." }
 // ==========================================
 
 router.post("/payment", requireCustomer, limitPayments, async (req, res) => {
@@ -375,59 +421,92 @@ router.post("/payment", requireCustomer, limitPayments, async (req, res) => {
     }
 
     const referenceId = `FH-MEM-${String(membershipRequest._id).toUpperCase()}`;
+    const customerId = req.fixhubCustomer._id;
 
-    let payment = await Payment.findOne({
-      customerId: req.fixhubCustomer._id,
-      purpose: "membership",
-      referenceId,
-    }).sort({ createdAt: -1 });
+    // Optional ₹1 test coupon (see resolveTestCoupon).
+    const coupon = resolveTestCoupon(req.body?.couponCode, req.fixhubCustomer);
 
-    if (payment?.status === "paid") {
-      return res.status(409).json({
+    if (coupon.error) {
+      return res.status(400).json({
         success: false,
-        message: "This membership payment has already been confirmed.",
-        payment: serializePayment(payment),
+        code: "INVALID_COUPON",
+        message: coupon.error,
       });
     }
 
-    if (payment && payment.amount !== amount) {
-      if (payment.razorpayLinkId) {
-        return res.status(409).json({
-          success: false,
-          message:
-            "The membership price changed after the payment link was created. Please contact FIXHUB support.",
-        });
-      }
+    const finalAmount = coupon.applied ? TEST_COUPON_AMOUNT : amount;
 
-      payment.amount = amount;
-      await payment.save();
+    // Bring every open payment for this request up to date with Razorpay,
+    // so a link paid earlier (full price or coupon) is detected.
+    const openPayments = await Payment.find({
+      customerId,
+      purpose: "membership",
+      referenceId,
+      status: { $in: ["pending", "submitted", "under_review"] },
+    })
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    for (const open of openPayments) {
+      await refreshPaymentFromRazorpay(open);
     }
+
+    const paidPayment = await Payment.findOne({
+      customerId,
+      purpose: "membership",
+      referenceId,
+      status: "paid",
+    });
+
+    if (paidPayment) {
+      return res.status(409).json({
+        success: false,
+        message: "This membership payment has already been confirmed.",
+        payment: serializePayment(paidPayment),
+      });
+    }
+
+    // Reuse an open payment with the same amount, otherwise create a new one.
+    let payment = await Payment.findOne({
+      customerId,
+      purpose: "membership",
+      referenceId,
+      amount: finalAmount,
+      status: { $in: ["pending", "submitted", "under_review"] },
+    }).sort({ createdAt: -1 });
 
     if (!payment) {
       payment = await Payment.create({
-        customerId: req.fixhubCustomer._id,
+        customerId,
         purpose: "membership",
         referenceId,
-        amount,
+        amount: finalAmount,
         currency: "INR",
         paymentMethod: "upi",
         status: "pending",
+        couponCode: coupon.applied ? coupon.code : "",
       });
     }
 
     const checkout = await createFixHubPaymentLink({
       payment,
       customer: req.fixhubCustomer,
-      description: "FIXHUB membership fixing charge",
+      description: coupon.applied
+        ? "FIXHUB membership fixing charge (TEST COUPON)"
+        : "FIXHUB membership fixing charge",
     });
 
     return res.status(200).json({
       success: true,
       payment: {
         ...serializePayment(payment),
+        paymentId: checkout.paymentId,
         paymentUrl: checkout.paymentUrl,
         qrCodeDataUrl: checkout.qrCodeDataUrl,
         amount: checkout.amount,
+        originalAmount: amount,
+        couponApplied: coupon.applied,
+        couponCode: coupon.applied ? coupon.code : null,
         status: checkout.status,
       },
     });
@@ -440,7 +519,6 @@ router.post("/payment", requireCustomer, limitPayments, async (req, res) => {
     });
   }
 });
-
 // ==========================================
 // 4. SUBMIT UPI REFERENCE
 // POST /api/membership-requests/payment/:paymentId/submit
@@ -520,7 +598,9 @@ router.post(
 
 router.get("/payment/:paymentId", requireCustomer, async (req, res) => {
   try {
-    const payment = await Payment.findOne({
+    res.set("Cache-Control", "no-store");
+
+    let payment = await Payment.findOne({
       paymentId: req.params.paymentId,
       customerId: req.fixhubCustomer._id,
       purpose: "membership",
@@ -532,6 +612,9 @@ router.get("/payment/:paymentId", requireCustomer, async (req, res) => {
         message: "Membership payment not found.",
       });
     }
+
+    // Auto-detect: ask Razorpay if the payment is still open.
+    payment = await refreshPaymentFromRazorpay(payment);
 
     return res.json({
       success: true,

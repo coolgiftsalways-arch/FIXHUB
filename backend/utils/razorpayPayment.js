@@ -1,7 +1,12 @@
 import Razorpay from "razorpay";
 import QRCode from "qrcode";
 
-function getRazorpay() {
+import Payment, { FINAL_STATUSES } from "../models/Payment.js";
+
+// Don't ask Razorpay more often than this per payment (the page polls every few seconds).
+const SYNC_THROTTLE_MS = 5000;
+
+export function getRazorpay() {
   const keyId = process.env.RAZORPAY_KEY_ID?.trim();
   const keySecret = process.env.RAZORPAY_KEY_SECRET?.trim();
 
@@ -101,4 +106,51 @@ export async function createFixHubPaymentLink({
     amount: payment.amount,
     status: payment.status,
   };
+}
+
+/**
+ * Runs exactly once per payment, the first time it is detected as paid
+ * (from either the webhook or a status check).
+ */
+export async function onPaymentConfirmed(payment) {
+  console.log(
+    `[payments] ${payment.paymentId} (${payment.purpose} ${payment.referenceId}) confirmed as paid`,
+  );
+
+  // Add follow-up work here if you want, e.g. send a confirmation email or
+  // move the membership request to "approved".
+}
+
+/**
+ * Bring a payment up to date with Razorpay if it is not final yet.
+ * Never throws: on any Razorpay error the stored payment is returned as-is.
+ */
+export async function refreshPaymentFromRazorpay(payment) {
+  if (!payment?.razorpayLinkId || FINAL_STATUSES.includes(payment.status)) {
+    return payment;
+  }
+
+  const lastSync = payment.lastSyncedAt
+    ? new Date(payment.lastSyncedAt).getTime()
+    : 0;
+
+  if (Date.now() - lastSync < SYNC_THROTTLE_MS) {
+    return payment;
+  }
+
+  try {
+    const result = await Payment.syncWithRazorpay(getRazorpay(), payment);
+
+    if (result.becamePaid && result.payment) {
+      await onPaymentConfirmed(result.payment);
+    }
+
+    return result.payment || payment;
+  } catch (error) {
+    console.error(
+      "Razorpay status sync failed:",
+      error?.error?.description || error.message,
+    );
+    return payment;
+  }
 }

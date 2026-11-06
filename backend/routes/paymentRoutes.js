@@ -4,7 +4,10 @@ import rateLimit from "express-rate-limit";
 import Payment from "../models/Payment.js";
 import { requireCustomer } from "../middleware/requireCustomer.js";
 import { getPhoneCatalog, findPhone } from "../data/phoneCatalog.js";
-import { createFixHubPaymentLink } from "../utils/razorpayPayment.js";
+import {
+  createFixHubPaymentLink,
+  refreshPaymentFromRazorpay,
+} from "../utils/razorpayPayment.js";
 
 const router = Router();
 
@@ -139,16 +142,20 @@ router.post("/", createPaymentLimit, async (req, res) => {
 // GET /api/payments/:paymentId
 router.get("/:paymentId", async (req, res) => {
   try {
-    const payment = await Payment.findOne({
+    res.set("Cache-Control", "no-store");
+
+    let payment = await Payment.findOne({
       paymentId: req.params.paymentId,
       customerId: getCustomerId(req),
-    })
-      .select("+qrCodeDataUrl")
-      .lean();
+    }).select("+qrCodeDataUrl");
 
     if (!payment) {
       return res.status(404).json({ message: "Payment not found." });
     }
+
+    // Auto-detect: ask Razorpay if the payment is still open.
+    const qrCodeDataUrl = payment.qrCodeDataUrl;
+    payment = await refreshPaymentFromRazorpay(payment);
 
     return res.json({
       payment: {
@@ -157,7 +164,7 @@ router.get("/:paymentId", async (req, res) => {
         currency: payment.currency,
         status: payment.status,
         paymentUrl: payment.paymentUrl,
-        qrCodeDataUrl: payment.qrCodeDataUrl || "",
+        qrCodeDataUrl: payment.qrCodeDataUrl || qrCodeDataUrl || "",
         razorpayStatus: payment.razorpayStatus,
       },
     });
