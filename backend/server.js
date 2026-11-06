@@ -52,13 +52,31 @@ function addAllowedOrigin(value) {
   if (!value) return;
 
   try {
-    allowedOrigins.add(new URL(value).origin);
+    const url = new URL(value.trim());
+    allowedOrigins.add(url.origin);
+
+    // Allow both example.com and www.example.com.
+    const altHost = url.hostname.startsWith("www.")
+      ? url.hostname.slice(4)
+      : `www.${url.hostname}`;
+
+    if (url.hostname.includes(".")) {
+      allowedOrigins.add(
+        `${url.protocol}//${altHost}${url.port ? `:${url.port}` : ""}`,
+      );
+    }
   } catch {
-    console.warn("Ignoring invalid CLIENT_URL configuration.");
+    console.warn(`Ignoring invalid origin in CLIENT_URL: ${value}`);
   }
 }
 
-addAllowedOrigin(process.env.CLIENT_URL);
+// CLIENT_URL can hold several origins separated by commas, e.g.
+// CLIENT_URL=https://fixhubsolutions.in,https://orangered-fox-540676.hostingersite.com
+String(process.env.CLIENT_URL || "")
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean)
+  .forEach(addAllowedOrigin);
 
 if (!production) {
   addAllowedOrigin("http://localhost:5173");
