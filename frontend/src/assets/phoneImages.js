@@ -512,6 +512,132 @@ import tecnoGsmarena006 from "./Tecno/gsmarena_006.jpg";
 
 
 
+
+
+// ============================================================
+// ITEL IMAGE IMPORTS
+// ============================================================
+
+import itelA70 from "./Itel/itel-a70-1.jpg";
+import itelA80 from "./Itel/itel-a80-1.jpg";
+import itelA100C from "./Itel/itel-a100c-1.jpg";
+import itelCity200S from "./Itel/itel-city-200s-1.jpg";
+import itelP40 from "./Itel/itel-p40-1.jpg";
+import itelPower55 from "./Itel/itel-power-55-1.jpg";
+import itelS23 from "./Itel/itel-s23-1.jpg";
+import itelS24 from "./Itel/itel-s24-1.jpg";
+import itelZeno300 from "./Itel/itel-zeno-300-1.jpg";
+
+
+// ============================================================
+// NOKIA IMAGE IMPORTS
+// ============================================================
+import nokia53 from "./Nokia/nokia-53-1.jpg";
+import nokia54 from "./Nokia/nokia-54-2020-1.jpg";
+import nokia61Plus from "./Nokia/nokia-61-plus-3.jpg";
+import nokia72 from "./Nokia/nokia-72-1.jpg";
+import nokia83 from "./Nokia/nokia-83-5g-1.jpg";
+import nokiaG20 from "./Nokia/nokia-g20-1.jpg";
+import nokiaG21 from "./Nokia/nokia-g21-dusk.jpg";
+import nokiaG42 from "./Nokia/nokia-g42-5g-1.jpg";
+import nokiaG60 from "./Nokia/nokia-g60-5g-1.jpg";
+import nokiaX6 from "./Nokia/nokia-x6-3.jpg";
+import nokiaX20 from "./Nokia/nokia-x20-1.jpg";
+import nokiaX30 from "./Nokia/nokia-x30-5g-2.jpg";
+
+
+
+// LAVA
+// ==================== LAVA IMPORTS ====================
+
+import lavaAgni2 from "./Lava/lava-agni2-5g-11.jpg";
+import lavaAgni3 from "./Lava/lava-agni3-1.jpg";
+
+import lavaBlaze2 from "./Lava/lava-blaze-2-1.jpg";
+import lavaBlaze5G from "./Lava/lava-blaze-5g-01.jpg";
+import lavaBlazeCurve5G from "./Lava/lava-blaze-curve-5g-1.jpg";
+import lavaBlazeDragon5G from "./Lava/lava-blaze-dragon-5g-1.jpg";
+import lavaBlazePro from "./Lava/lava-blaze-pro-1.jpg";
+
+import lavaViratCurve from "./Lava/lava-virat-curve-1.jpg";
+
+import lavaYuva3 from "./Lava/lava-yuva3-1.jpg";
+
+import lavaZ2 from "./Lava/lava-z2-1.jpg";
+import lavaZ6 from "./Lava/lava-z6-1.jpg";
+
+
+
+// ==================== ASUS IMPORTS ====================
+
+// ROG SERIES
+import asusRogPhone2 from "./ASUS/asus-rog-phone2-1.jpg";
+import asusRogPhone3 from "./ASUS/asus-rog-phone3-1.jpg";
+import asusRogPhone5 from "./ASUS/asus-rog-phone-5-0.jpg";
+import asusRogPhone6 from "./ASUS/asus-rog-phone6-01.jpg";
+import asusRogPhone7 from "./ASUS/asus-rog-phone-7-1.jpg";
+import asusRogPhone8 from "./ASUS/asus-rog-phone-8-1.jpg";
+
+// ZENFONE SERIES
+import asusZenfone6 from "./ASUS/asus-zenfone-6-2019-1.jpg";
+import asusZenfone7Pro from "./ASUS/asus-zenfone7-pro-zs670ks-zs671ks-1.jpg";
+import asusZenfone8 from "./ASUS/asus-zenfone-8-01.jpg";
+import asusZenfone9 from "./ASUS/asus-zenfone-9-0.jpg";
+import asusZenfone10 from "./ASUS/asus-zenfone10-0.jpg";
+import asusZenfone11Ultra from "./ASUS/asus-zenfone-11-ultra-1.jpg";
+
+
+
+// ==================== HUAWEI IMPORTS ====================
+
+// MATE SERIES
+import huaweiMate20Pro from "./Huawei/huawei-mate20-pro-1.jpg";
+import huaweiMate30Pro from "./Huawei/huawei-mate30-pro-1.jpg";
+import huaweiMate40Pro from "./Huawei/huawei-mate40-pro-1.jpg";
+
+// NOVA SERIES
+import huaweiNova5T from "./Huawei/huawei-nova-5t-2.jpg";
+import huaweiNova3 from "./Huawei/huawei-nova3-1.jpg";
+
+// P SERIES
+import huaweiP20Pro from "./Huawei/huawei-p20-pro-1.jpg";
+import huaweiP30Pro from "./Huawei/huawei-p30-pro-1.jpg";
+import huaweiP40Pro from "./Huawei/huawei-p40-pro-01.jpg";
+
+
+
+// ==================== SONY IMPORTS ====================
+
+// XPERIA 1 SERIES
+import sonyXperia1 from "./Sony/sony-xperia-1-1.jpg";
+import sonyXperia1II from "./Sony/sony-xperia-1-II-001.jpg";
+import sonyXperia1III from "./Sony/sony-xperia-1-iii-02.jpg";
+import sonyXperia1IV from "./Sony/sony-xperia-1-iv-1.jpg";
+import sonyXperia1V from "./Sony/sony-xperia-1-v-0.jpg";
+import sonyXperia1VI from "./Sony/sony-xperia-1-vi-1.jpg";
+
+// XPERIA 5 SERIES
+import sonyXperia5II from "./Sony/sony-xperia-5-ii-5g-2.jpg";
+import sonyXperia5III from "./Sony/sony-xperia-5-iii-02.jpg";
+import sonyXperia5IV from "./Sony/sony-xperia-5-iv-ecru-white.jpg";
+import sonyXperia5V from "./Sony/sony-xperia-5-v-new-1.jpg";
+
+// XPERIA 10 SERIES
+import sonyXperia10IV from "./Sony/sony-xperia-10-iv-1.jpg";
+import sonyXperia10V from "./Sony/sony-xperia-10-v-1.jpg";
+import sonyXperia10VI from "./Sony/sony-xperia-10mvi-1.jpg";
+
+// ==================== LENOVO IMPORTS ====================
+
+// K SERIES
+import lenovoK8Note from "./Lenovo/lenovo-k8-note-5.jpg";
+import lenovoK9 from "./Lenovo/lenovo-k9-1.jpg";
+
+// LEGION SERIES
+import lenovoLegion from "./Lenovo/lenovo-legion-01.jpg";
+
+// Z SERIES
+import lenovoZ5ProGT from "./Lenovo/lenovo-z5-pro-gt-1.jpg";
 // ============================================================
 // 12. EXTERNAL IMAGE URLS
 // ============================================================
@@ -758,6 +884,65 @@ const infinixZero40Image =
 
   const infinixHot60_5GPlusImage =
     "https://www.mobiledokan.com/media/infinix-hot-60-tundra-green-official-image.webp";
+
+
+
+
+    // ============================================================
+// TECNO EXTERNAL IMAGE URLS
+// ============================================================
+
+const tecnoPhantomVFlip2Image =
+  "https://cdn.beebom.com/mobile/tecno-phantom-v-flip-2/tecno-phantom-v-flip-2-front-and-back-1.png";
+
+const tecnoPova5ProImage =
+  "https://kupcochcesz.pl/environment/cache/images/500_500_productGfx_tecno_pova_5_pro_5g_8_256_gb_smartfon_6_78_cala_amoled_120_hz_ladowani_b0cc36hmdc_3.webp";
+
+const tecnoPova7Image =
+  "https://cdn.bdspec.com/mobile/smartphone/tecno-pova-7-bangladesh/tecno-pova-7-bangladesh.webp";
+
+
+
+  const nokiaD10Image = "https://m.media-amazon.com/images/I/81Io90tyv1L.jpg";
+
+
+
+
+  // ============================================================
+// ITEL EXTERNAL IMAGE URLS
+// ============================================================
+
+const itelCity300Image =
+  "https://www.mobilebd.co/wp-content/uploads/2025/09/Itel-City-300-Pure-Titanium-Image.png";
+
+const itelP55Image =
+  "https://www.pinoytechnoguide.com/wp-content/uploads/2023/11/itel-P55-5G.jpg";
+
+const itelZeno100LiteImage =
+  "https://www.pricekeeda.com/uploads/product/55179/itel-zeno-100-lite-4g6a61fbac39a51.jpg";
+
+
+
+  // ==================== LAVA EXTERNAL IMAGES ====================
+
+const lavaAuraCurveImage =
+  "https://static.hub.91mobiles.com/wp-content/uploads/sites/9/2026/10/LAVA-AURA-CURVE-1-1474x2048.jpg?tr=q-70";
+
+const lavaShark2Pro5GImage =
+  "https://images.fonearena.com/blog/wp-content/uploads/2025/05/Lava-Shark-5G-1.jpg";
+
+const lavaZ4Image =
+  "https://philnews.ph/wp-content/uploads/2021/07/Lava-Z4.jpeg";
+
+
+
+  // ==================== LENOVO EXTERNAL IMAGES ====================
+
+const lenovoLegionPhoneDuelImage =
+  "https://p4-ofp.static.pub/fes/cms/2023/02/03/ygx35uozcso9aufn5p2xa0xd4a2v9b240927.png";
+
+const lenovoLegionPhoneDuel2Image =
+  "https://www.notebookcheck.net/uploads/tx_nbc2/4_zu_3_Lenovo_Legion_Phone_Duel_2.jpg";
 // ============================================================
 // 13. PHONE IMAGE MAPPING
 // ============================================================
@@ -1398,6 +1583,7 @@ export const PHONE_IMAGES = {
   // TECNO
   // ============================================================
 
+  // TECNO
   ...{
     // CAMON SERIES
     "Tecno Camon 15": tecnoCamon15,
@@ -1411,13 +1597,18 @@ export const PHONE_IMAGES = {
 
     // PHANTOM SERIES
     "Tecno Phantom X2": tecnoPhantomX2,
-    "Tecno Phantom V Flip 2 5G": tecnoPhantomVFlip2,
-    "Tecno Phantom V Flip2 5G": tecnoPhantomVFlip2,
+    "Tecno Phantom V Flip2": tecnoPhantomVFlip2Image,
+    "Tecno Phantom V Flip 2": tecnoPhantomVFlip2Image,
+    "Tecno Phantom V Flip2 5G": tecnoPhantomVFlip2Image,
+    "Tecno Phantom V Flip 2 5G": tecnoPhantomVFlip2Image,
 
     // POVA SERIES
     "Tecno Pova 2": tecnoPova2,
+    "Tecno Pova 5 Pro": tecnoPova5ProImage,
+    "Tecno Pova 5 Pro 5G": tecnoPova5ProImage,
     "Tecno Pova 6 Pro": tecnoPova6Pro,
-    "Tecno Pova 7 5G": tecnoPova7,
+    "Tecno Pova 7": tecnoPova7Image,
+    "Tecno Pova 7 5G": tecnoPova7Image,
     "Tecno Pova 7 Pro": tecnoPova7Pro,
 
     // SPARK SERIES
@@ -1426,6 +1617,260 @@ export const PHONE_IMAGES = {
     "Tecno Spark 10": tecnoSpark10,
     "Tecno Spark 20": tecnoSpark20,
     "Tecno Spark 50S 5G": tecnoSpark50S,
+  },
+
+  // ITEL
+  // ITEL
+  ...{
+    // A SERIES
+    "Itel A70": itelA70,
+    "Itel A80": itelA80,
+    "Itel A100C": itelA100C,
+
+    // CITY SERIES
+    "Itel City 200S": itelCity200S,
+    "Itel City 300 5G": itelCity300Image,
+
+    // P SERIES
+    "Itel P40": itelP40,
+    "Itel P55 5G": itelP55Image,
+
+    // POWER SERIES
+    "Itel Power 55": itelPower55,
+
+    // S SERIES
+    "Itel S23": itelS23,
+    "Itel S24": itelS24,
+
+    // ZENO SERIES
+    "Itel Zeno 100 Lite": itelZeno100LiteImage,
+    "Itel Zeno 300": itelZeno300,
+  },
+
+  // NOKIA
+  // NOKIA
+  ...{
+    // NUMBER SERIES
+    "Nokia 5.3": nokia53,
+    "Nokia 5.4": nokia54,
+    "Nokia 5.4 (2020)": nokia54,
+
+    "Nokia 6.1 Plus": nokia61Plus,
+    "Nokia 7.2": nokia72,
+    "Nokia 8.3 5G": nokia83,
+
+    // D SERIES
+    // D SERIES
+    "Nokia D10": nokiaD10Image,
+    // G SERIES
+    "Nokia G20": nokiaG20,
+    "Nokia G21": nokiaG21,
+    "Nokia G21 Dusk": nokiaG21,
+    "Nokia G42 5G": nokiaG42,
+    "Nokia G60 5G": nokiaG60,
+
+    // X SERIES
+    "Nokia X6": nokiaX6,
+    "Nokia X20": nokiaX20,
+    "Nokia X30 5G": nokiaX30,
+  },
+  // ==================== LAVA ====================
+  // ==================== LAVA ====================
+
+  // ==================== LAVA ====================
+
+  ...{
+    // ==================== AGNI SERIES ====================
+
+    "Lava Agni 2 5G": lavaAgni2,
+    "Lava Agni 2": lavaAgni2,
+
+    "Lava Agni 3": lavaAgni3,
+    "Lava Agni 3 5G": lavaAgni3,
+
+    // ==================== AURA SERIES ====================
+
+    "Lava Aura Curve": lavaAuraCurveImage,
+    "Lava Aura Curve 5G": lavaAuraCurveImage,
+
+    // ==================== BLAZE SERIES ====================
+
+    "Lava Blaze 2": lavaBlaze2,
+
+    "Lava Blaze 5G": lavaBlaze5G,
+
+    "Lava Blaze Curve 5G": lavaBlazeCurve5G,
+    "Lava Blaze Curve": lavaBlazeCurve5G,
+
+    "Lava Blaze Dragon 5G": lavaBlazeDragon5G,
+    "Lava Blaze Dragon": lavaBlazeDragon5G,
+
+    "Lava Blaze Pro": lavaBlazePro,
+
+    // ==================== SHARK SERIES ====================
+
+    "Lava Shark 2 Pro 5G": lavaShark2Pro5GImage,
+    "Lava Shark 2 Pro": lavaShark2Pro5GImage,
+
+    // ==================== VIRAT SERIES ====================
+
+    "Lava Virat Curve": lavaViratCurve,
+    "Lava Virat Curve 5G": lavaViratCurve,
+
+    // ==================== YUVA SERIES ====================
+
+    "Lava Yuva 3": lavaYuva3,
+
+    // ==================== Z SERIES ====================
+
+    "Lava Z2": lavaZ2,
+
+    "Lava Z4": lavaZ4Image,
+
+    "Lava Z6": lavaZ6,
+  },
+
+  // ==================== ASUS ====================
+
+  ...{
+    // ==================== ROG PHONE SERIES ====================
+
+    "Asus ROG Phone 2": asusRogPhone2,
+    "Asus ROG Phone II": asusRogPhone2,
+
+    "Asus ROG Phone 3": asusRogPhone3,
+
+    "Asus ROG Phone 5": asusRogPhone5,
+    "Asus ROG Phone 5 5G": asusRogPhone5,
+
+    "Asus ROG Phone 6": asusRogPhone6,
+    "Asus ROG Phone 6 5G": asusRogPhone6,
+
+    "Asus ROG Phone 7": asusRogPhone7,
+    "Asus ROG Phone 7 Ultimate": asusRogPhone7,
+
+    "Asus ROG Phone 8": asusRogPhone8,
+    "Asus ROG Phone 8 5G": asusRogPhone8,
+    "Asus ROG Phone 8 Pro": asusRogPhone8,
+
+    // ==================== ZENFONE SERIES ====================
+
+    "Asus Zenfone 6": asusZenfone6,
+    "Asus Zenfone 6 2019": asusZenfone6,
+
+    "Asus Zenfone 7 Pro": asusZenfone7Pro,
+    "Asus Zenfone 7": asusZenfone7Pro,
+
+    "Asus Zenfone 8": asusZenfone8,
+
+    "Asus Zenfone 9": asusZenfone9,
+
+    "Asus Zenfone 10": asusZenfone10,
+
+    "Asus Zenfone 11 Ultra": asusZenfone11Ultra,
+  },
+
+  // ==================== HUAWEI ====================
+
+  ...{
+    // ==================== MATE SERIES ====================
+
+    "Huawei Mate 20 Pro": huaweiMate20Pro,
+    "Huawei Mate20 Pro": huaweiMate20Pro,
+
+    "Huawei Mate 30 Pro": huaweiMate30Pro,
+    "Huawei Mate30 Pro": huaweiMate30Pro,
+
+    "Huawei Mate 40 Pro": huaweiMate40Pro,
+    "Huawei Mate40 Pro": huaweiMate40Pro,
+
+    // ==================== NOVA SERIES ====================
+
+    "Huawei Nova 5T": huaweiNova5T,
+    "Huawei Nova5T": huaweiNova5T,
+
+    "Huawei Nova 3": huaweiNova3,
+    "Huawei Nova3": huaweiNova3,
+
+    // ==================== P SERIES ====================
+
+    "Huawei P20 Pro": huaweiP20Pro,
+    "Huawei P20": huaweiP20Pro,
+
+    "Huawei P30 Pro": huaweiP30Pro,
+    "Huawei P30": huaweiP30Pro,
+
+    "Huawei P40 Pro": huaweiP40Pro,
+    "Huawei P40": huaweiP40Pro,
+  },
+
+  // ==================== SONY ====================
+
+  ...{
+    // ==================== XPERIA 1 SERIES ====================
+
+    "Sony Xperia 1": sonyXperia1,
+    "Sony Xperia 1 II": sonyXperia1II,
+    "Sony Xperia 1 Mark 2": sonyXperia1II,
+
+    "Sony Xperia 1 III": sonyXperia1III,
+    "Sony Xperia 1 Mark 3": sonyXperia1III,
+
+    "Sony Xperia 1 IV": sonyXperia1IV,
+    "Sony Xperia 1 Mark 4": sonyXperia1IV,
+
+    "Sony Xperia 1 V": sonyXperia1V,
+    "Sony Xperia 1 Mark 5": sonyXperia1V,
+
+    "Sony Xperia 1 VI": sonyXperia1VI,
+    "Sony Xperia 1 Mark 6": sonyXperia1VI,
+
+    // ==================== XPERIA 5 SERIES ====================
+
+    "Sony Xperia 5 II": sonyXperia5II,
+    "Sony Xperia 5 Mark 2": sonyXperia5II,
+    "Sony Xperia 5 II 5G": sonyXperia5II,
+
+    "Sony Xperia 5 III": sonyXperia5III,
+    "Sony Xperia 5 Mark 3": sonyXperia5III,
+
+    "Sony Xperia 5 IV": sonyXperia5IV,
+    "Sony Xperia 5 Mark 4": sonyXperia5IV,
+
+    "Sony Xperia 5 V": sonyXperia5V,
+    "Sony Xperia 5 Mark 5": sonyXperia5V,
+
+    // ==================== XPERIA 10 SERIES ====================
+
+    "Sony Xperia 10 IV": sonyXperia10IV,
+    "Sony Xperia 10 Mark 4": sonyXperia10IV,
+
+    "Sony Xperia 10 V": sonyXperia10V,
+    "Sony Xperia 10 Mark 5": sonyXperia10V,
+
+    "Sony Xperia 10 VI": sonyXperia10VI,
+    "Sony Xperia 10 Mark 6": sonyXperia10VI,
+  },
+
+  // ==================== LENOVO ====================
+
+  // ==================== LENOVO ====================
+
+  ...{
+    // K SERIES
+    "Lenovo K8 Note": lenovoK8Note,
+    "Lenovo K9": lenovoK9,
+
+    // LEGION SERIES
+    "Lenovo Legion": lenovoLegionPhoneDuelImage,
+    "Lenovo Legion Phone Duel": lenovoLegionPhoneDuelImage,
+    "Lenovo Legion Phone Duel 5G": lenovoLegionPhoneDuelImage,
+
+    "Lenovo Legion Phone Duel 2": lenovoLegionPhoneDuel2Image,
+    "Lenovo Legion Phone Duel 2 5G": lenovoLegionPhoneDuel2Image,
+
+    // Z SERIES
+    "Lenovo Z5 Pro GT": lenovoZ5ProGT,
   },
 };
 
