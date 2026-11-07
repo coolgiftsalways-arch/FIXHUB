@@ -19,23 +19,26 @@ async function authRequest(path, options = {}) {
     response = await fetch(`${API_BASE}${path}`, {
       ...options,
 
+      // IMPORTANT: Send and receive HTTP-only cookies.
       credentials: "include",
 
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
         ...(options.headers || {}),
       },
 
       cache: "no-store",
     });
-  } catch {
-    const error = new Error(
-      "Unable to connect to the server. Please check your connection.",
+  } catch (error) {
+    const networkError = new Error(
+      "Unable to connect to FIXHUB server. Please check your internet connection.",
     );
 
-    error.status = 0;
+    networkError.status = 0;
+    networkError.originalError = error;
 
-    throw error;
+    throw networkError;
   }
 
   let data = {};
@@ -61,7 +64,7 @@ async function authRequest(path, options = {}) {
 }
 
 // ==========================================
-// EXTRACT CUSTOMER FROM API RESPONSE
+// EXTRACT CUSTOMER
 // ==========================================
 
 function extractUser(data) {
@@ -80,7 +83,7 @@ export function AuthProvider({ children }) {
   const [error, setError] = useState("");
 
   // ========================================
-  // REFRESH CURRENT CUSTOMER
+  // REFRESH CUSTOMER SESSION
   // ========================================
 
   const refresh = useCallback(async () => {
@@ -94,20 +97,13 @@ export function AuthProvider({ children }) {
       }
 
       setUser(currentUser);
-
       setError("");
 
       return currentUser;
     } catch (err) {
-      // Clear the user only when the backend
-      // confirms that the session is unauthorized.
-
       if (err.status === 401) {
         setUser(null);
       }
-
-      // Network errors and server errors should
-      // not automatically log the customer out.
 
       setError(err.message);
 
@@ -124,23 +120,38 @@ export function AuthProvider({ children }) {
 
     async function restoreSession() {
       try {
+        console.log("[FIXHUB AUTH] Restoring customer session...");
+
         const data = await authRequest("/me");
 
         if (!active) return;
 
         const currentUser = extractUser(data);
 
-        setUser(currentUser);
+        if (!currentUser) {
+          setUser(null);
+          return;
+        }
 
+        setUser(currentUser);
         setError("");
+
+        console.log("[FIXHUB AUTH] Customer session restored.");
       } catch (err) {
         if (!active) return;
 
         if (err.status === 401) {
           setUser(null);
-        }
 
-        setError(err.message);
+          console.log("[FIXHUB AUTH] No active customer session.");
+        } else {
+          console.error(
+            "[FIXHUB AUTH] Session restoration failed:",
+            err.message,
+          );
+
+          setError(err.message);
+        }
       } finally {
         if (active) {
           setLoading(false);
@@ -161,27 +172,56 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (credentials) => {
     setLoading(true);
-
     setError("");
 
     try {
-      const data = await authRequest("/login", {
-        method: "POST",
+      console.log("[FIXHUB AUTH] Login started.");
 
+      // Step 1: Authenticate customer.
+      const loginData = await authRequest("/login", {
+        method: "POST",
         body: JSON.stringify(credentials),
       });
 
-      let currentUser = extractUser(data);
+      console.log("[FIXHUB AUTH] Login API successful.");
 
-      if (!currentUser) {
-        const profileData = await authRequest("/me");
+      // Step 2: Verify that the browser retained
+      // the HTTP-only session cookie.
+      let currentUser = null;
 
-        currentUser = extractUser(profileData);
+      try {
+        const sessionData = await authRequest("/me");
+
+        currentUser = extractUser(sessionData);
+
+        if (!currentUser) {
+          throw new Error("Customer session could not be verified.");
+        }
+
+        console.log("[FIXHUB AUTH] Customer session verified.");
+      } catch (sessionError) {
+        console.error(
+          "[FIXHUB AUTH] Session verification failed:",
+          sessionError.message,
+        );
+
+        if (sessionError.status === 401) {
+          throw new Error(
+            "Login was successful, but your browser did not retain the login session. Please check your browser cookie settings and try again.",
+          );
+        }
+
+        throw sessionError;
       }
 
+      // Step 3: Save verified customer.
       setUser(currentUser);
+      setError("");
 
-      return data;
+      return {
+        ...loginData,
+        user: currentUser,
+      };
     } catch (err) {
       setError(err.message);
 
@@ -197,13 +237,11 @@ export function AuthProvider({ children }) {
 
   const register = useCallback(async (formData) => {
     setLoading(true);
-
     setError("");
 
     try {
       const data = await authRequest("/register", {
         method: "POST",
-
         body: JSON.stringify(formData),
       });
 
@@ -212,6 +250,8 @@ export function AuthProvider({ children }) {
       if (currentUser) {
         setUser(currentUser);
       }
+
+      setError("");
 
       return data;
     } catch (err) {
@@ -232,12 +272,8 @@ export function AuthProvider({ children }) {
       setError("");
 
       try {
-        // Correct backend endpoint:
-        // PATCH /api/auth/me
-
         const data = await authRequest("/me", {
           method: "PATCH",
-
           body: JSON.stringify(profileData),
         });
 
@@ -251,6 +287,10 @@ export function AuthProvider({ children }) {
 
         return data;
       } catch (err) {
+        if (err.status === 401) {
+          setUser(null);
+        }
+
         setError(err.message);
 
         throw err;
@@ -273,8 +313,16 @@ export function AuthProvider({ children }) {
 
       setUser(null);
 
+      console.log("[FIXHUB AUTH] Customer logged out.");
+
       return true;
     } catch (err) {
+      // If the backend confirms that the session
+      // is already unauthorized, clear local state.
+      if (err.status === 401) {
+        setUser(null);
+      }
+
       setError(err.message);
 
       throw err;
@@ -319,9 +367,11 @@ export function AuthProvider({ children }) {
       login,
       register,
       logout,
+
+      // Profile
       updateProfile,
 
-      // Refresh profile
+      // Refresh
       refresh,
       refreshUser: refresh,
 
@@ -354,5 +404,9 @@ export function AuthProvider({ children }) {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
+
+// ==========================================
+// DEFAULT EXPORT
+// ==========================================
 
 export default AuthProvider;
