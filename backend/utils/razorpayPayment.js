@@ -3,7 +3,7 @@ import QRCode from "qrcode";
 
 import Payment, { FINAL_STATUSES } from "../models/Payment.js";
 
-// Don't ask Razorpay more often than this per payment.
+// Don't ask Razorpay more often than this per payment (the page polls every few seconds).
 const SYNC_THROTTLE_MS = 5000;
 
 export function getRazorpay() {
@@ -20,12 +20,25 @@ export function getRazorpay() {
   });
 }
 
+// Public website address Razorpay sends the customer back to after paying.
+// Uses PUBLIC_SITE_URL if set, otherwise the first CLIENT_URL entry.
+function getSiteUrl() {
+  const raw =
+    process.env.PUBLIC_SITE_URL ||
+    String(process.env.CLIENT_URL || "").split(",")[0];
+
+  try {
+    return new URL(raw.trim()).origin;
+  } catch {
+    return "";
+  }
+}
+
 export async function createFixHubPaymentLink({
   payment,
   customer,
   description = "FIXHUB membership payment",
-  phoneBrand = "",
-  phoneModel = "",
+  returnPath = "",
 }) {
   if (
     !payment?._id ||
@@ -38,8 +51,6 @@ export async function createFixHubPaymentLink({
   if (!customer) {
     throw new Error("Customer not found.");
   }
-
-  const paymentRecordId = String(payment._id);
 
   // Reuse an existing payment link instead of creating duplicates.
   if (payment.razorpayLinkId && payment.paymentUrl) {
@@ -67,37 +78,31 @@ export async function createFixHubPaymentLink({
 
   const razorpay = getRazorpay();
 
+  // After paying, Razorpay redirects to e.g. https://fixhubsolutions.in/payment
+  // and adds ?razorpay_payment_link_reference_id=<our paymentId>&...
+  const siteUrl = getSiteUrl();
+  const callback =
+    returnPath && siteUrl
+      ? { callback_url: `${siteUrl}${returnPath}`, callback_method: "get" }
+      : {};
+
   const link = await razorpay.paymentLink.create({
     amount: payment.amount * 100,
     currency: "INR",
     accept_partial: false,
-
     reference_id: String(payment.paymentId).slice(0, 40),
-
     description: String(description).slice(0, 255),
-
     customer: {
       name: String(customer.fullName || "FIXHUB Customer").slice(0, 100),
       ...(customer.email ? { email: customer.email } : {}),
       ...(customer.phone ? { contact: String(customer.phone) } : {}),
     },
-
-    // FIXHUB PAYMENT IDENTIFICATION
-    notes: {
-      brand: "FIXHUB",
-      orderId: paymentRecordId,
-      paymentId: String(payment.paymentId || ""),
-      purpose: String(payment.purpose || "repair"),
-      phoneBrand: String(phoneBrand || ""),
-      phoneModel: String(phoneModel || ""),
-    },
-
     notify: {
       sms: false,
       email: false,
     },
-
     reminder_enable: false,
+    ...callback,
   });
 
   if (!link?.id || !link?.short_url) {
@@ -128,14 +133,16 @@ export async function createFixHubPaymentLink({
 }
 
 /**
- * Runs exactly once per payment, the first time it is detected as paid.
+ * Runs exactly once per payment, the first time it is detected as paid
+ * (from either the webhook or a status check).
  */
 export async function onPaymentConfirmed(payment) {
   console.log(
     `[payments] ${payment.paymentId} (${payment.purpose} ${payment.referenceId}) confirmed as paid`,
   );
 
-  // Add follow-up work here if required.
+  // Add follow-up work here if you want, e.g. send a confirmation email or
+  // move the membership request to "approved".
 }
 
 /**
@@ -168,7 +175,6 @@ export async function refreshPaymentFromRazorpay(payment) {
       "Razorpay status sync failed:",
       error?.error?.description || error.message,
     );
-
     return payment;
   }
 }

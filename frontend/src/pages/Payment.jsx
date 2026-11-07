@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import {
   CheckCircle2,
   Clock,
@@ -56,6 +56,12 @@ function formatAmount(amount, currency) {
 
 export default function Payment() {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  // Set when Razorpay redirects back here after the customer paid.
+  const returnedPaymentId = searchParams.get(
+    "razorpay_payment_link_reference_id",
+  );
 
   // Keep the request ID across a page refresh (router state is lost on reload).
   const requestId = location.state?.requestId || readStoredRequestId();
@@ -85,6 +91,14 @@ export default function Payment() {
     let cancelled = false;
 
     async function createPayment() {
+      // Back from Razorpay: just confirm this payment, don't create a new one.
+      if (returnedPaymentId) {
+        setPayment({ paymentId: returnedPaymentId, status: "pending" });
+        setError("");
+        setLoading(false);
+        return;
+      }
+
       if (!requestId) {
         setError(
           "Payment request not found. Please return to Membership and submit your request first.",
@@ -150,7 +164,7 @@ export default function Payment() {
     return () => {
       cancelled = true;
     };
-  }, [requestId, reloadKey]);
+  }, [requestId, returnedPaymentId, reloadKey]);
 
   // ==========================================
   // 2. AUTO-DETECT PAYMENT
@@ -248,7 +262,11 @@ export default function Payment() {
   async function applyCoupon(event) {
     event.preventDefault();
 
-    const couponCode = couponInput.trim();
+    // Phone keyboards can add spaces or odd characters: keep letters/digits only.
+    const couponCode = couponInput
+      .normalize("NFKC")
+      .replace(/[^a-z0-9]/gi, "")
+      .toUpperCase();
 
     if (!couponCode || !requestId) return;
 
@@ -396,7 +414,31 @@ export default function Payment() {
           </div>
         )}
 
-        {!loading && payment && !isFinal && !error && (
+        {!loading && returnedPaymentId && payment && !isFinal && !error && (
+          <div className="checkout-message" aria-live="polite">
+            <LoaderCircle className="checkout-spinner" size={30} />
+            <h2>Confirming your payment...</h2>
+            <p>
+              This usually takes a few seconds. Please don't close this page.
+            </p>
+
+            {pollTimedOut && (
+              <button
+                type="button"
+                className="checkout-secondary-button"
+                onClick={() => {
+                  setPollTimedOut(false);
+                  setPollKey((key) => key + 1);
+                }}
+              >
+                <RefreshCw size={15} />
+                Check again
+              </button>
+            )}
+          </div>
+        )}
+
+        {!loading && !returnedPaymentId && payment && !isFinal && !error && (
           <>
             <div className="checkout-amount">
               <span>Amount to pay</span>
@@ -427,6 +469,10 @@ export default function Payment() {
                   aria-label="Coupon code"
                   maxLength={50}
                   autoComplete="off"
+                  autoCapitalize="characters"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  enterKeyHint="go"
                 />
 
                 <button

@@ -501,6 +501,7 @@ router.post("/payment", requireCustomer, limitPayments, async (req, res) => {
       description: coupon.applied
         ? "FIXHUB membership fixing charge (TEST COUPON)"
         : "FIXHUB membership fixing charge",
+      returnPath: "/payment",
     });
 
     return res.status(200).json({
