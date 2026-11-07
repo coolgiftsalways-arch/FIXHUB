@@ -1,5 +1,6 @@
 // ==========================================
 // FIXHUB BACKEND SERVER
+// STABLE STARTUP + GRACEFUL SHUTDOWN
 // ==========================================
 
 import dns from "node:dns";
@@ -21,6 +22,10 @@ import repairBookingRoutes from "./routes/repairBookingRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import razorpayWebhookRoutes from "./routes/razorpayWebhookRoutes.js";
 
+// ==========================================
+// ENVIRONMENT CONFIGURATION
+// ==========================================
+
 dotenv.config();
 
 const app = express();
@@ -33,15 +38,138 @@ const __dirname = path.dirname(__filename);
 
 const frontendDist = path.resolve(__dirname, "../frontend/dist");
 
+const PROCESS_ID = process.pid;
+const SHUTDOWN_TIMEOUT = 15000;
+
+console.log("==================================");
+console.log("FIXHUB BACKEND INITIALIZING");
+console.log("Process ID:", PROCESS_ID);
+console.log("Environment:", production ? "production" : "development");
+console.log("Node version:", process.version);
+console.log("==================================");
+
+// ==========================================
+// PROCESS STATE
+// ==========================================
+
+let server = null;
+let stopping = false;
+let startupComplete = false;
+let shutdownTimer = null;
+
+// ==========================================
+// GRACEFUL SHUTDOWN
+// REGISTER BEFORE DATABASE CONNECTION
+// ==========================================
+
+async function shutdown(signal) {
+  if (stopping) {
+    console.log(`[SHUTDOWN] Already stopping. Ignoring ${signal}.`);
+    return;
+  }
+
+  stopping = true;
+
+  console.log("----------------------------------");
+  console.log(`[SHUTDOWN] ${signal} received.`);
+  console.log("[SHUTDOWN] Process ID:", PROCESS_ID);
+  console.log("[SHUTDOWN] Startup complete:", startupComplete);
+  console.log("[SHUTDOWN] Beginning graceful shutdown...");
+  console.log("----------------------------------");
+
+  // Force termination if graceful shutdown hangs.
+  shutdownTimer = setTimeout(() => {
+    console.error(
+      `[SHUTDOWN] Timeout after ${SHUTDOWN_TIMEOUT}ms. Forcing exit.`,
+    );
+
+    process.exit(1);
+  }, SHUTDOWN_TIMEOUT);
+
+  shutdownTimer.unref();
+
+  try {
+    // Stop accepting new HTTP requests.
+    if (server) {
+      console.log("[SHUTDOWN] Closing HTTP server...");
+
+      await new Promise((resolve) => {
+        server.close((error) => {
+          if (error) {
+            console.error("[SHUTDOWN] HTTP close error:", error.message);
+          }
+
+          resolve();
+        });
+
+        // Close idle connections when supported.
+        if (typeof server.closeIdleConnections === "function") {
+          server.closeIdleConnections();
+        }
+      });
+
+      console.log("[SHUTDOWN] HTTP server closed.");
+    }
+
+    // Disconnect MongoDB.
+    if (mongoose.connection.readyState !== 0) {
+      console.log("[SHUTDOWN] Disconnecting MongoDB...");
+
+      await mongoose.disconnect();
+
+      console.log("[SHUTDOWN] MongoDB disconnected.");
+    }
+
+    console.log("[SHUTDOWN] Graceful shutdown completed.");
+    console.log("[SHUTDOWN] Process exiting.");
+
+    if (shutdownTimer) {
+      clearTimeout(shutdownTimer);
+    }
+
+    process.exit(0);
+  } catch (error) {
+    console.error("[SHUTDOWN] Shutdown error:", error.stack || error.message);
+
+    if (shutdownTimer) {
+      clearTimeout(shutdownTimer);
+    }
+
+    process.exit(1);
+  }
+}
+
+// Register signals immediately.
+// This also works while MongoDB is connecting.
+process.once("SIGTERM", () => shutdown("SIGTERM"));
+process.once("SIGINT", () => shutdown("SIGINT"));
+
+// ==========================================
+// UNEXPECTED PROCESS ERRORS
+// ==========================================
+
+process.on("uncaughtException", (error) => {
+  console.error("[PROCESS] Uncaught exception:", error.stack || error.message);
+
+  shutdown("UNCAUGHT_EXCEPTION");
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("[PROCESS] Unhandled promise rejection:", reason);
+
+  shutdown("UNHANDLED_REJECTION");
+});
+
 // ==========================================
 // MONGODB DNS CONFIGURATION
 // ==========================================
 
 try {
   dns.setServers(["8.8.8.8", "1.1.1.1"]);
-  console.log("MongoDB DNS configuration applied.");
+
+  console.log("[DNS] MongoDB DNS configuration applied.");
 } catch (error) {
-  console.warn("DNS configuration skipped:", error.message);
+  console.warn("[DNS] Configuration skipped:", error.message);
 }
 
 // ==========================================
@@ -69,25 +197,25 @@ function addAllowedOrigin(value) {
       );
     }
   } catch {
-    console.warn(`Ignoring invalid origin: ${value}`);
+    console.warn(`[CORS] Ignoring invalid origin: ${value}`);
   }
 }
 
-// Official FixHub domains
+// Official FIXHUB domains.
 addAllowedOrigin("https://fixhubsolutions.in");
 addAllowedOrigin("https://www.fixhubsolutions.in");
 
-// Hostinger preview domain
+// Hostinger preview domain.
 addAllowedOrigin("https://orangered-fox-540676.hostingersite.com");
 
-// Read additional domains from CLIENT_URL.
+// Additional domains from environment.
 String(process.env.CLIENT_URL || "")
   .split(",")
   .map((value) => value.trim())
   .filter(Boolean)
   .forEach(addAllowedOrigin);
 
-// Local development
+// Local development.
 if (!production) {
   addAllowedOrigin("http://localhost:5173");
   addAllowedOrigin("http://127.0.0.1:5173");
@@ -96,11 +224,14 @@ if (!production) {
 }
 
 console.log(
-  "Allowed frontend origins:",
+  "[CORS] Allowed origins:",
   [...allowedOrigins].join(", ") || "(none configured)",
 );
 
-// CORS middleware
+// ==========================================
+// CORS MIDDLEWARE
+// ==========================================
+
 app.use(
   cors({
     origin(origin, callback) {
@@ -108,7 +239,7 @@ app.use(
         return callback(null, true);
       }
 
-      console.warn("Blocked CORS origin:", origin);
+      console.warn("[CORS] Blocked origin:", origin);
 
       return callback(new Error("CORS origin not allowed."));
     },
@@ -132,7 +263,11 @@ app.use("/api/razorpay/webhook", razorpayWebhookRoutes);
 // EXPRESS MIDDLEWARE
 // ==========================================
 
-app.use(express.json({ limit: "1mb" }));
+app.use(
+  express.json({
+    limit: "1mb",
+  }),
+);
 
 app.use(
   express.urlencoded({
@@ -210,7 +345,7 @@ app.get("/", (_req, res) => {
     success: true,
     name: "FIXHUB",
     message: "FIXHUB Backend is running",
-
+    processId: PROCESS_ID,
     database:
       mongoose.connection.readyState === 1 ? "connected" : "disconnected",
   });
@@ -221,6 +356,13 @@ app.get("/", (_req, res) => {
 // ==========================================
 
 app.get("/api/health", async (_req, res) => {
+  if (stopping) {
+    return res.status(503).json({
+      success: false,
+      server: "shutting_down",
+    });
+  }
+
   if (mongoose.connection.readyState !== 1) {
     return res.status(503).json({
       success: false,
@@ -237,9 +379,11 @@ app.get("/api/health", async (_req, res) => {
       server: "running",
       mongodb: "connected",
       database: mongoose.connection.name,
+      processId: PROCESS_ID,
+      uptime: Math.floor(process.uptime()),
     });
   } catch (error) {
-    console.error("Health check failed:", error.message);
+    console.error("[HEALTH] Check failed:", error.message);
 
     return res.status(503).json({
       success: false,
@@ -311,7 +455,9 @@ app.use("/api", (req, res) => {
 // ==========================================
 
 if (production) {
-  if (fs.existsSync(path.join(frontendDist, "index.html"))) {
+  const indexPath = path.join(frontendDist, "index.html");
+
+  if (fs.existsSync(indexPath)) {
     app.use(express.static(frontendDist));
 
     app.get("/{*splat}", (req, res, next) => {
@@ -319,7 +465,7 @@ if (production) {
         return next();
       }
 
-      res.sendFile(path.join(frontendDist, "index.html"), (error) => {
+      res.sendFile(indexPath, (error) => {
         if (error) {
           next(error);
         }
@@ -327,7 +473,7 @@ if (production) {
     });
   } else {
     console.warn(
-      `Frontend build not found at ${frontendDist}. ` +
+      `[FRONTEND] Build not found at ${frontendDist}. ` +
         "API server will run without serving frontend files.",
     );
   }
@@ -352,10 +498,10 @@ app.use((error, _req, res, next) => {
   }
 
   if (error.message === "CORS origin not allowed.") {
-    console.warn("CORS request rejected.");
+    console.warn("[CORS] Request rejected.");
     status = 403;
   } else {
-    console.error("FIXHUB SERVER ERROR:", error.stack || error.message);
+    console.error("[SERVER ERROR]", error.stack || error.message);
   }
 
   res.status(status).json({
@@ -369,72 +515,71 @@ app.use((error, _req, res, next) => {
 // ==========================================
 
 mongoose.connection.on("connected", () => {
-  console.log("MongoDB connection established.");
+  console.log("[MONGODB] Connection established.");
 });
 
 mongoose.connection.on("disconnected", () => {
-  console.warn("MongoDB disconnected.");
+  console.warn("[MONGODB] Connection disconnected.");
 });
 
 mongoose.connection.on("error", (error) => {
-  console.error("MongoDB error:", error.message);
+  console.error("[MONGODB] Error:", error.message);
 });
 
 // ==========================================
-// START SERVER
+// SERVER STARTUP
 // ==========================================
 
-let server;
-let stopping = false;
-
-async function shutdown(signal) {
-  if (stopping) return;
-
-  stopping = true;
-
-  console.log(`${signal} received. Shutting down FIXHUB...`);
-
-  if (server) {
-    await new Promise((resolve) => {
-      server.close(resolve);
-    });
-  }
-
-  try {
-    await mongoose.disconnect();
-    console.log("MongoDB disconnected.");
-  } catch (error) {
-    console.error("MongoDB shutdown error:", error.message);
-  }
-
-  process.exit(0);
-}
-
 async function startServer() {
+  if (stopping) {
+    console.warn("[STARTUP] Startup cancelled because shutdown has started.");
+    return;
+  }
+
   if (!process.env.MONGO_URI) {
-    console.error("Startup failed: MONGO_URI is missing. Check backend/.env.");
+    console.error("[STARTUP] MONGO_URI is missing. Check backend/.env.");
 
     process.exitCode = 1;
     return;
   }
 
   try {
-    console.log("Connecting to MongoDB Atlas...");
+    console.log("----------------------------------");
+    console.log("[STARTUP] Connecting to MongoDB Atlas...");
+    console.log("[STARTUP] Process ID:", PROCESS_ID);
+    console.log("[STARTUP] Port:", PORT);
+    console.log("----------------------------------");
 
     await mongoose.connect(process.env.MONGO_URI, {
       serverSelectionTimeoutMS: 30000,
       connectTimeoutMS: 30000,
     });
 
+    if (stopping) {
+      console.warn("[STARTUP] Shutdown requested during MongoDB connection.");
+
+      await mongoose.disconnect();
+      return;
+    }
+
     await mongoose.connection.db.admin().ping();
 
-    console.log("MongoDB Atlas connected.");
-    console.log("Database:", mongoose.connection.name);
+    console.log("[STARTUP] MongoDB Atlas connected.");
+    console.log("[STARTUP] Database:", mongoose.connection.name);
 
-    server = app.listen(PORT, () => {
+    if (stopping) {
+      await mongoose.disconnect();
+      return;
+    }
+
+    server = app.listen(PORT, "0.0.0.0", () => {
+      startupComplete = true;
+
       console.log("----------------------------------");
       console.log("FIXHUB BACKEND STARTED");
-      console.log(`Server: http://localhost:${PORT}`);
+      console.log("Process ID:", PROCESS_ID);
+      console.log(`Port: ${PORT}`);
+      console.log(`Environment: ${production ? "production" : "development"}`);
 
       console.log("Customer authentication: registered");
       console.log("Admin authentication: registered");
@@ -451,27 +596,44 @@ async function startServer() {
       );
 
       console.log("MongoDB: connected");
-
       console.log("----------------------------------");
     });
 
     server.on("error", (error) => {
-      console.error("HTTP server error:", error.message);
+      console.error("[HTTP SERVER ERROR]", error.stack || error.message);
+
+      shutdown("HTTP_SERVER_ERROR");
     });
 
-    process.once("SIGINT", () => shutdown("SIGINT"));
-    process.once("SIGTERM", () => shutdown("SIGTERM"));
+    server.on("close", () => {
+      console.log("[HTTP SERVER] Server close event received.");
+    });
   } catch (error) {
-    console.error("FIXHUB startup failed:", error.stack || error.message);
+    console.error("[STARTUP FAILED]", error.stack || error.message);
 
     try {
-      await mongoose.disconnect();
-    } catch {
-      // Ignore secondary cleanup errors.
+      if (mongoose.connection.readyState !== 0) {
+        await mongoose.disconnect();
+      }
+    } catch (disconnectError) {
+      console.error(
+        "[STARTUP] MongoDB cleanup failed:",
+        disconnectError.message,
+      );
     }
 
-    process.exitCode = 1;
+    if (!stopping) {
+      process.exitCode = 1;
+    }
   }
 }
 
-startServer();
+// ==========================================
+// START
+// ==========================================
+
+startServer().catch((error) => {
+  console.error("[FATAL STARTUP ERROR]", error.stack || error.message);
+
+  process.exitCode = 1;
+});

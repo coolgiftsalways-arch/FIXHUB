@@ -153,6 +153,8 @@ function createSession(res, customer) {
     ...COOKIE_OPTIONS,
     maxAge: SESSION_MS,
   });
+
+  console.log("[FIXHUB AUTH] Customer session cookie created.");
 }
 
 // ==========================================
@@ -229,11 +231,23 @@ const emailLimiter = rateLimit({
 // ==========================================
 
 export async function requireCustomer(req, res, next) {
+  console.log("[FIXHUB AUTH] Checking customer session.");
+
+  console.log(
+    "[FIXHUB AUTH] Cookie received:",
+    Boolean(req.cookies?.[COOKIE_NAME]),
+  );
+
+  console.log("[FIXHUB AUTH] Expected cookie name:", COOKIE_NAME);
+
   const token = req.cookies?.[COOKIE_NAME];
 
   if (!token) {
+    console.warn("[FIXHUB AUTH] Customer cookie missing.");
+
     return res.status(401).json({
       success: false,
+      code: "CUSTOMER_COOKIE_MISSING",
       message: "Please login to continue.",
     });
   }
@@ -248,27 +262,38 @@ export async function requireCustomer(req, res, next) {
     });
   } catch (error) {
     if (error.code === "FIXHUB_AUTH_CONFIG_ERROR") {
-      console.error("FIXHUB configuration error:", error.message);
+      console.error("[FIXHUB AUTH] Configuration error:", error.message);
 
       return res.status(503).json({
         success: false,
+        code: "AUTH_CONFIGURATION_ERROR",
         message: "Customer authentication is not configured correctly.",
       });
     }
 
+    console.warn("[FIXHUB AUTH] JWT verification failed:", error.name);
+
     clearSession(res);
 
     return res.status(401).json({
       success: false,
+      code: "CUSTOMER_SESSION_INVALID",
       message: "Your session has expired. Please login again.",
     });
   }
 
-  if (typeof decoded?.sub !== "string" || typeof decoded?.v !== "number") {
+  if (
+    !decoded ||
+    typeof decoded.sub !== "string" ||
+    typeof decoded.v !== "number"
+  ) {
+    console.warn("[FIXHUB AUTH] Invalid JWT payload.");
+
     clearSession(res);
 
     return res.status(401).json({
       success: false,
+      code: "CUSTOMER_TOKEN_INVALID",
       message: "Invalid customer session.",
     });
   }
@@ -276,34 +301,41 @@ export async function requireCustomer(req, res, next) {
   try {
     const customer = await FixHubCustomer.findById(decoded.sub);
 
-    // IMPORTANT FIX:
-    // passwordHash has select:false in the customer schema.
-    // Therefore, it will not be available in this query.
-    // Checking customer existence is sufficient here.
-
     if (!customer) {
+      console.warn("[FIXHUB AUTH] Customer account not found.");
+
       clearSession(res);
 
       return res.status(401).json({
         success: false,
+        code: "CUSTOMER_NOT_FOUND",
         message: "Customer account not found. Please login again.",
       });
     }
 
-    if ((customer.tokenVersion ?? 0) !== decoded.v) {
+    const currentTokenVersion = customer.tokenVersion ?? 0;
+
+    if (currentTokenVersion !== decoded.v) {
+      console.warn("[FIXHUB AUTH] Token version mismatch.");
+
       clearSession(res);
 
       return res.status(401).json({
         success: false,
+        code: "CUSTOMER_TOKEN_VERSION_MISMATCH",
         message: "Session expired. Please login again.",
       });
     }
 
     req.fixhubCustomer = customer;
+    req.customer = customer;
+    req.customerId = String(customer._id);
+
+    console.log("[FIXHUB AUTH] Customer authenticated successfully.");
 
     return next();
   } catch (error) {
-    console.error("FIXHUB session verification failed:", error.message);
+    console.error("[FIXHUB AUTH] Session verification failed:", error.message);
 
     return res.status(500).json({
       success: false,
@@ -395,11 +427,7 @@ router.post("/register", registrationLimiter, async (req, res) => {
       emailVerifiedAt: new Date(),
     });
 
-    // Automatically log in the newly registered customer.
-
     createSession(res, customer);
-
-    // Send welcome email.
 
     let emailSent = false;
 
@@ -411,7 +439,7 @@ router.post("/register", registrationLimiter, async (req, res) => {
 
       emailSent = true;
     } catch (emailError) {
-      console.error("FIXHUB registration welcome email:", emailError.message);
+      console.error("[FIXHUB] Welcome email error:", emailError.message);
     }
 
     return res.status(201).json({
@@ -434,7 +462,7 @@ router.post("/register", registrationLimiter, async (req, res) => {
     }
 
     if (error.code === "FIXHUB_AUTH_CONFIG_ERROR") {
-      console.error("FIXHUB registration configuration:", error.message);
+      console.error("[FIXHUB] Registration configuration:", error.message);
 
       return res.status(503).json({
         success: false,
@@ -442,7 +470,7 @@ router.post("/register", registrationLimiter, async (req, res) => {
       });
     }
 
-    console.error("FIXHUB registration error:", error.message);
+    console.error("[FIXHUB] Registration error:", error.message);
 
     return res.status(500).json({
       success: false,
@@ -488,13 +516,15 @@ router.post("/login", loginLimiter, async (req, res) => {
 
     createSession(res, customer);
 
+    console.log("[FIXHUB AUTH] Login successful.");
+
     return res.json({
       success: true,
       message: "Login successful.",
       user: publicCustomer(customer),
     });
   } catch (error) {
-    console.error("FIXHUB login error:", error.message);
+    console.error("[FIXHUB AUTH] Login error:", error.message);
 
     if (error.code === "FIXHUB_AUTH_CONFIG_ERROR") {
       return res.status(503).json({
@@ -524,7 +554,7 @@ router.get("/me", requireCustomer, (req, res) => {
       user: publicCustomer(req.fixhubCustomer),
     });
   } catch (error) {
-    console.error("FIXHUB profile error:", error.message);
+    console.error("[FIXHUB AUTH] Profile error:", error.message);
 
     return res.status(500).json({
       success: false,
@@ -578,7 +608,7 @@ router.patch("/me", requireCustomer, async (req, res) => {
       });
     }
 
-    console.error("FIXHUB profile update:", error.message);
+    console.error("[FIXHUB AUTH] Profile update:", error.message);
 
     return res.status(500).json({
       success: false,
@@ -605,7 +635,7 @@ router.post("/logout", requireCustomer, async (req, res) => {
       message: "Logged out successfully.",
     });
   } catch (error) {
-    console.error("FIXHUB logout error:", error.message);
+    console.error("[FIXHUB AUTH] Logout error:", error.message);
 
     return res.status(500).json({
       success: false,
@@ -670,9 +700,7 @@ router.post("/forgot-password", emailLimiter, async (req, res) => {
       {
         $set: {
           passwordResetTokenHash: reset.tokenHash,
-
           passwordResetExpiresAt: new Date(now.getTime() + EMAIL_TOKEN_MS),
-
           passwordResetSentAt: now,
         },
       },
@@ -689,14 +717,14 @@ router.post("/forgot-password", emailLimiter, async (req, res) => {
       await sendPasswordResetEmail(customer.email, reset.token);
     } catch (error) {
       console.error(
-        "FIXHUB password reset email:",
+        "[FIXHUB AUTH] Password reset email:",
         error.code || error.message,
       );
     }
 
     return res.json(genericEmailResponse);
   } catch (error) {
-    console.error("FIXHUB forgot password:", error.message);
+    console.error("[FIXHUB AUTH] Forgot password:", error.message);
 
     return res.status(500).json({
       success: false,
@@ -768,7 +796,7 @@ router.post("/reset-password", emailLimiter, async (req, res) => {
         "Password changed successfully. Please log in using your new password.",
     });
   } catch (error) {
-    console.error("FIXHUB reset password:", error.message);
+    console.error("[FIXHUB AUTH] Reset password:", error.message);
 
     return res.status(500).json({
       success: false,
