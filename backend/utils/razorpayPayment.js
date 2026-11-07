@@ -3,7 +3,7 @@ import QRCode from "qrcode";
 
 import Payment, { FINAL_STATUSES } from "../models/Payment.js";
 
-// Don't ask Razorpay more often than this per payment (the page polls every few seconds).
+// Don't ask Razorpay more often than this per payment.
 const SYNC_THROTTLE_MS = 5000;
 
 export function getRazorpay() {
@@ -24,6 +24,8 @@ export async function createFixHubPaymentLink({
   payment,
   customer,
   description = "FIXHUB membership payment",
+  phoneBrand = "",
+  phoneModel = "",
 }) {
   if (
     !payment?._id ||
@@ -36,6 +38,8 @@ export async function createFixHubPaymentLink({
   if (!customer) {
     throw new Error("Customer not found.");
   }
+
+  const paymentRecordId = String(payment._id);
 
   // Reuse an existing payment link instead of creating duplicates.
   if (payment.razorpayLinkId && payment.paymentUrl) {
@@ -67,17 +71,32 @@ export async function createFixHubPaymentLink({
     amount: payment.amount * 100,
     currency: "INR",
     accept_partial: false,
+
     reference_id: String(payment.paymentId).slice(0, 40),
+
     description: String(description).slice(0, 255),
+
     customer: {
       name: String(customer.fullName || "FIXHUB Customer").slice(0, 100),
       ...(customer.email ? { email: customer.email } : {}),
       ...(customer.phone ? { contact: String(customer.phone) } : {}),
     },
+
+    // FIXHUB PAYMENT IDENTIFICATION
+    notes: {
+      brand: "FIXHUB",
+      orderId: paymentRecordId,
+      paymentId: String(payment.paymentId || ""),
+      purpose: String(payment.purpose || "repair"),
+      phoneBrand: String(phoneBrand || ""),
+      phoneModel: String(phoneModel || ""),
+    },
+
     notify: {
       sms: false,
       email: false,
     },
+
     reminder_enable: false,
   });
 
@@ -109,16 +128,14 @@ export async function createFixHubPaymentLink({
 }
 
 /**
- * Runs exactly once per payment, the first time it is detected as paid
- * (from either the webhook or a status check).
+ * Runs exactly once per payment, the first time it is detected as paid.
  */
 export async function onPaymentConfirmed(payment) {
   console.log(
     `[payments] ${payment.paymentId} (${payment.purpose} ${payment.referenceId}) confirmed as paid`,
   );
 
-  // Add follow-up work here if you want, e.g. send a confirmation email or
-  // move the membership request to "approved".
+  // Add follow-up work here if required.
 }
 
 /**
@@ -151,6 +168,7 @@ export async function refreshPaymentFromRazorpay(payment) {
       "Razorpay status sync failed:",
       error?.error?.description || error.message,
     );
+
     return payment;
   }
 }

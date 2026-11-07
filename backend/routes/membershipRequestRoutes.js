@@ -200,16 +200,22 @@ const limitPayments = rateLimit({
 
 const TEST_COUPON_AMOUNT = 1;
 
-function resolveTestCoupon(rawCode, customer) {
-  const entered = String(rawCode || "")
-    .trim()
+// Keep letters/digits only, so quotes, spaces or phone-keyboard
+// characters in the env value or the typed code don't break matching.
+function normalizeCoupon(value) {
+  return String(value || "")
+    .normalize("NFKC")
+    .replace(/[^a-z0-9]/gi, "")
     .toUpperCase();
+}
+
+function resolveTestCoupon(rawCode, customer) {
+  const entered = normalizeCoupon(rawCode);
 
   if (!entered) return { applied: false };
 
-  const configured = String(process.env.TEST_COUPON_CODE || "")
-    .trim()
-    .toUpperCase();
+  // Read at request time (server.js loads .env after imports).
+  const configured = normalizeCoupon(process.env.TEST_COUPON_CODE);
 
   if (!configured || entered !== configured) {
     return { applied: false, error: "Invalid coupon code." };
@@ -232,6 +238,7 @@ function resolveTestCoupon(rawCode, customer) {
 
   return { applied: true, code: configured };
 }
+
 // ==========================================
 // FIND OWN MEMBERSHIP REQUEST
 // ==========================================

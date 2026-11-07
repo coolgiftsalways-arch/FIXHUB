@@ -444,6 +444,12 @@ async function startServer() {
       console.log("Repair payments API: registered");
       console.log("Razorpay webhook: registered");
 
+      console.log(
+        process.env.TEST_COUPON_CODE?.trim()
+          ? "Test coupon: ENABLED"
+          : "Test coupon: disabled (TEST_COUPON_CODE not set)",
+      );
+
       console.log("MongoDB: connected");
 
       console.log("----------------------------------");
