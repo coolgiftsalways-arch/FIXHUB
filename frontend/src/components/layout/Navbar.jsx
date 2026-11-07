@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 
 import { LogIn, LogOut, Menu, UserRound, X } from "lucide-react";
@@ -8,10 +7,11 @@ import { useAuth } from "../../context/AuthContext.jsx";
 
 import "../../styles/Navbar.css";
 import "../../styles/NavbarAuth.css";
+import "../../styles/NavbarMembership.css";
 
-// =====================================================
+// ==========================================
 // NAVIGATION LINKS
-// =====================================================
+// ==========================================
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -21,11 +21,44 @@ const navLinks = [
   { name: "Contact", path: "/contact" },
 ];
 
-// =====================================================
-// NAVBAR WRAPPER
-// Automatically resets menu when route changes.
-// No setState inside useEffect.
-// =====================================================
+// ==========================================
+// CHECK ACTIVE MEMBERSHIP
+// ==========================================
+
+function hasActiveMembership(user) {
+  if (!user) return false;
+
+  // New FIXHUB Gold membership system.
+  const membershipTier = String(user.membershipTier || "").toLowerCase();
+
+  if (membershipTier === "gold" || user.isGoldMember === true) {
+    return true;
+  }
+
+  // Backward compatibility with older membership data.
+  const membership = user.membership;
+
+  if (!membership) return false;
+
+  const status = String(membership.status || "").toLowerCase();
+
+  const validStatuses = ["active", "paid"];
+
+  const endDate = membership.endDate
+    ? new Date(membership.endDate).getTime()
+    : null;
+
+  return (
+    validStatuses.includes(status) &&
+    endDate !== null &&
+    !Number.isNaN(endDate) &&
+    endDate > Date.now()
+  );
+}
+
+// ==========================================
+// NAVBAR
+// ==========================================
 
 export default function Navbar() {
   const location = useLocation();
@@ -33,15 +66,11 @@ export default function Navbar() {
   return <NavbarContent key={location.key} />;
 }
 
-// =====================================================
+// ==========================================
 // NAVBAR CONTENT
-// =====================================================
+// ==========================================
 
 function NavbarContent() {
-  // ===================================================
-  // STATES
-  // ===================================================
-
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [scrolled, setScrolled] = useState(
@@ -49,20 +78,18 @@ function NavbarContent() {
   );
 
   const [loggingOut, setLoggingOut] = useState(false);
-
   const [logoutError, setLogoutError] = useState("");
-
-  // ===================================================
-  // AUTHENTICATION
-  // ===================================================
 
   const { user, loading, logout } = useAuth();
 
   const navigate = useNavigate();
 
-  // ===================================================
+  // Check Gold membership.
+  const isMember = hasActiveMembership(user);
+
+  // ==========================================
   // SCROLL EFFECT
-  // ===================================================
+  // ==========================================
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,9 +105,9 @@ function NavbarContent() {
     };
   }, []);
 
-  // ===================================================
-  // CLOSE MENU WITH ESC KEY
-  // ===================================================
+  // ==========================================
+  // ESCAPE KEY
+  // ==========================================
 
   useEffect(() => {
     const handleKey = (event) => {
@@ -96,25 +123,25 @@ function NavbarContent() {
     };
   }, []);
 
-  // ===================================================
+  // ==========================================
   // CLOSE MOBILE MENU
-  // ===================================================
+  // ==========================================
 
   const closeMenu = () => {
     setMenuOpen(false);
   };
 
-  // ===================================================
+  // ==========================================
   // TOGGLE MOBILE MENU
-  // ===================================================
+  // ==========================================
 
   const toggleMenu = () => {
     setMenuOpen((previous) => !previous);
   };
 
-  // ===================================================
+  // ==========================================
   // LOGOUT
-  // ===================================================
+  // ==========================================
 
   const handleLogout = async () => {
     if (loggingOut) return;
@@ -137,16 +164,14 @@ function NavbarContent() {
     }
   };
 
-  // ===================================================
-  // NAVBAR JSX
-  // ===================================================
+  // ==========================================
+  // RENDER
+  // ==========================================
 
   return (
     <header className={`fh-navbar ${scrolled ? "fh-navbar--scrolled" : ""}`}>
       <div className="fh-navbar__container">
-        {/* ==========================================
-            LOGO
-        ========================================== */}
+        {/* LOGO */}
 
         <Link
           to="/"
@@ -156,9 +181,7 @@ function NavbarContent() {
         >
           <div className="fh-navbar__logo-symbol">
             <span className="fh-navbar__logo-line fh-navbar__logo-line--one" />
-
             <span className="fh-navbar__logo-line fh-navbar__logo-line--two" />
-
             <span className="fh-navbar__logo-line fh-navbar__logo-line--three" />
           </div>
 
@@ -173,17 +196,13 @@ function NavbarContent() {
           </div>
         </Link>
 
-        {/* ==========================================
-            NAVIGATION
-        ========================================== */}
+        {/* NAVIGATION */}
 
         <nav
           id="fixhub-navigation"
           aria-label="Main navigation"
           className={`fh-navbar__nav ${menuOpen ? "fh-navbar__nav--open" : ""}`}
         >
-          {/* NAVIGATION LINKS */}
-
           {navLinks.map((item) => (
             <NavLink
               key={item.path}
@@ -198,69 +217,70 @@ function NavbarContent() {
             </NavLink>
           ))}
 
-          {/* ======================================
-              MOBILE PROFILE
-          ====================================== */}
+          {/* MOBILE PROFILE AND LOGOUT */}
 
           {user && (
-            <NavLink
-              to="/profile"
-              onClick={closeMenu}
-              className={({ isActive }) =>
-                `fh-navbar__link fh-navbar__mobile-profile ${
-                  isActive ? "fh-navbar__link--active" : ""
-                }`
-              }
-            >
-              My Profile
-            </NavLink>
-          )}
+            <>
+              <NavLink
+                to="/profile"
+                onClick={closeMenu}
+                className={({ isActive }) =>
+                  `fh-navbar__link fh-navbar__mobile-profile ${
+                    isActive ? "fh-navbar__link--active" : ""
+                  }`
+                }
+              >
+                My Profile
+                {isMember && (
+                  <span className="fh-navbar__member-badge">PRO</span>
+                )}
+              </NavLink>
 
-          {/* ======================================
-              MOBILE LOGOUT
-          ====================================== */}
+              <button
+                type="button"
+                className="fh-navbar__mobile-logout"
+                disabled={loggingOut}
+                onClick={handleLogout}
+              >
+                <LogOut size={18} />
 
-          {user && (
-            <button
-              type="button"
-              className="fh-navbar__mobile-logout"
-              disabled={loggingOut}
-              onClick={handleLogout}
-            >
-              <LogOut size={18} />
-              Logout
-            </button>
+                {loggingOut ? "Logging out..." : "Logout"}
+              </button>
+            </>
           )}
         </nav>
 
-        {/* ==========================================
-            RIGHT ACTIONS
-        ========================================== */}
+        {/* RIGHT ACTIONS */}
 
         <div className="fh-navbar__actions">
-          {/* ======================================
-              LOADING STATE
-          ====================================== */}
-
           {loading ? (
             <span className="fh-navbar__auth-wait">Loading...</span>
           ) : user ? (
-            /* =====================================
-                LOGGED-IN CUSTOMER
-            ===================================== */
-
             <div className="fh-navbar__user-actions">
               {/* PROFILE BUTTON */}
 
               <Link
                 to="/profile"
-                className="fh-navbar__book-btn fh-navbar__account-btn"
+                className={`fh-navbar__book-btn fh-navbar__account-btn ${
+                  isMember
+                    ? "fh-navbar__account-btn--member"
+                    : "fh-navbar__account-btn--nonmember"
+                }`}
                 onClick={closeMenu}
-                title={user.fullName || "My Profile"}
+                title={isMember ? "Active Gold Membership" : "My Profile"}
+                aria-label={
+                  isMember
+                    ? "Profile - Active Gold Membership"
+                    : "Profile - No Active Membership"
+                }
               >
                 <UserRound size={19} />
 
                 <span>{user.fullName?.split(" ")[0] || "Profile"}</span>
+
+                {isMember && (
+                  <span className="fh-navbar__member-badge">PRO</span>
+                )}
               </Link>
 
               {/* LOGOUT BUTTON */}
@@ -277,10 +297,6 @@ function NavbarContent() {
               </button>
             </div>
           ) : (
-            /* =====================================
-                NOT LOGGED IN
-            ===================================== */
-
             <Link
               to="/login"
               className="fh-navbar__book-btn"
@@ -292,9 +308,7 @@ function NavbarContent() {
             </Link>
           )}
 
-          {/* ======================================
-              MOBILE MENU BUTTON
-          ====================================== */}
+          {/* MOBILE MENU BUTTON */}
 
           <button
             type="button"
@@ -315,9 +329,7 @@ function NavbarContent() {
         </div>
       </div>
 
-      {/* ==========================================
-          LOGOUT ERROR MESSAGE
-      ========================================== */}
+      {/* LOGOUT ERROR */}
 
       {logoutError && (
         <div className="fh-navbar__auth-error" role="alert">

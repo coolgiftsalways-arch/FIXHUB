@@ -2,9 +2,13 @@ import Razorpay from "razorpay";
 import QRCode from "qrcode";
 
 import Payment, { FINAL_STATUSES } from "../models/Payment.js";
+import FixHubCustomer from "../models/FixHubCustomer.js";
 
-// Don't ask Razorpay more often than this per payment (the page polls every few seconds).
 const SYNC_THROTTLE_MS = 5000;
+
+// ==========================================
+// RAZORPAY INSTANCE
+// ==========================================
 
 export function getRazorpay() {
   const keyId = process.env.RAZORPAY_KEY_ID?.trim();
@@ -20,8 +24,10 @@ export function getRazorpay() {
   });
 }
 
-// Public website address Razorpay sends the customer back to after paying.
-// Uses PUBLIC_SITE_URL if set, otherwise the first CLIENT_URL entry.
+// ==========================================
+// WEBSITE URL
+// ==========================================
+
 function getSiteUrl() {
   const raw =
     process.env.PUBLIC_SITE_URL ||
@@ -34,16 +40,24 @@ function getSiteUrl() {
   }
 }
 
+// ==========================================
+// CREATE RAZORPAY PAYMENT LINK
+// ==========================================
+
 export async function createFixHubPaymentLink({
   payment,
   customer,
   description = "FIXHUB membership payment",
   returnPath = "",
 }) {
+  const amount = Number(payment?.amount);
+  const amountPaise = Math.round(amount * 100);
+
   if (
     !payment?._id ||
-    !Number.isSafeInteger(payment.amount) ||
-    payment.amount < 1
+    !Number.isFinite(amount) ||
+    amount < 1 ||
+    !Number.isSafeInteger(amountPaise)
   ) {
     throw new Error("Invalid payment amount.");
   }
@@ -52,7 +66,7 @@ export async function createFixHubPaymentLink({
     throw new Error("Customer not found.");
   }
 
-  // Reuse an existing payment link instead of creating duplicates.
+  // Reuse existing payment link.
   if (payment.razorpayLinkId && payment.paymentUrl) {
     let qrCodeDataUrl = payment.qrCodeDataUrl;
 
@@ -76,32 +90,42 @@ export async function createFixHubPaymentLink({
     };
   }
 
+  // Create new Razorpay payment link.
   const razorpay = getRazorpay();
-
-  // After paying, Razorpay redirects to e.g. https://fixhubsolutions.in/payment
-  // and adds ?razorpay_payment_link_reference_id=<our paymentId>&...
   const siteUrl = getSiteUrl();
+
   const callback =
     returnPath && siteUrl
-      ? { callback_url: `${siteUrl}${returnPath}`, callback_method: "get" }
+      ? {
+          callback_url: `${siteUrl}${returnPath}`,
+          callback_method: "get",
+        }
       : {};
 
   const link = await razorpay.paymentLink.create({
-    amount: payment.amount * 100,
+    amount: amountPaise,
     currency: "INR",
     accept_partial: false,
+
     reference_id: String(payment.paymentId).slice(0, 40),
+
     description: String(description).slice(0, 255),
+
     customer: {
       name: String(customer.fullName || "FIXHUB Customer").slice(0, 100),
+
       ...(customer.email ? { email: customer.email } : {}),
+
       ...(customer.phone ? { contact: String(customer.phone) } : {}),
     },
+
     notify: {
       sms: false,
       email: false,
     },
+
     reminder_enable: false,
+
     ...callback,
   });
 
@@ -132,28 +156,128 @@ export async function createFixHubPaymentLink({
   };
 }
 
-/**
- * Runs exactly once per payment, the first time it is detected as paid
- * (from either the webhook or a status check).
- */
+// ==========================================
+// VERIFIED GOLD MEMBERSHIP ACTIVATION
+// ==========================================
+
 export async function onPaymentConfirmed(payment) {
+  if (!payment) {
+    throw new Error("Payment record is missing.");
+  }
+
   console.log(
     `[payments] ${payment.paymentId} (${payment.purpose} ${payment.referenceId}) confirmed as paid`,
   );
 
-  // Add follow-up work here if you want, e.g. send a confirmation email or
-  // move the membership request to "approved".
+  // Only verified membership payments can activate Gold.
+  if (payment.purpose !== "membership" || payment.status !== "paid") {
+    return null;
+  }
+
+  if (!payment.customerId) {
+    throw new Error(`Customer ID missing for ${payment.paymentId}`);
+  }
+
+  try {
+    /*
+     * Activate Gold only if the customer is not already Gold.
+     *
+     * The first-repair benefit is made available at the same
+     * time as the first successful Gold activation.
+     *
+     * Existing Gold members are not given another benefit
+     * when a payment is retried or membership is renewed.
+     */
+    const customer = await FixHubCustomer.findOneAndUpdate(
+      {
+        _id: payment.customerId,
+        membershipTier: { $ne: "gold" },
+      },
+      {
+        $set: {
+          membershipTier: "gold",
+          goldActivatedAt: new Date(),
+
+          // First eligible repair benefit.
+          firstRepairBenefitAvailable: true,
+          firstRepairBenefitUsed: false,
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    if (customer) {
+      console.log(
+        `[membership] Gold activated and first repair benefit enabled for ${customer.email}`,
+      );
+
+      return customer;
+    }
+
+    // Customer may already be Gold.
+    const existingCustomer = await FixHubCustomer.findById(payment.customerId);
+
+    if (!existingCustomer) {
+      throw new Error(`Customer not found for ${payment.paymentId}`);
+    }
+
+    if (existingCustomer.membershipTier !== "gold") {
+      throw new Error(`Gold activation failed for ${payment.paymentId}`);
+    }
+
+    console.log(
+      `[membership] Gold membership already active for ${existingCustomer.email}`,
+    );
+
+    return existingCustomer;
+  } catch (error) {
+    console.error(
+      `[membership] Gold activation failed for ${payment.paymentId}:`,
+      error.message,
+    );
+
+    throw error;
+  }
 }
 
-/**
- * Bring a payment up to date with Razorpay if it is not final yet.
- * Never throws: on any Razorpay error the stored payment is returned as-is.
- */
+// ==========================================
+// REFRESH PAYMENT STATUS FROM RAZORPAY
+// ==========================================
+
 export async function refreshPaymentFromRazorpay(payment) {
-  if (!payment?.razorpayLinkId || FINAL_STATUSES.includes(payment.status)) {
+  if (!payment) {
     return payment;
   }
 
+  // Retry Gold activation for an already-paid payment.
+  if (payment.status === "paid") {
+    if (payment.purpose === "membership") {
+      try {
+        await onPaymentConfirmed(payment);
+      } catch (error) {
+        console.error(
+          "[membership] Gold activation retry failed:",
+          error.message,
+        );
+      }
+    }
+
+    return payment;
+  }
+
+  // Do not sync final payment statuses.
+  if (FINAL_STATUSES.includes(payment.status)) {
+    return payment;
+  }
+
+  if (!payment.razorpayLinkId) {
+    return payment;
+  }
+
+  // Sync throttling.
   const lastSync = payment.lastSyncedAt
     ? new Date(payment.lastSyncedAt).getTime()
     : 0;
@@ -163,18 +287,34 @@ export async function refreshPaymentFromRazorpay(payment) {
   }
 
   try {
-    const result = await Payment.syncWithRazorpay(getRazorpay(), payment);
+    const razorpay = getRazorpay();
 
-    if (result.becamePaid && result.payment) {
-      await onPaymentConfirmed(result.payment);
+    const result = await Payment.syncWithRazorpay(razorpay, payment);
+
+    const updatedPayment = result?.payment || payment;
+
+    // Activate Gold only after verified payment.
+    if (
+      updatedPayment.status === "paid" &&
+      updatedPayment.purpose === "membership"
+    ) {
+      try {
+        await onPaymentConfirmed(updatedPayment);
+      } catch (activationError) {
+        console.error(
+          "[membership] Gold activation failed after payment:",
+          activationError.message,
+        );
+      }
     }
 
-    return result.payment || payment;
+    return updatedPayment;
   } catch (error) {
     console.error(
       "Razorpay status sync failed:",
       error?.error?.description || error.message,
     );
+
     return payment;
   }
 }

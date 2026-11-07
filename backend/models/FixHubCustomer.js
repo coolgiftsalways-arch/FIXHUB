@@ -43,9 +43,14 @@ const fixHubCustomerSchema = new mongoose.Schema(
       default: 0,
     },
 
+    // ======================================
+    // MEMBERSHIP
+    // ======================================
+
     membershipTier: {
       type: String,
       default: "none",
+      enum: ["none", "free", "gold"],
     },
 
     goldActivatedAt: {
@@ -53,7 +58,40 @@ const fixHubCustomerSchema = new mongoose.Schema(
       default: null,
     },
 
-    // Email verification is not required.
+    // ======================================
+    // FIRST REPAIR FREE BENEFIT
+    // ======================================
+
+    firstRepairBenefitAvailable: {
+      type: Boolean,
+      default: false,
+    },
+
+    firstRepairBenefitUsed: {
+      type: Boolean,
+      default: false,
+    },
+
+    firstRepairBenefitGrantedAt: {
+      type: Date,
+      default: null,
+    },
+
+    firstRepairBenefitRedeemedAt: {
+      type: Date,
+      default: null,
+    },
+
+    firstRepairBenefitBooking: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "FixHubRepairBooking",
+      default: null,
+    },
+
+    // ======================================
+    // EMAIL VERIFICATION
+    // ======================================
+
     emailVerified: {
       type: Boolean,
       default: true,
@@ -64,7 +102,6 @@ const fixHubCustomerSchema = new mongoose.Schema(
       default: Date.now,
     },
 
-    // Retained for compatibility with existing records.
     verificationTokenHash: {
       type: String,
       select: false,
@@ -80,7 +117,10 @@ const fixHubCustomerSchema = new mongoose.Schema(
       select: false,
     },
 
-    // Password recovery fields.
+    // ======================================
+    // PASSWORD RECOVERY
+    // ======================================
+
     passwordResetTokenHash: {
       type: String,
       select: false,
@@ -98,6 +138,7 @@ const fixHubCustomerSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+
     collection: "fixhub_customers",
 
     toJSON: {

@@ -11,11 +11,13 @@ import {
   Tag,
   XCircle,
 } from "lucide-react";
+
+import { useAuth } from "../context/AuthContext";
 import "../styles/Payment.css";
 
 const API_URL = "/api/membership-requests";
 const POLL_INTERVAL_MS = 4000;
-const MAX_POLL_MS = 20 * 60 * 1000; // stop auto-checking after 20 minutes
+const MAX_POLL_MS = 20 * 60 * 1000;
 const FINAL_STATUSES = ["paid", "rejected", "refunded", "expired", "cancelled"];
 const STORAGE_KEY = "fixhub_payment_request_id";
 
@@ -32,7 +34,7 @@ function storeRequestId(id) {
     if (id) sessionStorage.setItem(STORAGE_KEY, id);
     else sessionStorage.removeItem(STORAGE_KEY);
   } catch {
-    // Storage unavailable (private mode etc.) – ignore.
+    // Storage unavailable – ignore.
   }
 }
 
@@ -58,12 +60,15 @@ export default function Payment() {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  // Set when Razorpay redirects back here after the customer paid.
+  // Refresh authentication data after confirmed payment.
+  const { refreshUser } = useAuth();
+
+  // Razorpay redirect reference.
   const returnedPaymentId = searchParams.get(
     "razorpay_payment_link_reference_id",
   );
 
-  // Keep the request ID across a page refresh (router state is lost on reload).
+  // Preserve request ID after page refresh.
   const requestId = location.state?.requestId || readStoredRequestId();
 
   const [payment, setPayment] = useState(null);
@@ -76,8 +81,12 @@ export default function Payment() {
   const [couponInput, setCouponInput] = useState("");
   const [couponError, setCouponError] = useState("");
   const [applyingCoupon, setApplyingCoupon] = useState(false);
+  const [membershipRefreshing, setMembershipRefreshing] = useState(false);
 
   const inFlightRef = useRef(false);
+
+  // Prevent multiple membership refreshes for the same paid payment.
+  const refreshedPaymentRef = useRef("");
 
   useEffect(() => {
     if (requestId) storeRequestId(requestId);
@@ -91,9 +100,13 @@ export default function Payment() {
     let cancelled = false;
 
     async function createPayment() {
-      // Back from Razorpay: just confirm this payment, don't create a new one.
+      // Returned from Razorpay: confirm existing payment.
       if (returnedPaymentId) {
-        setPayment({ paymentId: returnedPaymentId, status: "pending" });
+        setPayment({
+          paymentId: returnedPaymentId,
+          status: "pending",
+        });
+
         setError("");
         setLoading(false);
         return;
@@ -103,6 +116,7 @@ export default function Payment() {
         setError(
           "Payment request not found. Please return to Membership and submit your request first.",
         );
+
         setLoading(false);
         return;
       }
@@ -122,9 +136,11 @@ export default function Payment() {
 
         const data = await readJson(response);
 
-        // Already paid: the server answers 409 with the paid payment.
+        // Already paid.
         if (response.status === 409 && data.payment?.status === "paid") {
-          if (!cancelled) setPayment(data.payment);
+          if (!cancelled) {
+            setPayment(data.payment);
+          }
           return;
         }
 
@@ -132,7 +148,6 @@ export default function Payment() {
           throw new Error(data.message || "Unable to create your payment.");
         }
 
-        // Supports either { payment: {...} } or a direct payment object.
         const paymentData = data.payment || data;
 
         if (cancelled) return;
@@ -155,7 +170,9 @@ export default function Payment() {
           );
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
 
@@ -167,19 +184,66 @@ export default function Payment() {
   }, [requestId, returnedPaymentId, reloadKey]);
 
   // ==========================================
-  // 2. AUTO-DETECT PAYMENT
-  // Polls the server, which checks Razorpay, until the status is final.
+  // 2. PAYMENT STATUS
   // ==========================================
 
   const paymentId = payment?.paymentId;
   const status = payment?.status || "pending";
   const isFinal = FINAL_STATUSES.includes(status);
 
+  // ==========================================
+  // 3. AUTOMATIC GOLD MEMBERSHIP REFRESH
+  // ==========================================
+
+  useEffect(() => {
+    if (status !== "paid" || !paymentId) return;
+
+    // Don't refresh repeatedly for the same payment.
+    if (refreshedPaymentRef.current === paymentId) return;
+
+    let cancelled = false;
+
+    async function activateMembershipInFrontend() {
+      try {
+        setMembershipRefreshing(true);
+
+        // Mark this payment so the effect does not repeat.
+        refreshedPaymentRef.current = paymentId;
+
+        // The backend activates Gold membership.
+        // This refreshes the logged-in user's data from /api/auth/me.
+        if (typeof refreshUser === "function") {
+          await refreshUser();
+        }
+      } catch (err) {
+        console.error("Unable to refresh membership after payment:", err);
+
+        // Allow a future retry if refreshing failed.
+        refreshedPaymentRef.current = "";
+      } finally {
+        if (!cancelled) {
+          setMembershipRefreshing(false);
+        }
+      }
+    }
+
+    activateMembershipInFrontend();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [status, paymentId, refreshUser]);
+
+  // ==========================================
+  // 4. AUTO-DETECT PAYMENT
+  // ==========================================
+
   useEffect(() => {
     if (!paymentId || isFinal) return undefined;
 
     let cancelled = false;
     let timer = null;
+
     const startedAt = Date.now();
 
     function scheduleNext() {
@@ -204,7 +268,10 @@ export default function Payment() {
       try {
         const response = await fetch(
           `${API_URL}/payment/${encodeURIComponent(paymentId)}`,
-          { credentials: "include", cache: "no-store" },
+          {
+            credentials: "include",
+            cache: "no-store",
+          },
         );
 
         const data = await readJson(response);
@@ -217,22 +284,29 @@ export default function Payment() {
           setPayment((prev) => ({
             ...prev,
             ...next,
-            // The status endpoint does not resend the QR image.
+
+            // Status endpoint does not resend QR image.
             qrCodeDataUrl: next.qrCodeDataUrl || prev?.qrCodeDataUrl,
+
             paymentUrl: next.paymentUrl || prev?.paymentUrl,
           }));
         }
       } catch {
-        // Temporary network problem – keep polling.
+        // Temporary network problem – continue polling.
       } finally {
         inFlightRef.current = false;
-        if (!cancelled) setChecking(false);
+
+        if (!cancelled) {
+          setChecking(false);
+        }
       }
 
-      if (!reachedFinal) scheduleNext();
+      if (!reachedFinal) {
+        scheduleNext();
+      }
     }
 
-    // Check right away when the customer comes back from Razorpay / UPI app.
+    // Immediately check when returning from Razorpay.
     function handleReturn() {
       if (document.visibilityState === "visible" && !inFlightRef.current) {
         clearTimeout(timer);
@@ -241,28 +315,29 @@ export default function Payment() {
     }
 
     document.addEventListener("visibilitychange", handleReturn);
+
     window.addEventListener("focus", handleReturn);
 
     checkStatus();
 
     return () => {
       cancelled = true;
+
       clearTimeout(timer);
+
       document.removeEventListener("visibilitychange", handleReturn);
+
       window.removeEventListener("focus", handleReturn);
     };
   }, [paymentId, isFinal, pollKey]);
 
   // ==========================================
-  // 3. APPLY TEST COUPON
-  // Creates a new (discounted) payment link; the old QR keeps working
-  // until the new one is shown.
+  // 5. APPLY TEST COUPON
   // ==========================================
 
   async function applyCoupon(event) {
     event.preventDefault();
 
-    // Phone keyboards can add spaces or odd characters: keep letters/digits only.
     const couponCode = couponInput
       .normalize("NFKC")
       .replace(/[^a-z0-9]/gi, "")
@@ -280,7 +355,10 @@ export default function Payment() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ requestId, couponCode }),
+        body: JSON.stringify({
+          requestId,
+          couponCode,
+        }),
       });
 
       const data = await readJson(response);
@@ -303,16 +381,28 @@ export default function Payment() {
     }
   }
 
-  // Forget the stored request once the payment is finished.
+  // ==========================================
+  // 6. CLEAR STORED REQUEST AFTER FINAL STATUS
+  // ==========================================
+
   useEffect(() => {
-    if (isFinal) storeRequestId(null);
+    if (isFinal) {
+      storeRequestId(null);
+    }
   }, [isFinal]);
 
+  // ==========================================
+  // 7. PAYMENT DETAILS
+  // ==========================================
+
   const amount = payment?.amount ?? payment?.planPrice;
+
   const isPaid = status === "paid";
+
   const isClosed = ["rejected", "expired", "cancelled", "refunded"].includes(
     status,
   );
+
   const paymentUrl = payment?.paymentUrl;
   const qrCode = payment?.qrCodeDataUrl;
 
@@ -323,9 +413,14 @@ export default function Payment() {
     rejected: "This payment was rejected. Please contact FIXHUB support.",
   }[status];
 
+  // ==========================================
+  // 8. UI
+  // ==========================================
+
   return (
     <main className="fixhub-checkout">
       <section className="checkout-card">
+        {/* BRAND */}
         <Link to="/membership" className="checkout-brand">
           <span className="checkout-brand-icon">
             <Smartphone size={23} />
@@ -337,6 +432,7 @@ export default function Payment() {
           </span>
         </Link>
 
+        {/* HEADING */}
         <div className="checkout-heading">
           <span className="checkout-secure-label">
             <ShieldCheck size={15} />
@@ -350,16 +446,20 @@ export default function Payment() {
           </p>
         </div>
 
+        {/* LOADING */}
         {loading && (
           <div className="checkout-message">
             <LoaderCircle className="checkout-spinner" size={30} />
+
             <p>Preparing your payment...</p>
           </div>
         )}
 
+        {/* ERROR */}
         {!loading && error && !isFinal && (
           <div className="checkout-message checkout-error">
             <XCircle size={30} />
+
             <p>{error}</p>
 
             <button
@@ -376,13 +476,28 @@ export default function Payment() {
           </div>
         )}
 
+        {/* PAYMENT SUCCESS */}
         {!loading && isPaid && (
           <div className="checkout-message checkout-success">
             <CheckCircle2 size={42} />
+
             <h2>Payment Confirmed</h2>
+
             <p>
               We received {formatAmount(amount, payment?.currency)}. Thank you!
             </p>
+
+            {membershipRefreshing ? (
+              <p>
+                <LoaderCircle className="checkout-spinner" size={16} />{" "}
+                Activating your Gold membership...
+              </p>
+            ) : (
+              <p>
+                Your payment is confirmed. Your membership details have been
+                refreshed.
+              </p>
+            )}
 
             <Link to="/membership" className="checkout-back-link">
               Back to Membership
@@ -390,9 +505,11 @@ export default function Payment() {
           </div>
         )}
 
+        {/* CLOSED PAYMENT */}
         {!loading && isClosed && (
           <div className="checkout-message checkout-error">
             <XCircle size={30} />
+
             <p>{closedMessage}</p>
 
             {["expired", "cancelled"].includes(status) && (
@@ -414,10 +531,13 @@ export default function Payment() {
           </div>
         )}
 
+        {/* RAZORPAY RETURN CONFIRMATION */}
         {!loading && returnedPaymentId && payment && !isFinal && !error && (
           <div className="checkout-message" aria-live="polite">
             <LoaderCircle className="checkout-spinner" size={30} />
+
             <h2>Confirming your payment...</h2>
+
             <p>
               This usually takes a few seconds. Please don't close this page.
             </p>
@@ -438,10 +558,13 @@ export default function Payment() {
           </div>
         )}
 
+        {/* PAYMENT CHECKOUT */}
         {!loading && !returnedPaymentId && payment && !isFinal && !error && (
           <>
+            {/* AMOUNT */}
             <div className="checkout-amount">
               <span>Amount to pay</span>
+
               <strong>
                 {payment.couponApplied &&
                   payment.originalAmount != null &&
@@ -450,10 +573,12 @@ export default function Payment() {
                       {formatAmount(payment.originalAmount, payment.currency)}
                     </s>
                   )}
+
                 {formatAmount(amount, payment.currency)}
               </strong>
             </div>
 
+            {/* COUPON */}
             {payment.couponApplied ? (
               <div className="checkout-coupon-applied">
                 <Tag size={14} />
@@ -491,6 +616,7 @@ export default function Payment() {
               </p>
             )}
 
+            {/* QR CODE */}
             {qrCode ? (
               <div className="checkout-qr-container">
                 <div className="checkout-qr-frame">
@@ -502,6 +628,7 @@ export default function Payment() {
                 </div>
 
                 <h2>Scan to Pay</h2>
+
                 <p>Open your UPI app and scan this QR code.</p>
               </div>
             ) : (
@@ -511,6 +638,7 @@ export default function Payment() {
               </div>
             )}
 
+            {/* RAZORPAY PAYMENT LINK */}
             {paymentUrl && (
               <a
                 href={paymentUrl}
@@ -523,6 +651,7 @@ export default function Payment() {
               </a>
             )}
 
+            {/* PAYMENT STATUS */}
             <div className="checkout-payment-status" aria-live="polite">
               {checking ? (
                 <LoaderCircle className="checkout-spinner" size={14} />
@@ -535,6 +664,7 @@ export default function Payment() {
                 : "Waiting for payment – this page updates automatically"}
             </div>
 
+            {/* MANUAL PAYMENT CHECK */}
             {pollTimedOut && (
               <button
                 type="button"
@@ -549,6 +679,7 @@ export default function Payment() {
               </button>
             )}
 
+            {/* DISCLAIMER */}
             <p className="checkout-disclaimer">
               Your payment is confirmed only after the payment provider verifies
               the transaction.
@@ -556,6 +687,7 @@ export default function Payment() {
           </>
         )}
 
+        {/* FOOTER */}
         <div className="checkout-footer">
           <ShieldCheck size={15} />
           <span>Secure payment processing</span>

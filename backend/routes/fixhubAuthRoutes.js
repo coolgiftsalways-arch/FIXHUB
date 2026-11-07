@@ -94,6 +94,7 @@ function getJwtSecret() {
     );
 
     error.code = "FIXHUB_AUTH_CONFIG_ERROR";
+
     throw error;
   }
 
@@ -112,14 +113,18 @@ function publicCustomer(customer) {
   return {
     id,
     customerId: `FH-${id.toUpperCase()}`,
+
     fullName: customer.fullName,
     email: customer.email,
     phone: customer.phone,
     address: customer.address,
+
     membershipTier,
     isGoldMember: membershipTier === "gold",
     goldActivatedAt: customer.goldActivatedAt || null,
+
     emailVerified: customer.emailVerified !== false,
+
     createdAt: customer.createdAt,
     updatedAt: customer.updatedAt,
   };
@@ -188,6 +193,7 @@ const loginLimiter = rateLimit({
   skip: () => !IS_PRODUCTION,
   standardHeaders: "draft-7",
   legacyHeaders: false,
+
   message: {
     success: false,
     message: "Too many login attempts. Please try again later.",
@@ -199,6 +205,7 @@ const registrationLimiter = rateLimit({
   limit: IS_PRODUCTION ? 5 : 30,
   standardHeaders: "draft-7",
   legacyHeaders: false,
+
   message: {
     success: false,
     message: "Too many registration attempts. Please try again later.",
@@ -210,6 +217,7 @@ const emailLimiter = rateLimit({
   limit: IS_PRODUCTION ? 5 : 30,
   standardHeaders: "draft-7",
   legacyHeaders: false,
+
   message: {
     success: false,
     message: "Too many email requests. Please try again later.",
@@ -239,8 +247,6 @@ export async function requireCustomer(req, res, next) {
       audience: "fixhub-customers",
     });
   } catch (error) {
-    clearSession(res);
-
     if (error.code === "FIXHUB_AUTH_CONFIG_ERROR") {
       console.error("FIXHUB configuration error:", error.message);
 
@@ -249,6 +255,8 @@ export async function requireCustomer(req, res, next) {
         message: "Customer authentication is not configured correctly.",
       });
     }
+
+    clearSession(res);
 
     return res.status(401).json({
       success: false,
@@ -268,7 +276,12 @@ export async function requireCustomer(req, res, next) {
   try {
     const customer = await FixHubCustomer.findById(decoded.sub);
 
-    if (!customer || !customer.passwordHash) {
+    // IMPORTANT FIX:
+    // passwordHash has select:false in the customer schema.
+    // Therefore, it will not be available in this query.
+    // Checking customer existence is sufficient here.
+
+    if (!customer) {
       clearSession(res);
 
       return res.status(401).json({
@@ -317,8 +330,11 @@ const genericEmailResponse = {
 router.post("/register", registrationLimiter, async (req, res) => {
   try {
     const fullName = String(req.body?.fullName || "").trim();
+
     const email = normalizeEmail(req.body?.email);
+
     const phone = normalizePhone(req.body?.phone);
+
     const address = String(req.body?.address || "").trim();
 
     const password = req.body?.password;
@@ -380,9 +396,11 @@ router.post("/register", registrationLimiter, async (req, res) => {
     });
 
     // Automatically log in the newly registered customer.
+
     createSession(res, customer);
 
     // Send welcome email.
+
     let emailSent = false;
 
     try {
@@ -398,10 +416,13 @@ router.post("/register", registrationLimiter, async (req, res) => {
 
     return res.status(201).json({
       success: true,
+
       message: emailSent
         ? "Welcome to FIXHUB! Your account has been created and a welcome email has been sent."
         : "Your FIXHUB account has been created, but the welcome email could not be sent.",
+
       emailSent,
+
       user: publicCustomer(customer),
     });
   } catch (error) {
@@ -520,7 +541,9 @@ router.get("/me", requireCustomer, (req, res) => {
 router.patch("/me", requireCustomer, async (req, res) => {
   try {
     const fullName = String(req.body?.fullName || "").trim();
+
     const phone = normalizePhone(req.body?.phone);
+
     const address = String(req.body?.address || "").trim();
 
     if (
@@ -607,7 +630,9 @@ router.post("/forgot-password", emailLimiter, async (req, res) => {
       });
     }
 
-    const customer = await FixHubCustomer.findOne({ email });
+    const customer = await FixHubCustomer.findOne({
+      email,
+    });
 
     if (!customer) {
       return res.json(genericEmailResponse);
@@ -628,8 +653,13 @@ router.post("/forgot-password", emailLimiter, async (req, res) => {
     const updated = await FixHubCustomer.findOneAndUpdate(
       {
         _id: customer._id,
+
         $or: [
-          { passwordResetSentAt: { $exists: false } },
+          {
+            passwordResetSentAt: {
+              $exists: false,
+            },
+          },
           {
             passwordResetSentAt: {
               $lt: new Date(now.getTime() - EMAIL_COOLDOWN_MS),
@@ -640,11 +670,15 @@ router.post("/forgot-password", emailLimiter, async (req, res) => {
       {
         $set: {
           passwordResetTokenHash: reset.tokenHash,
+
           passwordResetExpiresAt: new Date(now.getTime() + EMAIL_TOKEN_MS),
+
           passwordResetSentAt: now,
         },
       },
-      { new: true },
+      {
+        new: true,
+      },
     );
 
     if (!updated) {
@@ -679,6 +713,7 @@ router.post("/forgot-password", emailLimiter, async (req, res) => {
 router.post("/reset-password", emailLimiter, async (req, res) => {
   try {
     const tokenHash = hashReceivedToken(req.body?.token);
+
     const newPassword = req.body?.newPassword;
 
     if (!tokenHash || !validPassword(newPassword)) {
@@ -693,18 +728,29 @@ router.post("/reset-password", emailLimiter, async (req, res) => {
     const customer = await FixHubCustomer.findOneAndUpdate(
       {
         passwordResetTokenHash: tokenHash,
-        passwordResetExpiresAt: { $gt: new Date() },
+
+        passwordResetExpiresAt: {
+          $gt: new Date(),
+        },
       },
       {
-        $set: { passwordHash },
-        $inc: { tokenVersion: 1 },
+        $set: {
+          passwordHash,
+        },
+
+        $inc: {
+          tokenVersion: 1,
+        },
+
         $unset: {
           passwordResetTokenHash: "",
           passwordResetExpiresAt: "",
           passwordResetSentAt: "",
         },
       },
-      { new: true },
+      {
+        new: true,
+      },
     );
 
     if (!customer) {

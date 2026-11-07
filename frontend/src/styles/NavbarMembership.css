@@ -1,0 +1,123 @@
+/* ==========================================
+   FIXHUB MEMBERSHIP PROFILE BUTTON
+========================================== */
+
+/* DEFAULT: BLUE PROFILE BUTTON */
+
+.fh-navbar__account-btn--nonmember {
+     background: linear-gradient(135deg,
+               #008cff 0%,
+               #0066d6 100%) !important;
+
+     color: #ffffff !important;
+
+     border: 1px solid rgba(0, 140, 255, 0.5) !important;
+
+     box-shadow:
+          0 5px 18px rgba(0, 140, 255, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+     transition: all 0.3s ease;
+}
+
+.fh-navbar__account-btn--nonmember:hover {
+     background: linear-gradient(135deg,
+               #159dff 0%,
+               #0073ed 100%) !important;
+
+     box-shadow:
+          0 8px 24px rgba(0, 140, 255, 0.35);
+
+     transform: translateY(-2px);
+}
+
+/* ==========================================
+   ACTIVE PAID MEMBER: GOLD BUTTON
+========================================== */
+
+.fh-navbar__account-btn--member {
+     background: linear-gradient(135deg,
+               #fff0a8 0%,
+               #f5c542 45%,
+               #d99a16 100%) !important;
+
+     color: #493000 !important;
+
+     border: 1px solid #e5b638 !important;
+
+     box-shadow:
+          0 5px 20px rgba(218, 165, 32, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.65);
+
+     transition: all 0.3s ease;
+}
+
+.fh-navbar__account-btn--member:hover {
+     background: linear-gradient(135deg,
+               #fff5c7 0%,
+               #ffd95c 45%,
+               #e5aa24 100%) !important;
+
+     box-shadow:
+          0 8px 25px rgba(218, 165, 32, 0.45);
+
+     transform: translateY(-2px);
+}
+
+/* MEMBER ICON */
+
+.fh-navbar__account-btn--member svg {
+     color: #493000 !important;
+}
+
+/* NON-MEMBER ICON */
+
+.fh-navbar__account-btn--nonmember svg {
+     color: #ffffff !important;
+}
+
+/* ==========================================
+   PRO BADGE
+========================================== */
+
+.fh-navbar__member-badge {
+     display: inline-flex;
+
+     align-items: center;
+     justify-content: center;
+
+     padding: 3px 6px;
+
+     margin-left: 4px;
+
+     border-radius: 5px;
+
+     background: rgba(73, 48, 0, 0.13);
+
+     color: #493000;
+
+     font-size: 9px;
+
+     font-weight: 900;
+
+     letter-spacing: 0.8px;
+
+     line-height: 1.2;
+}
+
+/* ==========================================
+   MOBILE RESPONSIVE
+========================================== */
+
+@media (max-width: 768px) {
+
+     .fh-navbar__account-btn--member,
+     .fh-navbar__account-btn--nonmember {
+          transition: none;
+     }
+
+     .fh-navbar__member-badge {
+          font-size: 8px;
+          padding: 2px 5px;
+     }
+}

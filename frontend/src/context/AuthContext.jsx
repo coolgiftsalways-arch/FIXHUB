@@ -1,16 +1,20 @@
-import { useContext } from "react";
+import { createContext, useContext } from "react";
 
-import { AuthContext } from "./authStore.js";
+// ==========================================
+// FIXHUB AUTH CONTEXT
+// ==========================================
 
-// =====================================================
-// FIXHUB AUTHENTICATION HOOK
-// =====================================================
+export const AuthContext = createContext(null);
+
+// ==========================================
+// CUSTOM AUTH HOOK
+// ==========================================
 
 export function useAuth() {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider.");
+    throw new Error("useAuth must be used inside AuthProvider");
   }
 
   return context;

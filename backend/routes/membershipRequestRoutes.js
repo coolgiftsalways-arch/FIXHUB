@@ -7,6 +7,7 @@ import MembershipRequest from "../models/MembershipRequest.js";
 import Payment from "../models/Payment.js";
 
 import { requireAdmin } from "./authRoutes.js";
+
 import {
   createFixHubPaymentLink,
   refreshPaymentFromRazorpay,
@@ -157,7 +158,6 @@ function serializePayment(payment) {
     status: payment.status,
     paymentUrl: payment.paymentUrl || null,
     razorpayStatus: payment.razorpayStatus || null,
-    razorpayStatus: payment.razorpayStatus || null,
     couponCode: payment.couponCode || null,
     createdAt: payment.createdAt,
     updatedAt: payment.updatedAt,
@@ -194,7 +194,8 @@ const limitPayments = rateLimit({
 // ==========================================
 // ₹1 TEST COUPON
 // Enabled only when TEST_COUPON_CODE is set in backend/.env.
-// Optional: TEST_COUPON_EMAILS=a@x.com,b@y.com limits who can use it.
+// Optional: TEST_COUPON_EMAILS=a@x.com,b@y.com
+// limits who can use it.
 // Remove these variables when you finish testing.
 // ==========================================
 
@@ -202,6 +203,7 @@ const TEST_COUPON_AMOUNT = 1;
 
 // Keep letters/digits only, so quotes, spaces or phone-keyboard
 // characters in the env value or the typed code don't break matching.
+
 function normalizeCoupon(value) {
   return String(value || "")
     .normalize("NFKC")
@@ -212,13 +214,18 @@ function normalizeCoupon(value) {
 function resolveTestCoupon(rawCode, customer) {
   const entered = normalizeCoupon(rawCode);
 
-  if (!entered) return { applied: false };
+  if (!entered) {
+    return { applied: false };
+  }
 
   // Read at request time (server.js loads .env after imports).
   const configured = normalizeCoupon(process.env.TEST_COUPON_CODE);
 
   if (!configured || entered !== configured) {
-    return { applied: false, error: "Invalid coupon code." };
+    return {
+      applied: false,
+      error: "Invalid coupon code.",
+    };
   }
 
   const allowedEmails = String(process.env.TEST_COUPON_EMAILS || "")
@@ -236,7 +243,10 @@ function resolveTestCoupon(rawCode, customer) {
     };
   }
 
-  return { applied: true, code: configured };
+  return {
+    applied: true,
+    code: configured,
+  };
 }
 
 // ==========================================
@@ -280,10 +290,15 @@ router.get("/catalog", (_req, res) => {
 router.post("/", requireCustomer, limitRequests, async (req, res) => {
   try {
     const phoneBrand = String(req.body?.phoneBrand || "").trim();
+
     const phoneModel = String(req.body?.phoneModel || "").trim();
+
     const repairIssue = String(req.body?.repairIssue || "").trim();
+
     const preferredDate = String(req.body?.preferredDate || "").trim();
+
     const notes = String(req.body?.notes || "").trim();
+
     const modelNotListed = req.body?.modelNotListed === true;
 
     if (
@@ -334,7 +349,9 @@ router.post("/", requireCustomer, limitRequests, async (req, res) => {
       customer: req.fixhubCustomer._id,
       phoneBrand,
       phoneModel,
-      status: { $in: ["pending", "pending_quote"] },
+      status: {
+        $in: ["pending", "pending_quote"],
+      },
       createdAt: {
         $gte: new Date(Date.now() - 5 * 60 * 1000),
       },
@@ -379,154 +396,200 @@ router.post("/", requireCustomer, limitRequests, async (req, res) => {
     });
   }
 });
-
 // ==========================================
 // 3. CREATE MEMBERSHIP PAYMENT + RAZORPAY QR
 // POST /api/membership-requests/payment
 // Body: { requestId: "FH-MEM-...", couponCode?: "..." }
 // ==========================================
 
-router.post("/payment", requireCustomer, limitPayments, async (req, res) => {
-  try {
-    const membershipRequest = await findOwnMembershipRequest(
-      req.body?.requestId,
-      req.fixhubCustomer._id,
-    );
+router.post(
+  "/payment",
+  requireCustomer,
+  limitPayments,
+  async (req, res) => {
+    try {
+      const membershipRequest =
+        await findOwnMembershipRequest(
+          req.body?.requestId,
+          req.fixhubCustomer._id
+        );
 
-    if (!membershipRequest) {
-      return res.status(404).json({
-        success: false,
-        message: "Membership request not found.",
+      if (!membershipRequest) {
+        return res.status(404).json({
+          success: false,
+          message: "Membership request not found.",
+        });
+      }
+
+      if (membershipRequest.status === "pending_quote") {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Your phone model is awaiting a confirmed quote.",
+        });
+      }
+
+      if (membershipRequest.status === "rejected") {
+        return res.status(400).json({
+          success: false,
+          message: "This membership request was rejected.",
+        });
+      }
+
+      const amount = Number(membershipRequest.planPrice);
+
+      if (
+        membershipRequest.planPrice == null ||
+        !Number.isSafeInteger(amount) ||
+        amount < 1
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Your membership charge is not confirmed yet.",
+        });
+      }
+
+      const referenceId =
+        `FH-MEM-${String(
+          membershipRequest._id
+        ).toUpperCase()}`;
+
+      const customerId = req.fixhubCustomer._id;
+
+      // Optional ₹1 test coupon.
+      const coupon = resolveTestCoupon(
+        req.body?.couponCode,
+        req.fixhubCustomer
+      );
+
+      if (coupon.error) {
+        return res.status(400).json({
+          success: false,
+          code: "INVALID_COUPON",
+          message: coupon.error,
+        });
+      }
+
+      const finalAmount = coupon.applied
+        ? TEST_COUPON_AMOUNT
+        : amount;
+
+      // Bring every open payment for this request up to date
+      // with Razorpay so an earlier successful payment is detected.
+      const openPayments = await Payment.find({
+        customerId,
+        purpose: "membership",
+        referenceId,
+        status: {
+          $in: [
+            "pending",
+            "submitted",
+            "under_review",
+          ],
+        },
+      })
+        .sort({ createdAt: -1 })
+        .limit(5);
+
+      for (const open of openPayments) {
+        await refreshPaymentFromRazorpay(open);
+      }
+
+      // Check whether an existing payment is already paid.
+      const paidPayment = await Payment.findOne({
+        customerId,
+        purpose: "membership",
+        referenceId,
+        status: "paid",
       });
-    }
 
-    if (membershipRequest.status === "pending_quote") {
-      return res.status(400).json({
-        success: false,
-        message: "Your phone model is awaiting a confirmed quote.",
-      });
-    }
+      if (paidPayment) {
+        return res.status(409).json({
+          success: false,
+          message:
+            "This membership payment has already been confirmed.",
+          payment: serializePayment(paidPayment),
+        });
+      }
 
-    if (membershipRequest.status === "rejected") {
-      return res.status(400).json({
-        success: false,
-        message: "This membership request was rejected.",
-      });
-    }
-
-    const amount = Number(membershipRequest.planPrice);
-
-    if (
-      membershipRequest.planPrice == null ||
-      !Number.isSafeInteger(amount) ||
-      amount < 1
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "Your membership charge is not confirmed yet.",
-      });
-    }
-
-    const referenceId = `FH-MEM-${String(membershipRequest._id).toUpperCase()}`;
-    const customerId = req.fixhubCustomer._id;
-
-    // Optional ₹1 test coupon (see resolveTestCoupon).
-    const coupon = resolveTestCoupon(req.body?.couponCode, req.fixhubCustomer);
-
-    if (coupon.error) {
-      return res.status(400).json({
-        success: false,
-        code: "INVALID_COUPON",
-        message: coupon.error,
-      });
-    }
-
-    const finalAmount = coupon.applied ? TEST_COUPON_AMOUNT : amount;
-
-    // Bring every open payment for this request up to date with Razorpay,
-    // so a link paid earlier (full price or coupon) is detected.
-    const openPayments = await Payment.find({
-      customerId,
-      purpose: "membership",
-      referenceId,
-      status: { $in: ["pending", "submitted", "under_review"] },
-    })
-      .sort({ createdAt: -1 })
-      .limit(5);
-
-    for (const open of openPayments) {
-      await refreshPaymentFromRazorpay(open);
-    }
-
-    const paidPayment = await Payment.findOne({
-      customerId,
-      purpose: "membership",
-      referenceId,
-      status: "paid",
-    });
-
-    if (paidPayment) {
-      return res.status(409).json({
-        success: false,
-        message: "This membership payment has already been confirmed.",
-        payment: serializePayment(paidPayment),
-      });
-    }
-
-    // Reuse an open payment with the same amount, otherwise create a new one.
-    let payment = await Payment.findOne({
-      customerId,
-      purpose: "membership",
-      referenceId,
-      amount: finalAmount,
-      status: { $in: ["pending", "submitted", "under_review"] },
-    }).sort({ createdAt: -1 });
-
-    if (!payment) {
-      payment = await Payment.create({
+      // Reuse an open payment with the same amount.
+      // Otherwise create a new payment.
+      let payment = await Payment.findOne({
         customerId,
         purpose: "membership",
         referenceId,
         amount: finalAmount,
-        currency: "INR",
-        paymentMethod: "upi",
-        status: "pending",
-        couponCode: coupon.applied ? coupon.code : "",
+        status: {
+          $in: [
+            "pending",
+            "submitted",
+            "under_review",
+          ],
+        },
+      }).sort({ createdAt: -1 });
+
+      if (!payment) {
+        payment = await Payment.create({
+          customerId,
+          purpose: "membership",
+          referenceId,
+          amount: finalAmount,
+          currency: "INR",
+          paymentMethod: "upi",
+          status: "pending",
+          couponCode: coupon.applied
+            ? coupon.code
+            : "",
+        });
+      }
+
+      // Create or reuse Razorpay Payment Link.
+      const checkout = await createFixHubPaymentLink({
+        payment,
+        customer: req.fixhubCustomer,
+        description: coupon.applied
+          ? "FIXHUB membership fixing charge (TEST COUPON)"
+          : "FIXHUB membership fixing charge",
+        returnPath: "/payment",
+      });
+
+      return res.status(200).json({
+        success: true,
+        payment: {
+          ...serializePayment(payment),
+
+          paymentId: checkout.paymentId,
+          paymentUrl: checkout.paymentUrl,
+          qrCodeDataUrl: checkout.qrCodeDataUrl,
+
+          amount: checkout.amount,
+          originalAmount: amount,
+
+          couponApplied: coupon.applied,
+          couponCode: coupon.applied
+            ? coupon.code
+            : null,
+
+          status: checkout.status,
+        },
+      });
+
+    } catch (error) {
+      console.error(
+        "Membership payment creation error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Unable to create membership payment.",
       });
     }
-
-    const checkout = await createFixHubPaymentLink({
-      payment,
-      customer: req.fixhubCustomer,
-      description: coupon.applied
-        ? "FIXHUB membership fixing charge (TEST COUPON)"
-        : "FIXHUB membership fixing charge",
-      returnPath: "/payment",
-    });
-
-    return res.status(200).json({
-      success: true,
-      payment: {
-        ...serializePayment(payment),
-        paymentId: checkout.paymentId,
-        paymentUrl: checkout.paymentUrl,
-        qrCodeDataUrl: checkout.qrCodeDataUrl,
-        amount: checkout.amount,
-        originalAmount: amount,
-        couponApplied: coupon.applied,
-        couponCode: coupon.applied ? coupon.code : null,
-        status: checkout.status,
-      },
-    });
-  } catch (error) {
-    console.error("Membership payment creation error:", error.message);
-
-    return res.status(500).json({
-      success: false,
-      message: "Unable to create membership payment.",
-    });
   }
-});
+);
+
 // ==========================================
 // 4. SUBMIT UPI REFERENCE
 // POST /api/membership-requests/payment/:paymentId/submit
@@ -538,7 +601,9 @@ router.post(
   limitPayments,
   async (req, res) => {
     try {
-      const upiReference = String(req.body?.upiReference || "").trim();
+      const upiReference = String(
+        req.body?.upiReference || ""
+      ).trim();
 
       if (
         upiReference.length < 6 ||
@@ -547,7 +612,8 @@ router.post(
       ) {
         return res.status(400).json({
           success: false,
-          message: "Enter a valid UPI transaction reference.",
+          message:
+            "Enter a valid UPI transaction reference.",
         });
       }
 
@@ -564,17 +630,21 @@ router.post(
         });
       }
 
-      if (["paid", "refunded"].includes(payment.status)) {
+      if (
+        ["paid", "refunded"].includes(payment.status)
+      ) {
         return res.status(409).json({
           success: false,
-          message: "This payment can no longer be changed.",
+          message:
+            "This payment can no longer be changed.",
         });
       }
 
       if (payment.status === "rejected") {
         return res.status(409).json({
           success: false,
-          message: "This payment was rejected. Please contact FIXHUB.",
+          message:
+            "This payment was rejected. Please contact FIXHUB.",
         });
       }
 
@@ -585,169 +655,235 @@ router.post(
 
       return res.json({
         success: true,
-        message: "UPI reference submitted for verification.",
+        message:
+          "UPI reference submitted for verification.",
         payment: serializePayment(payment),
       });
+
     } catch (error) {
-      console.error("Membership UPI submission error:", error.message);
+      console.error(
+        "Membership UPI submission error:",
+        error.message
+      );
 
       return res.status(500).json({
         success: false,
-        message: "Unable to submit UPI reference.",
+        message:
+          "Unable to submit UPI reference.",
       });
     }
-  },
+  }
 );
-
 // ==========================================
 // 5. GET MEMBERSHIP PAYMENT STATUS
 // GET /api/membership-requests/payment/:paymentId
 // ==========================================
 
-router.get("/payment/:paymentId", requireCustomer, async (req, res) => {
-  try {
-    res.set("Cache-Control", "no-store");
+router.get(
+  "/payment/:paymentId",
+  requireCustomer,
+  async (req, res) => {
+    try {
+      res.set("Cache-Control", "no-store");
 
-    let payment = await Payment.findOne({
-      paymentId: req.params.paymentId,
-      customerId: req.fixhubCustomer._id,
-      purpose: "membership",
-    });
+      let payment = await Payment.findOne({
+        paymentId: req.params.paymentId,
+        customerId: req.fixhubCustomer._id,
+        purpose: "membership",
+      });
 
-    if (!payment) {
-      return res.status(404).json({
+      if (!payment) {
+        return res.status(404).json({
+          success: false,
+          message: "Membership payment not found.",
+        });
+      }
+
+      // Auto-detect: ask Razorpay if the payment
+      // is still open.
+      //
+      // If Razorpay confirms full payment,
+      // refreshPaymentFromRazorpay() triggers
+      // onPaymentConfirmed() and activates Gold.
+
+      payment = await refreshPaymentFromRazorpay(payment);
+
+      return res.json({
+        success: true,
+        payment: serializePayment(payment),
+      });
+
+    } catch (error) {
+      console.error(
+        "Membership payment lookup error:",
+        error.message
+      );
+
+      return res.status(500).json({
         success: false,
-        message: "Membership payment not found.",
+        message: "Unable to load membership payment.",
       });
     }
-
-    // Auto-detect: ask Razorpay if the payment is still open.
-    payment = await refreshPaymentFromRazorpay(payment);
-
-    return res.json({
-      success: true,
-      payment: serializePayment(payment),
-    });
-  } catch (error) {
-    console.error("Membership payment lookup error:", error.message);
-
-    return res.status(500).json({
-      success: false,
-      message: "Unable to load membership payment.",
-    });
   }
-});
+);
 
 // ==========================================
 // 6. CUSTOMER REQUEST HISTORY
 // GET /api/membership-requests/my
 // ==========================================
 
-router.get("/my", requireCustomer, async (req, res) => {
-  try {
-    const requests = await MembershipRequest.find({
-      customer: req.fixhubCustomer._id,
-    })
-      .sort({ createdAt: -1 })
-      .limit(50)
-      .lean();
+router.get(
+  "/my",
+  requireCustomer,
+  async (req, res) => {
+    try {
+      const requests = await MembershipRequest.find({
+        customer: req.fixhubCustomer._id,
+      })
+        .sort({ createdAt: -1 })
+        .limit(50)
+        .lean();
 
-    return res.json({
-      success: true,
-      requests: requests.map(serialize),
-    });
-  } catch (error) {
-    console.error("Customer request history error:", error.message);
+      return res.json({
+        success: true,
+        requests: requests.map(serialize),
+      });
 
-    return res.status(500).json({
-      success: false,
-      message: "Unable to load your requests.",
-    });
+    } catch (error) {
+      console.error(
+        "Customer request history error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Unable to load your requests.",
+      });
+    }
   }
-});
+);
 
 // ==========================================
 // 7. ADMIN GET ALL REQUESTS
 // GET /api/membership-requests/admin
 // ==========================================
 
-router.get("/admin", requireAdmin, async (req, res) => {
-  try {
-    const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 50));
-    const selectedStatus = String(req.query.status || "");
+router.get(
+  "/admin",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const limit = Math.min(
+        100,
+        Math.max(1, Number(req.query.limit) || 50)
+      );
 
-    const filter = VALID_STATUSES.has(selectedStatus)
-      ? { status: selectedStatus }
-      : {};
+      const selectedStatus = String(
+        req.query.status || ""
+      );
 
-    const requests = await MembershipRequest.find(filter)
-      .populate("customer", "fullName email phone address")
-      .sort({ createdAt: -1 })
-      .limit(limit)
-      .lean();
+      const filter = VALID_STATUSES.has(selectedStatus)
+        ? { status: selectedStatus }
+        : {};
 
-    return res.json({
-      success: true,
-      requests: requests.map(serialize),
-    });
-  } catch (error) {
-    console.error("Admin requests error:", error.message);
+      const requests = await MembershipRequest.find(filter)
+        .populate(
+          "customer",
+          "fullName email phone address"
+        )
+        .sort({ createdAt: -1 })
+        .limit(limit)
+        .lean();
 
-    return res.status(500).json({
-      success: false,
-      message: "Unable to load requests.",
-    });
+      return res.json({
+        success: true,
+        requests: requests.map(serialize),
+      });
+
+    } catch (error) {
+      console.error(
+        "Admin requests error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Unable to load requests.",
+      });
+    }
   }
-});
+);
 
 // ==========================================
 // 8. ADMIN UPDATE REQUEST STATUS
 // PATCH /api/membership-requests/admin/:id
 // ==========================================
 
-router.patch("/admin/:id", requireAdmin, async (req, res) => {
-  try {
-    const status = String(req.body?.status || "");
+router.patch(
+  "/admin/:id",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const status = String(
+        req.body?.status || ""
+      );
 
-    if (!VALID_STATUSES.has(status)) {
-      return res.status(400).json({
+      if (!VALID_STATUSES.has(status)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid request status.",
+        });
+      }
+
+      const request = await MembershipRequest.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: { status },
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      ).populate(
+        "customer",
+        "fullName email phone address"
+      );
+
+      if (!request) {
+        return res.status(404).json({
+          success: false,
+          message: "Request not found.",
+        });
+      }
+
+      return res.json({
+        success: true,
+        request: serialize(request),
+      });
+
+    } catch (error) {
+      if (error.name === "CastError") {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid request ID.",
+        });
+      }
+
+      console.error(
+        "Update request error:",
+        error.message
+      );
+
+      return res.status(500).json({
         success: false,
-        message: "Invalid request status.",
+        message: "Unable to update request.",
       });
     }
-
-    const request = await MembershipRequest.findByIdAndUpdate(
-      req.params.id,
-      { $set: { status } },
-      { new: true, runValidators: true },
-    ).populate("customer", "fullName email phone address");
-
-    if (!request) {
-      return res.status(404).json({
-        success: false,
-        message: "Request not found.",
-      });
-    }
-
-    return res.json({
-      success: true,
-      request: serialize(request),
-    });
-  } catch (error) {
-    if (error.name === "CastError") {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid request ID.",
-      });
-    }
-
-    console.error("Update request error:", error.message);
-
-    return res.status(500).json({
-      success: false,
-      message: "Unable to update request.",
-    });
   }
-});
+);
+
+// ==========================================
+// EXPORT ROUTER
+// ==========================================
 
 export default router;

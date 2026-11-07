@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useState } from "react";
 
 import {
@@ -10,10 +9,7 @@ import {
   useParams,
 } from "react-router-dom";
 
-// ==========================================
 // WEBSITE COMPONENTS
-// ==========================================
-
 import Navbar from "./components/layout/Navbar.jsx";
 import Footer from "./components/layout/Footer.jsx";
 import FloatingContact from "./components/FloatingContact.jsx";
@@ -25,6 +21,7 @@ import { AuthProvider } from "./context/AuthProvider.jsx";
 
 import useSmoothScroll from "./hooks/useSmoothScroll.js";
 
+// ADMIN COMPONENTS
 import AdminSidebar from "./pages/admin/AdminSidebar.jsx";
 import AdminCustomersPage from "./pages/admin/AdminCustomers.jsx";
 import AdminMembershipRequests from "./pages/admin/AdminMembershipRequests.jsx";
@@ -41,63 +38,51 @@ const adminPages = {
     title: "Dashboard",
     description: "Welcome to the FixHub repair management dashboard.",
   },
-
   bookings: {
     title: "Repair Bookings",
     description: "Manage mobile repair bookings and appointments.",
   },
-
   customers: {
     title: "Customers",
     description: "Manage registered FixHub customers.",
   },
-
   services: {
     title: "Repair Services",
     description: "Manage mobile repair services.",
   },
-
   memberships: {
     title: "Memberships",
     description:
       "Review FIXHUB customer requests and phone-based fixing charges.",
   },
-
   technicians: {
     title: "Technicians",
     description: "Manage technicians and repair assignments.",
   },
-
   analytics: {
     title: "Analytics",
     description: "View booking trends and repair revenue.",
   },
-
   offers: {
     title: "Offers & Coupons",
     description: "Manage customer offers and discount coupons.",
   },
-
   reviews: {
     title: "Reviews",
     description: "Manage customer ratings and feedback.",
   },
-
   notifications: {
     title: "Notifications",
     description: "View booking and repair notifications.",
   },
-
   settings: {
     title: "Settings",
     description: "Manage FixHub admin settings.",
   },
-
   payments: {
     title: "Payments",
     description: "Manage repair payments and transactions.",
   },
-
   "service-areas": {
     title: "Service Areas",
     description: "Manage doorstep repair service locations.",
@@ -243,12 +228,7 @@ function AdminLogin({ onLogin }) {
 
         <form onSubmit={handleSubmit}>
           <label
-            style={{
-              display: "block",
-              fontWeight: 700,
-              marginBottom: 10,
-              color: "#17243c",
-            }}
+            style={{ display: "block", fontWeight: 700, marginBottom: 10 }}
           >
             Admin Email
           </label>
@@ -264,12 +244,7 @@ function AdminLogin({ onLogin }) {
           />
 
           <label
-            style={{
-              display: "block",
-              fontWeight: 700,
-              marginBottom: 10,
-              color: "#17243c",
-            }}
+            style={{ display: "block", fontWeight: 700, marginBottom: 10 }}
           >
             Password
           </label>
@@ -766,8 +741,7 @@ function AppLayout() {
   const location = useLocation();
   const pathname = location.pathname.toLowerCase();
 
-  const isAdminPage =
-    pathname === "/admin" || pathname.startsWith("/admin/");
+  const isAdminPage = pathname === "/admin" || pathname.startsWith("/admin/");
 
   if (isAdminPage) {
     return <AdminPortal />;
